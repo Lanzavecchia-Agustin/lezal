@@ -86,7 +86,9 @@ app.prepare().then(() => {
   const httpServer = createServer(handler);
   const io = new Server(httpServer, {
     cors: {
-      origin: "*",
+      origin: process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000", // Permitir solo el dominio del frontend
+      methods: ["GET", "POST"], // Métodos permitidos
+      credentials: true, // Permitir cookies (si es necesario para autenticación)
     },
   });
 

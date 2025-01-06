@@ -6,8 +6,14 @@ export const getSocket = (): Socket => {
   if (socket) {
     return socket;
   }
-  socket = io(process.env.NEXT_PUBLIC_APP_URL as string, {
-    autoConnect: false,
+
+  const serverUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+
+
+  socket = io(serverUrl, {
+    autoConnect: false, // El cliente controla la conexión
+    transports: ["websocket"], // Usar WebSocket como transporte preferido
   });
+
   return socket;
 };

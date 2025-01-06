@@ -1,10 +1,9 @@
-import Messages from "@/components/messages";
-import React from "react";
+import StoryGame from "@/components/storyGame";
 
 export default function Home() {
   return (
     <>
-      <Messages />
+       <StoryGame />
     </>
   );
 }

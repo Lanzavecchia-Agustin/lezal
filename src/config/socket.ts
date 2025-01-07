@@ -12,7 +12,7 @@ export const getSocket = (): Socket => {
 
   socket = io(serverUrl, {
     autoConnect: false, // Control manual de conexión
-    transports: ["polling"], // Forzar uso de long polling
+    transports: ["websocket"], // Permite WebSockets
   });
 
   return socket;

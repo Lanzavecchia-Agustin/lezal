@@ -3,16 +3,6 @@ import { Scene } from "./roomsStore"; // Importa la interfaz `Scene`
 
 
 export const storyData: Record<string, Scene> = {
-  scene1: {
-    id: "scene1",
-    text: "Año 2247. La humanidad se enfrenta a su última frontera: las estrellas. Tras décadas de exploración, una señal extraña ha surgido de Lezal, un planeta olvidado en el borde del espacio conocido. Se organiza un grupo de reconocimiento... pero los recursos son escasos, y las probabilidades de éxito, cuestionables.\n\n" +
-      "C.H.I. aparece en los altoparlantes de la Federación:\n" +
-      "\"He analizado los parámetros de esta misión y, con todo respeto, debo declarar que las probabilidades de éxito de esta tripulación son cercanas a cero. Pero aquí estamos. Prepárense para ser 'medianamente útiles'.\"",
-    options: [
-      { id: 1, text: "Avanzar hacia el hangar para preparar el despegue", nextSceneId: "scene2" },
-      { id: 2, text: "Preguntar a C.H.I. más detalles sobre la misión", nextSceneId: "scene3" },
-    ],
-  },
   scene2: {
     id: "scene2",
     text: "Te encuentras en el hangar de la estación espacial. La nave luce desgastada, con parches en el fuselaje. C.H.I. analiza tus movimientos:\n" +

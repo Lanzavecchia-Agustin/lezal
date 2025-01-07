@@ -1,8 +1,7 @@
-// app/api/joinRoom/route.ts
+// app/api/join/route.ts
 import { NextResponse } from "next/server";
 import Pusher from "pusher";
-import { roomManager } from "@/store/roomsStore";
-import { storyData } from "@/store/storyData";
+import rooms from "../../../../roomsStore";
 
 const pusher = new Pusher({
   appId: process.env.PUSHER_APP_ID!,
@@ -13,109 +12,42 @@ const pusher = new Pusher({
 });
 
 export async function GET(req: Request) {
+  console.log("GET /api/join called");
   const { searchParams } = new URL(req.url);
   const roomId = searchParams.get("roomId");
   const userName = searchParams.get("userName");
-  const isHost = searchParams.get("isHost") === "true";
 
   if (!roomId || !userName) {
-    return NextResponse.json(
-      { error: "Faltan parámetros requeridos" },
-      { status: 400 }
-    );
+    return NextResponse.json({ error: "Invalid parameters" }, { status: 400 });
   }
 
-  let room = roomManager.getRoom(roomId);
-
-  // Si la sala no existe y es el host, créala
-  if (!room && isHost) {
-    room = roomManager.createRoom(roomId, {
-      hostName: userName,
-      settings: {
-        voteTimeLimit: 30,
-        minPlayers: 2,
-        autoStartWhen: "MANUAL",
+  if (!rooms[roomId]) {
+    rooms[roomId] = {
+      users: [],
+      scene: {
+        id: "scene1",
+        text: "Año 2247. La humanidad se enfrenta a su última frontera: las estrellas. Tras décadas de exploración, una señal extraña ha surgido de Lezal, un planeta olvidado en el borde del espacio conocido. Se organiza un grupo de reconocimiento... pero los recursos son escasos, y las probabilidades de éxito, cuestionables.\n\n" +
+          "C.H.I. aparece en los altoparlantes de la Federación:\n" +
+          "\"He analizado los parámetros de esta misión y, con todo respeto, debo declarar que las probabilidades de éxito de esta tripulación son cercanas a cero. Pero aquí estamos. Prepárense para ser 'medianamente útiles'.\"",
+        options: [
+          { id: 1, text: "Avanzar hacia el hangar para preparar el despegue", nextSceneId: "scene2" },
+          { id: 2, text: "Preguntar a C.H.I. más detalles sobre la misión", nextSceneId: "scene3" },
+        ],
       },
-    });
-  } else if (!room) {
-    return NextResponse.json(
-      { error: "La sala no existe" },
-      { status: 404 }
-    );
+      votes: {}, 
+      userVoted: new Set<string>(), 
+    };
   }
 
-  // Si la partida ya comenzó, no permitir nuevos jugadores
-  if (room.gameState.currentPhase === "PLAYING") {
-    return NextResponse.json(
-      { error: "La partida ya ha comenzado" },
-      { status: 400 }
-    );
+  if (!rooms[roomId].users.includes(userName)) {
+    rooms[roomId].users.push(userName);
   }
 
-  // Añadir usuario a la sala
-  if (!room.users.includes(userName)) {
-    room.users.push(userName);
-  }
-
-  // Emitir actualización a todos los usuarios
-  await pusher.trigger(`room-${roomId}`, "roomUpdate", {
-    users: room.users,
-    host: room.host,
-    gameState: room.gameState,
-    settings: room.settings,
+  await pusher.trigger(`room-${roomId}`, "sceneUpdate", {
+    users: rooms[roomId].users,
+    scene: rooms[roomId].scene,
+    votes: rooms[roomId].votes,
   });
 
-  return NextResponse.json({
-    message: "Te has unido a la sala exitosamente",
-    room: {
-      users: room.users,
-      host: room.host,
-      gameState: room.gameState,
-      settings: room.settings,
-      isHost: userName === room.host,
-    },
-  });
-}
-
-export async function POST(req: Request) {
-  const body = await req.json();
-  const { roomId, action } = body;
-
-  const room = roomManager.getRoom(roomId);
-  if (!room) {
-    return NextResponse.json(
-      { error: "Sala no encontrada" },
-      { status: 404 }
-    );
-  }
-
-  switch (action) {
-    case "START_GAME":
-      if (room.users.length < room.settings.minPlayers) {
-        return NextResponse.json(
-          { error: "No hay suficientes jugadores" },
-          { status: 400 }
-        );
-      }
-
-      roomManager.startGame(roomId);
-      
-      // Notificar a todos los jugadores que el juego ha comenzado
-      await pusher.trigger(`room-${roomId}`, "gameStart", {
-        scene: room.scene,
-        gameState: room.gameState,
-      });
-
-      return NextResponse.json({
-        message: "Juego iniciado",
-        scene: room.scene,
-        gameState: room.gameState,
-      });
-
-    default:
-      return NextResponse.json(
-        { error: "Acción no válida" },
-        { status: 400 }
-      );
-  }
+  return NextResponse.json({ message: "Room joined", room: rooms[roomId] });
 }

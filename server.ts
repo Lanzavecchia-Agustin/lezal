@@ -1,4 +1,4 @@
-import { createServer } from "node:http";
+import { createServer } from "http";
 import next from "next";
 import { Server } from "socket.io";
 
@@ -26,6 +26,7 @@ interface RoomState {
   users: Record<string, string>; // socket.id -> userName
 }
 
+// Datos de la historia
 const storyData: StoryData = {
   scene1: {
     id: "scene1",
@@ -76,26 +77,26 @@ function resetVotesForScene(scene: Scene): Record<number, number> {
 }
 
 const dev = process.env.NODE_ENV !== "production";
-const hostname = "localhost";
-const port = 3000;
+const hostname = dev ? "localhost" : "0.0.0.0";
+const port = parseInt(process.env.PORT || "3000", 10);
 
-const app = next({ dev, hostname, port });
+const app = next({ dev });
 const handler = app.getRequestHandler();
 
 app.prepare().then(() => {
   const httpServer = createServer(handler);
   const io = new Server(httpServer, {
+    path: "/socket.io",
     cors: {
-      origin: process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000", // Permitir solo el dominio del frontend
-      methods: ["GET", "POST"], // Métodos permitidos
-      credentials: true, // Permitir cookies (si es necesario para autenticación)
+      origin: process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000", // Frontend
+      methods: ["GET", "POST"],
+      credentials: true,
     },
   });
 
   io.on("connection", (socket) => {
-    console.log("New client connected:", socket.id);
+    console.log("Cliente conectado:", socket.id);
 
-    // Evento para que el usuario se una o cree una sala
     socket.on("joinRoom", ({ roomId, userName }: { roomId: string; userName: string }) => {
       if (!userName) {
         socket.emit("error", "El nombre de usuario es obligatorio.");
@@ -103,7 +104,6 @@ app.prepare().then(() => {
       }
 
       if (!rooms[roomId]) {
-        // Crear una nueva sala si no existe
         rooms[roomId] = {
           currentScene: storyData.scene1,
           votes: resetVotesForScene(storyData.scene1),
@@ -113,12 +113,9 @@ app.prepare().then(() => {
       }
 
       const room = rooms[roomId];
-      room.users[socket.id] = userName; // Guardar el nombre del usuario
+      room.users[socket.id] = userName;
       socket.join(roomId);
 
-      console.log(`Usuario "${userName}" se unió a la sala "${roomId}".`);
-
-      // Enviar la escena actual y los usuarios en la sala
       io.to(roomId).emit("sceneUpdate", {
         scene: room.currentScene,
         votes: room.votes,
@@ -126,53 +123,27 @@ app.prepare().then(() => {
       });
     });
 
-    // Cuando un cliente vota
     socket.on("vote", ({ roomId, optionId }: { roomId: string; optionId: number }) => {
       const room = rooms[roomId];
-      if (!room) return;
-
-      if (room.currentScene.isEnding) {
-        console.log("La historia ha terminado. No se aceptan votos.");
-        return;
-      }
-
-      if (room.userVoted.has(socket.id)) {
-        console.log(`Usuario ${socket.id} ya votó en esta escena.`);
-        return;
-      }
+      if (!room || room.userVoted.has(socket.id)) return;
 
       const foundOption = room.currentScene.options.find((opt) => opt.id === optionId);
-      if (!foundOption) {
-        console.log("Opción inválida.");
-        return;
-      }
+      if (!foundOption) return;
 
-      room.votes[optionId] = (room.votes[optionId] ?? 0) + 1;
+      room.votes[optionId] = (room.votes[optionId] || 0) + 1;
       room.userVoted.add(socket.id);
 
       io.to(roomId).emit("voteUpdate", room.votes);
     });
 
-    // Cuando el anfitrión cierra la votación
     socket.on("closeVoting", (roomId: string) => {
       const room = rooms[roomId];
-      if (!room || room.currentScene.isEnding) return;
+      if (!room) return;
 
-      let winnerOptionId: number | null = null;
-      let maxVotes = -1;
-
-      for (const [optionIdStr, voteCount] of Object.entries(room.votes)) {
-        const optionId = parseInt(optionIdStr, 10);
-        if (voteCount > maxVotes) {
-          maxVotes = voteCount;
-          winnerOptionId = optionId;
-        }
-      }
-
-      if (winnerOptionId === null) {
-        console.log("No hubo votos. No se avanza de escena.");
-        return;
-      }
+      const winnerOptionId = Object.entries(room.votes).reduce(
+        (max, [id, votes]) => (votes > max.votes ? { id: Number(id), votes } : max),
+        { id: -1, votes: -1 }
+      ).id;
 
       const winnerOption = room.currentScene.options.find((opt) => opt.id === winnerOptionId);
       if (!winnerOption) return;
@@ -190,9 +161,7 @@ app.prepare().then(() => {
       });
     });
 
-    // Evento para desconectar al usuario
     socket.on("disconnect", () => {
-      console.log("Client disconnected:", socket.id);
       for (const roomId of Object.keys(rooms)) {
         const room = rooms[roomId];
         if (room.users[socket.id]) {
@@ -208,6 +177,6 @@ app.prepare().then(() => {
   });
 
   httpServer.listen(port, () => {
-    console.log(`> Ready on http://${hostname}:${port}`);
+    console.log(`> Server ready on http://${hostname}:${port}`);
   });
 });

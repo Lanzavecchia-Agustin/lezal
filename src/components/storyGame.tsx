@@ -30,9 +30,11 @@ export default function StoryGame() {
   const [users, setUsers] = useState<string[]>([]);
   const [hasVoted, setHasVoted] = useState(false);
 
-  const socket = useMemo(() => getSocket().connect(), []);
+  const socket = useMemo(() => getSocket(), []);
 
   useEffect(() => {
+    socket.connect();
+
     socket.on("sceneUpdate", (payload: SceneUpdatePayload) => {
       setScene(payload.scene);
       setVotes(payload.votes);
@@ -46,6 +48,10 @@ export default function StoryGame() {
 
     socket.on("error", (message: string) => {
       alert(message);
+    });
+
+    socket.on("connect_error", (error) => {
+      console.error("Error de conexión:", error.message);
     });
 
     return () => {
@@ -78,11 +84,21 @@ export default function StoryGame() {
   const handleVote = (optionId: number) => {
     if (!scene || scene.isEnding || hasVoted) return;
 
+    if (!socket.connected) {
+      alert("No estás conectado al servidor.");
+      return;
+    }
+
     socket.emit("vote", { roomId, optionId });
     setHasVoted(true);
   };
 
   const handleCloseVoting = () => {
+    if (!socket.connected) {
+      alert("No estás conectado al servidor.");
+      return;
+    }
+
     socket.emit("closeVoting", roomId);
   };
 

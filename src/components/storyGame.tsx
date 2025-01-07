@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useEffect, useState, useMemo } from "react";
-import { getSocket } from "@/config/socket";
+import React, { useEffect, useState } from "react";
+import Pusher from "pusher-js";
 
 interface Scene {
   id: string;
@@ -30,36 +30,36 @@ export default function StoryGame() {
   const [users, setUsers] = useState<string[]>([]);
   const [hasVoted, setHasVoted] = useState(false);
 
-  const socket = useMemo(() => getSocket(), []);
-
   useEffect(() => {
-    socket.connect();
+    if (roomId) {
+      const pusher = new Pusher(process.env.NEXT_PUBLIC_PUSHER_KEY!, {
+        cluster: process.env.NEXT_PUBLIC_PUSHER_CLUSTER!,
+      });
 
-    socket.on("sceneUpdate", (payload: SceneUpdatePayload) => {
-      setScene(payload.scene);
-      setVotes(payload.votes);
-      setUsers(payload.users);
-      setHasVoted(false);
-    });
+      const channel = pusher.subscribe(`room-${roomId}`);
 
-    socket.on("voteUpdate", (updatedVotes: { [optionId: number]: number }) => {
-      setVotes(updatedVotes);
-    });
+      channel.bind("sceneUpdate", (payload: SceneUpdatePayload) => {
+        setScene(payload.scene);
+        setVotes(payload.votes);
+        setUsers(payload.users);
+        setHasVoted(false);
+      });
 
-    socket.on("error", (message: string) => {
-      alert(message);
-    });
+      channel.bind("voteUpdate", (updatedVotes: { [optionId: number]: number }) => {
+        setVotes(updatedVotes);
+      });
 
-    socket.on("connect_error", (error) => {
-      console.error("Error de conexión:", error.message);
-    });
+      channel.bind("error", (error: string) => {
+        alert(error);
+      });
 
-    return () => {
-      socket.disconnect();
-    };
-  }, [socket]);
+      return () => {
+        pusher.unsubscribe(`room-${roomId}`);
+      };
+    }
+  }, [roomId]);
 
-  const handleCreateRoom = () => {
+  const handleCreateRoom = async () => {
     if (!userName) {
       alert("Por favor, ingresa tu nombre para continuar.");
       return;
@@ -67,39 +67,66 @@ export default function StoryGame() {
 
     const generatedRoomId = `room-${Math.random().toString(36).substring(2, 10)}`;
     setRoomId(generatedRoomId);
-    socket.emit("joinRoom", { roomId: generatedRoomId, userName });
-    setJoined(true);
+
+    const response = await fetch(`/api/joinRoom?roomId=${generatedRoomId}&userName=${userName}`, {
+      method: "GET",
+    });
+
+    if (response.ok) {
+      setJoined(true);
+    } else {
+      alert("Error al crear la sala.");
+    }
   };
 
-  const handleJoinRoom = () => {
+  const handleJoinRoom = async () => {
     if (!userName || !roomId) {
       alert("Por favor, ingresa tu nombre y el ID de la sala.");
       return;
     }
 
-    socket.emit("joinRoom", { roomId, userName });
-    setJoined(true);
+    const response = await fetch(`/api/joinRoom?roomId=${roomId}&userName=${userName}`, {
+      method: "GET",
+    });
+
+    if (response.ok) {
+      setJoined(true);
+    } else {
+      alert("Error al unirse a la sala.");
+    }
   };
 
-  const handleVote = (optionId: number) => {
+  const handleVote = async (optionId: number) => {
     if (!scene || scene.isEnding || hasVoted) return;
 
-    if (!socket.connected) {
-      alert("No estás conectado al servidor.");
+    if (!roomId) {
+      alert("No estás en una sala.");
       return;
     }
 
-    socket.emit("vote", { roomId, optionId });
-    setHasVoted(true);
+    const response = await fetch(
+      `/api/vote?roomId=${roomId}&userName=${userName}&optionId=${optionId}`,
+      { method: "GET" }
+    );
+
+    if (response.ok) {
+      setHasVoted(true);
+    } else {
+      alert("Error al enviar el voto.");
+    }
   };
 
-  const handleCloseVoting = () => {
-    if (!socket.connected) {
-      alert("No estás conectado al servidor.");
+  const handleCloseVoting = async () => {
+    if (!roomId) {
+      alert("No estás en una sala.");
       return;
     }
 
-    socket.emit("closeVoting", roomId);
+    const response = await fetch(`/api/closeVoting?roomId=${roomId}`, { method: "GET" });
+
+    if (!response.ok) {
+      alert("Error al cerrar la votación.");
+    }
   };
 
   if (!joined) {

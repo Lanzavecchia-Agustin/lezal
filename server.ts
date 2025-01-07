@@ -1,6 +1,18 @@
 import { createServer } from "http";
 import next from "next";
-import { Server } from "socket.io";
+import Pusher from "pusher";
+import { parse } from "url";
+import 'dotenv/config';
+
+
+// Configuración de Pusher
+const pusher = new Pusher({
+  appId: process.env.PUSHER_APP_ID!,
+  key: process.env.PUSHER_APP_KEY!,
+  secret: process.env.PUSHER_APP_SECRET!,
+  cluster: process.env.PUSHER_APP_CLUSTER!,
+  useTLS: true,
+});
 
 type SceneKey = "scene1" | "scene2" | "scene3" | "endingA" | "endingB";
 
@@ -22,11 +34,10 @@ type StoryData = Record<SceneKey, Scene>;
 interface RoomState {
   currentScene: Scene;
   votes: Record<number, number>;
-  userVoted: Set<string>; // socket.id que ya votaron
-  users: Record<string, string>; // socket.id -> userName
+  userVoted: Set<string>;
+  users: Record<string, string>;
 }
 
-// Datos de la historia
 const storyData: StoryData = {
   scene1: {
     id: "scene1",
@@ -76,6 +87,7 @@ function resetVotesForScene(scene: Scene): Record<number, number> {
   return votes;
 }
 
+
 const dev = process.env.NODE_ENV !== "production";
 const hostname = dev ? "localhost" : "0.0.0.0";
 const port = parseInt(process.env.PORT || "3000", 10);
@@ -84,25 +96,12 @@ const app = next({ dev });
 const handler = app.getRequestHandler();
 
 app.prepare().then(() => {
-  const httpServer = createServer(handler);
-  const io = new Server(httpServer, {
-    path: "/socket.io",
-    cors: {
-      origin: process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000", // Frontend
-      methods: ["GET", "POST"],
-      credentials: true,
-    },
-  });
+  const server = createServer(async (req, res) => {
+    const parsedUrl = parse(req.url!, true);
+    const { pathname, query } = parsedUrl;
 
-  io.on("connection", (socket) => {
-    console.log("Cliente conectado:", socket.id);
-
-    socket.on("joinRoom", ({ roomId, userName }: { roomId: string; userName: string }) => {
-      if (!userName) {
-        socket.emit("error", "El nombre de usuario es obligatorio.");
-        return;
-      }
-
+    if (pathname === "/api/joinRoom") {
+      const { roomId, userName } = query as { roomId: string; userName: string };
       if (!rooms[roomId]) {
         rooms[roomId] = {
           currentScene: storyData.scene1,
@@ -113,32 +112,45 @@ app.prepare().then(() => {
       }
 
       const room = rooms[roomId];
-      room.users[socket.id] = userName;
-      socket.join(roomId);
+      room.users[userName] = userName;
 
-      io.to(roomId).emit("sceneUpdate", {
+      pusher.trigger(`room-${roomId}`, "sceneUpdate", {
         scene: room.currentScene,
         votes: room.votes,
         users: Object.values(room.users),
       });
-    });
 
-    socket.on("vote", ({ roomId, optionId }: { roomId: string; optionId: number }) => {
+      res.statusCode = 200;
+      res.end("Joined room");
+    } else if (pathname === "/api/vote") {
+      const { roomId, userName, optionId } = query as {
+        roomId: string;
+        userName: string;
+        optionId: string;
+      };
       const room = rooms[roomId];
-      if (!room || room.userVoted.has(socket.id)) return;
+      if (!room) {
+        res.statusCode = 404;
+        res.end("Room not found");
+        return;
+      }
 
-      const foundOption = room.currentScene.options.find((opt) => opt.id === optionId);
-      if (!foundOption) return;
+      const optionIdNum = parseInt(optionId);
+      room.votes[optionIdNum] = (room.votes[optionIdNum] || 0) + 1;
+      room.userVoted.add(userName);
 
-      room.votes[optionId] = (room.votes[optionId] || 0) + 1;
-      room.userVoted.add(socket.id);
+      pusher.trigger(`room-${roomId}`, "voteUpdate", room.votes);
 
-      io.to(roomId).emit("voteUpdate", room.votes);
-    });
-
-    socket.on("closeVoting", (roomId: string) => {
+      res.statusCode = 200;
+      res.end("Vote registered");
+    } else if (pathname === "/api/closeVoting") {
+      const { roomId } = query as { roomId: string };
       const room = rooms[roomId];
-      if (!room) return;
+      if (!room) {
+        res.statusCode = 404;
+        res.end("Room not found");
+        return;
+      }
 
       const winnerOptionId = Object.entries(room.votes).reduce(
         (max, [id, votes]) => (votes > max.votes ? { id: Number(id), votes } : max),
@@ -154,29 +166,20 @@ app.prepare().then(() => {
         room.userVoted = new Set();
       }
 
-      io.to(roomId).emit("sceneUpdate", {
+      pusher.trigger(`room-${roomId}`, "sceneUpdate", {
         scene: room.currentScene,
         votes: room.votes,
         users: Object.values(room.users),
       });
-    });
 
-    socket.on("disconnect", () => {
-      for (const roomId of Object.keys(rooms)) {
-        const room = rooms[roomId];
-        if (room.users[socket.id]) {
-          delete room.users[socket.id];
-          io.to(roomId).emit("sceneUpdate", {
-            scene: room.currentScene,
-            votes: room.votes,
-            users: Object.values(room.users),
-          });
-        }
-      }
-    });
+      res.statusCode = 200;
+      res.end("Voting closed");
+    } else {
+      handler(req, res); // Maneja las solicitudes de Next.js
+    }
   });
 
-  httpServer.listen(port, () => {
+  server.listen(port, () => {
     console.log(`> Server ready on http://${hostname}:${port}`);
   });
 });

@@ -1,13 +1,12 @@
-export interface Option {
-    id: number;
-    text: string;
-    nextSceneId: string;
-  }
-  
-  export interface Scene {
+// roomsStore.ts
+export interface Scene {
     id: string;
     text: string;
-    options: Option[];
+    options: {
+      id: number;
+      text: string;
+      nextSceneId: string;
+    }[];
     isEnding?: boolean;
   }
   
@@ -15,9 +14,10 @@ export interface Option {
     users: string[];
     scene: Scene;
     votes: Record<number, number>;
+    userVoted: Set<string>;
+    voteTimer?: NodeJS.Timeout;
   }
   
   const rooms: Record<string, Room> = {};
   
   export default rooms;
-  

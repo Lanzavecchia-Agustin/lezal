@@ -19,6 +19,12 @@ interface SceneUpdatePayload {
   scene: Scene;
   votes: { [optionId: number]: number };
   users: string[];
+  userVoted: string[];
+}
+
+interface VoteUpdatePayload {
+  votes: { [optionId: number]: number };
+  userVoted: string[];
 }
 
 export default function StoryGame() {
@@ -45,11 +51,12 @@ export default function StoryGame() {
         setScene(payload.scene);
         setVotes(payload.votes);
         setUsers(payload.users);
-        setHasVoted(false);
+        setHasVoted(payload.userVoted?.includes(userName) || false);
       });
 
-      channel.bind("voteUpdate", (updatedVotes: { [optionId: number]: number }) => {
-        setVotes(updatedVotes);
+      channel.bind("voteUpdate", (payload: VoteUpdatePayload) => {
+        setVotes(payload.votes);
+        setHasVoted(payload.userVoted?.includes(userName) || false);
       });
 
       channel.bind("error", (error: string) => {
@@ -57,10 +64,11 @@ export default function StoryGame() {
       });
 
       return () => {
-        pusherRef.current?.unsubscribe(`room-${roomId}`);
+        channel.unbind_all();
+        channel.unsubscribe();
       };
     }
-  }, [roomId]);
+  }, [roomId, userName]);
 
   const handleCreateRoom = async () => {
     if (!userName.trim()) {
@@ -121,9 +129,7 @@ export default function StoryGame() {
         method: "GET",
       });
 
-      if (response.ok) {
-        setHasVoted(true);
-      } else {
+      if (!response.ok) {
         const error = await response.json();
         alert(`Error al votar: ${error.message}`);
       }
@@ -220,25 +226,19 @@ export default function StoryGame() {
           <button
             key={option.id}
             onClick={() => handleVote(option.id)}
-            className="bg-blue-800 py-2 px-4 rounded-md w-full max-w-md text-left"
+            disabled={hasVoted}
+            className={`bg-blue-800 py-2 px-4 rounded-md w-full max-w-md text-left text-white ${
+              hasVoted ? 'opacity-50 cursor-not-allowed' : ''
+            }`}
           >
             {option.text} <span className="ml-2">({votes[option.id] || 0} votos)</span>
           </button>
         ))}
 
       {scene.isEnding && (
-        <div className="bg-yellow-800 p-4 rounded-md">
+        <div className="bg-yellow-800 p-4 rounded-md text-white">
           <p className="text-xl font-semibold">¡Has llegado a un final!</p>
         </div>
-      )}
-
-      {!scene.isEnding && (
-        <button
-          onClick={handleCloseVoting}
-          className="mt-4 py-2 px-6 bg-red-400 text-white rounded-md"
-        >
-          Cerrar votación
-        </button>
       )}
     </div>
   );

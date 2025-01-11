@@ -1,7 +1,9 @@
 // app/api/join/route.ts
+
 import { NextResponse } from "next/server";
 import Pusher from "pusher";
-import rooms from "../../../../roomsStore";
+import rooms, { Player, ATRIBUTOS_DISPONIBLES } from "../../../../roomsStore";
+import { storyData } from "../../../../storyData";
 
 const pusher = new Pusher({
   appId: process.env.PUSHER_APP_ID!,
@@ -12,42 +14,89 @@ const pusher = new Pusher({
 });
 
 export async function GET(req: Request) {
-  console.log("GET /api/join called");
   const { searchParams } = new URL(req.url);
   const roomId = searchParams.get("roomId");
   const userName = searchParams.get("userName");
+  const typeParam = searchParams.get("type") || "Normal";
+  const attributesParam = searchParams.get("attributes") || "";
+
+  console.log("[JOIN] Incoming params =>", {
+    roomId,
+    userName,
+    typeParam,
+    attributesParam,
+  });
 
   if (!roomId || !userName) {
-    return NextResponse.json({ error: "Invalid parameters" }, { status: 400 });
+    console.log("[JOIN] Error: roomId y userName son requeridos");
+    return NextResponse.json({
+      error: "roomId y userName son requeridos"
+    }, { status: 400 });
   }
 
+  // Crear sala si no existe
   if (!rooms[roomId]) {
+    console.log(`[JOIN] Room ${roomId} no existe, creándola...`);
     rooms[roomId] = {
-      users: [],
-      scene: {
-        id: "scene1",
-        text: "Año 2247. La humanidad se enfrenta a su última frontera: las estrellas. Tras décadas de exploración, una señal extraña ha surgido de Lezal, un planeta olvidado en el borde del espacio conocido. Se organiza un grupo de reconocimiento... pero los recursos son escasos, y las probabilidades de éxito, cuestionables.\n\n" +
-          "C.H.I. aparece en los altoparlantes de la Federación:\n" +
-          "\"He analizado los parámetros de esta misión y, con todo respeto, debo declarar que las probabilidades de éxito de esta tripulación son cercanas a cero. Pero aquí estamos. Prepárense para ser 'medianamente útiles'.\"",
-        options: [
-          { id: 1, text: "Avanzar hacia el hangar para preparar el despegue", nextSceneId: "scene2" },
-          { id: 2, text: "Preguntar a C.H.I. más detalles sobre la misión", nextSceneId: "scene3" },
-        ],
-      },
-      votes: {}, 
-      userVoted: new Set<string>(), 
+      scene: storyData.scene1,
+      votes: {},
+      userVoted: new Set(),
+      players: {},
+      optionVotes: {},  // IMPORTANT: Initialize empty
     };
   }
 
-  if (!rooms[roomId].users.includes(userName)) {
-    rooms[roomId].users.push(userName);
+  const room = rooms[roomId];
+
+  // Parsear atributos
+  const attributeArray = attributesParam
+    .split(",")
+    .map((a) => a.trim())
+    .filter(Boolean);
+
+  console.log("[JOIN] attributeArray parsed =>", attributeArray);
+
+  // Ver si ya existe un Líder
+  const existingLeader = Object.values(room.players).find((p) => p.type === "Líder");
+
+  let finalType: "Normal" | "Líder" = "Normal";
+  if (typeParam === "Líder" && !existingLeader) {
+    finalType = "Líder";
   }
 
+  // Validar atributos
+  if (attributeArray.length > 2) {
+    console.log("[JOIN] Error: Más de 2 atributos");
+    return NextResponse.json({ error: "Máximo 2 atributos." }, { status: 400 });
+  }
+  for (const attr of attributeArray) {
+    if (!ATRIBUTOS_DISPONIBLES.includes(attr)) {
+      console.log("[JOIN] Error: Atributo inválido =>", attr);
+      return NextResponse.json({
+        error: `Atributo '${attr}' no es válido.`
+      }, { status: 400 });
+    }
+  }
+
+  // Crear Player
+  const newPlayer: Player = {
+    name: userName,
+    type: finalType,
+    attributes: attributeArray,
+  };
+
+  console.log("[JOIN] Creating new player =>", newPlayer);
+
+  room.players[userName] = newPlayer;
+
+  // Notificar a los demás (opcional)
   await pusher.trigger(`room-${roomId}`, "sceneUpdate", {
-    users: rooms[roomId].users,
-    scene: rooms[roomId].scene,
-    votes: rooms[roomId].votes,
+    scene: room.scene,
+    votes: room.votes,
+    users: Object.values(room.players).map((p) => p.name),
+    userVoted: Array.from(room.userVoted),
   });
 
-  return NextResponse.json({ message: "Room joined", room: rooms[roomId] });
+  console.log("[JOIN] Player joined room =>", userName, "| Final type:", finalType);
+  return NextResponse.json({ message: "Room joined", room });
 }

@@ -12,397 +12,197 @@ interface StoryData {
   };
 }
 
+/*
+  En este ejemplo se usan 3 caminos:
+   - "sceneNormal..." → camino por defecto.
+   - "sceneChiInutil..." → camino especial si se ha desbloqueado "chi-inutil".
+   - "sceneChiResponsable..." → camino especial si se ha desbloqueado "chi-responsable".
+  
+  Cada opción define:
+   - En "success" la ruta normal.
+   - En "partial" la ruta especial a tomar si se cumple el desbloqueo.
+  
+  Durante la historia, algunas opciones (a través de lockedAttributeIncrement)
+  acumulan puntos para desbloquear uno u otro atributo oculto.
+*/
+
 export const storyData: StoryData = {
-  // Escena inicial
+  // Escena 1: Introducción
   scene1: {
     id: "scene1",
-    text: "Te despiertas en un bosque misterioso bajo un cielo cubierto de nubes rojas. Frente a ti, ves una cabaña antigua, un sendero que se pierde en la oscuridad, y un extraño altar tallado en piedra.",
+    text: "Doctor, nos encontramos en el hospital central. Tus decisiones definirán si eres responsable, o un completo inútil.",
     options: [
-      // Opción con único requerimiento ("inteligente"): solo success/failure
       {
         id: 1,
-        text: "Entrar a la cabaña a investigar.",
+        text: "quién es el paciente de mayor urgencia?.",
         requirement: ["inteligente"],
         maxVotes: 1,
+        // Suma 2 puntos para 'chi-responsable'
+        lockedAttributeIncrement: { attribute: "chi-responsable", increment: 2 },
         nextSceneId: {
-          success: "sceneCabanaExitosa",
-          failure: "sceneCabanaFallida",
+          success: "sceneNormal2",  // Por defecto
+          failure: "sceneNormal2"
         },
       },
-      // Opción con único requerimiento ("carismatico"): solo success/failure
       {
         id: 2,
-        text: "Seguir el sendero oscuro.",
+        text: "Debería alimentarme para pensar mejor",
         requirement: ["carismatico"],
         maxVotes: 1,
+        // Suma 1 punto para 'chi-responsable'
+        lockedAttributeIncrement: { attribute: "chi-responsable", increment: 1 },
         nextSceneId: {
-          success: "sceneSenderoExitosa",
-          failure: "sceneSenderoFallida",
+          success: "sceneNormal2",
+          failure: "sceneNormal2"
         },
       },
-      // Opción con dos requerimientos ("otaku" y "inteligente"): se requiere partial
       {
         id: 3,
-        text: "Examinar el altar tallado.",
-        requirement: ["otaku", "inteligente"],
+        text: "Acercarte a la bella mujer de mirada triste que se encuentra en el pasillo.",
+        requirement: ["carismatico", "fuerte"],
         maxVotes: 1,
+        // No suma puntos, pero abre la posibilidad de una ruta especial:
+        // Si se ha desbloqueado "chi-responsable", se redirige a esa rama.
         nextSceneId: {
-          success: "sceneAltarExitosa",
-          failure: "sceneAltarFallida",
-          partial: "sceneAltarParcial", // nueva escena para partial
+          success: "sceneChiResponsableIntro",
+          failure: "sceneNormal2",
+          partial: "sceneNormal2"
         },
       },
     ],
   },
 
-  // Escena de la cabaña (éxito)
-  sceneCabanaExitosa: {
-    id: "sceneCabanaExitosa",
-    text: "Con tus conocimientos deduces cómo abrir una puerta secreta dentro de la cabaña. Encuentras un mapa antiguo y un diario que menciona 'la llave del altar' como crucial.",
+  // Escena 2: Camino normal (continúa la aventura)
+  sceneNormal2: {
+    id: "sceneNormal2",
+    text: "Una puerta se abre de golpe antes de que puedas reaccionar. Una enfermera lleva a una niña en una camilla a toda velocidad, rodeada por 2 médicos más.",
     options: [
       {
         id: 1,
-        text: "Seguir las indicaciones del mapa.",
+        text: "Entrar a socorrer.",
+        requirement: ["carismatico", "Inteligente"],
+        // Suma 1 punto para 'chi-inutil'
+        lockedAttributeIncrement: { attribute: "chi-inutil", increment: 1 },
         nextSceneId: {
-          success: "sceneTesoro",
-          failure: "scenePantano",
+          success: "sceneNormal3",
+          failure: "sceneChiresponsableintro",
+          partial: "sceneChiInutilIntro"  
         },
       },
       {
         id: 2,
-        text: "Buscar la llave mencionada en el diario.",
+        text: "Exigir que te brinden información sobre la muchacha, quizás tu ojo experto pueda ayudar.",
+        requirement: ["autista", "Inteligente"],
+ // Suma 1 punto para 'chi-responsable'
+        lockedAttributeIncrement: { attribute: "chi-responsable", increment: 1 },
         nextSceneId: {
-          success: "sceneLlaveEncontrada",
+          success: "sceneNormal3",
+          failure: "sceneChiresponsableintro",
+        },
+      },
+    ],
+  },
+
+  // Escena 3: Continuación del camino normal
+  sceneNormal3: {
+    id: "sceneNormal3",
+    text: "Sarcoidosis. Lo que pensabas. Están por operar. ¿Qué es lo que los otros médicos no han visto?",
+    options: [
+      {
+        id: 1,
+        text: "No tiene salvación. Morirá de todas formas, es innecesario operar.",
+        requirement: ["autista", "Inteligente"],
+        nextSceneId: {
+          success: "sceneNormalFinal",
           failure: "sceneFailGenerico",
         },
       },
     ],
   },
 
-  // Escena de la cabaña (fallo)
-  sceneCabanaFallida: {
-    id: "sceneCabanaFallida",
-    text: "No comprendes los mecanismos de la cabaña y accidentalmente activas una trampa que te atrapa. Tras horas, logras liberarte, pero ahora estás débil.",
+  // Final normal
+  sceneNormalFinal: {
+    id: "sceneNormalFinal",
+    text: "Has salvado los órganos, gente en terapia intensiva te lo agradecerá, la niña muere de manera pacífica.",
+    options: [],
+    isEnding: true,
+  },
+
+  // Rama especial: Introducción a "chi-inutil"
+  sceneChiInutilIntro: {
+    id: "sceneChiInutilIntro",
+    text: "El poder caótico de 'chi-inutil' comienza a manifestarse en ti. Sientes una energía inusual que te prepara para desafíos únicos en un nuevo camino.",
     options: [
       {
         id: 1,
-        text: "Salir de la cabaña y tomar el sendero oscuro.",
+        text: "Seguir el camino influenciado por 'chi-inutil'.",
         nextSceneId: {
-          success: "sceneSenderoExitosa",
+          success: "sceneFinalChiInutil",
           failure: "sceneFailGenerico",
         },
       },
     ],
   },
 
-  // Escena de la cabaña (resultado parcial)
-  sceneCabanaParcial: {
-    id: "sceneCabanaParcial",
-    text: "Encuentras algunas pistas en la cabaña, pero activas una trampa que destruye parte del diario. Decides salir en busca de más información.",
-    options: [
-      {
-        id: 1,
-        text: "Examinar el altar para buscar conexiones con el diario dañado.",
-        nextSceneId: {
-          success: "sceneAltarExitosa",
-          failure: "sceneFailGenerico",
-        },
-      },
-    ],
+  // Rama especial: Final Chi-Inutil
+  sceneFinalChiInutil: {
+    id: "sceneFinalChiInutil",
+    text: "Cjjjjjjjjjj",
+    options: [],
+    isEnding: true,
   },
 
-  // Escena del sendero (éxito)
-  sceneSenderoExitosa: {
-    id: "sceneSenderoExitosa",
-    text: "Tu carisma atrae a un misterioso guía que te cuenta sobre una 'torre de las sombras' y sobre un peligroso pantano que se extiende más adelante.",
+  // Rama especial: Introducción a "chi-responsable"
+  sceneChiresponsableintro: {
+    id: "sceneChiResponsableIntro",
+    text: "Tu ojo no falla. La mujer del pasillo te cuenta que su hija está en grave peligro. Los médicos dicen que es Sarcoidosis, pero tú notas algo distinto solo con verla",
     options: [
       {
         id: 1,
-        text: "Pedir que te lleve a la torre de las sombras.",
+        text: "Las manchas en su mano'.",
+        maxVotes: 1,
+        // Suma 0 punto para 'chi-responsable'
+        lockedAttributeIncrement: { attribute: "chi-responsable", increment: 0 },
         nextSceneId: {
-          success: "sceneTorreSombras",
+          success: "sceneFinalChiResponsable",
           failure: "sceneFailGenerico",
         },
       },
-      {
+        {
         id: 2,
-        text: "Explorar el pantano por tu cuenta.",
+        text: "Su falta de cabello.",
+        maxVotes: 1,
+        // Suma 3 punto para 'chi-responsable'
+        lockedAttributeIncrement: { attribute: "chi-responsable", increment: 3 },
         nextSceneId: {
-          success: "scenePantano",
+          success: "sceneFinalChiResponsable",
           failure: "sceneFailGenerico",
         },
-      },
+      }
     ],
   },
 
-  // Escena del sendero (fallo)
-  sceneSenderoFallida: {
-    id: "sceneSenderoFallida",
-    text: "Te pierdes en la oscuridad y terminas en un pantano peligroso, donde cada paso es un riesgo.",
+  // Rama especial: Final Chi-Responsable
+  sceneFinalChiResponsable: {
+    id: "sceneFinalChiResponsable",
+    text: "Tu maaestria en la disciplina te lleva a moverte directamente hacia el lugar de la cirugía.",
     options: [
       {
         id: 1,
-        text: "Intentar regresar al punto de inicio.",
-        nextSceneId: {
-          success: "scene1",
+        text: "DETENGAN LA CIRUGÍA!.",
+        requirement: ["chi-responsable"],
+        maxVotes: 1,
+          nextSceneId: {
+          success: "sceneFinalChiResponsable2",
           failure: "sceneFailGenerico",
-        },
-      },
-    ],
-  },
+        },}
+    ]
+ },
 
-  // Escena del sendero (parcial)
-  sceneSenderoParcial: {
-    id: "sceneSenderoParcial",
-    text: "Logras evitar algunos peligros, pero terminas en un cruce incierto. Debes elegir entre seguir hacia una luz lejana o adentrarte en un sendero estrecho rodeado de árboles.",
-    options: [
-      {
-        id: 1,
-        text: "Seguir el camino hacia la luz lejana.",
-        nextSceneId: {
-          success: "sceneRefugio",
-          failure: "sceneFailGenerico",
-        },
-      },
-      {
-        id: 2,
-        text: "Adentrarte en el sendero oscuro entre los árboles.",
-        nextSceneId: {
-          success: "sceneTorreSombras",
-          failure: "sceneFailGenerico",
-        },
-      },
-    ],
-  },
-
-  // Escena del altar (éxito)
-  sceneAltarExitosa: {
-    id: "sceneAltarExitosa",
-    text: "Estudias las inscripciones del altar y descubres que mencionan 'la llave del bosque' y un ritual ancestral que requiere un objeto perdido.",
-    options: [
-      {
-        id: 1,
-        text: "Buscar la llave mencionada en el mapa que viste en la cabaña.",
-        nextSceneId: {
-          success: "sceneLlaveEncontrada",
-          failure: "sceneFailGenerico",
-        },
-      },
-      {
-        id: 2,
-        text: "Intentar realizar el ritual sin esperar por el objeto perdido.",
-        nextSceneId: {
-          success: "sceneRitual",
-          failure: "sceneFailGenerico",
-        },
-      },
-    ],
-  },
-
-  // Escena del altar (fallo)
-  sceneAltarFallida: {
-    id: "sceneAltarFallida",
-    text: "Las inscripciones te superan y, sin comprender su significado, liberas accidentalmente un espíritu hostil. Huyes con dificultad.",
-    options: [
-      {
-        id: 1,
-        text: "Correr hacia el sendero oscuro en busca de refugio.",
-        nextSceneId: {
-          success: "sceneSenderoExitosa",
-          failure: "sceneFailGenerico",
-        },
-      },
-    ],
-  },
-
-  // Escena del altar (resultado parcial) – creada para opciones con múltiples requerimientos
-  sceneAltarParcial: {
-    id: "sceneAltarParcial",
-    text: "Aunque tus conocimientos no son suficientes para descifrar completamente las inscripciones, logras entender parte del ritual. La información que obtienes te permite avanzar, pero con ciertas incertidumbres.",
-    options: [
-      {
-        id: 1,
-        text: "Continuar intentando comprender el ritual por tu cuenta.",
-        nextSceneId: {
-          success: "sceneRitual",
-          failure: "sceneFailGenerico",
-        },
-      },
-      {
-        id: 2,
-        text: "Buscar ayuda para descifrar el resto de las inscripciones.",
-        nextSceneId: {
-          success: "sceneConocimiento",
-          failure: "sceneFailGenerico",
-        },
-      },
-    ],
-  },
-
-  // Escena de la llave encontrada
-  sceneLlaveEncontrada: {
-    id: "sceneLlaveEncontrada",
-    text: "Tras buscar en los alrededores, encuentras una llave oculta bajo unas raíces cerca del altar. Esta parece ser la pieza que conecta los misterios del diario y el altar.",
-    options: [
-      {
-        id: 1,
-        text: "Regresar al altar y realizar el ritual con la llave.",
-        nextSceneId: {
-          success: "sceneRitualCompleto",
-          failure: "sceneFailGenerico",
-        },
-      },
-    ],
-  },
-
-  // Escena del ritual (sin llave): resultado de intentar el ritual sin la llave
-  sceneRitual: {
-    id: "sceneRitual",
-    text: "Decides intentar el ritual sin esperar la llave. El proceso es inestable y fuerzas invisibles se desatan, llevándote a un estado de confusión.",
-    options: [
-      {
-        id: 1,
-        text: "Recobrar la compostura y buscar ayuda en el bosque.",
-        nextSceneId: {
-          success: "sceneConocimiento",
-          failure: "sceneFailGenerico",
-        },
-      },
-    ],
-  },
-
-  // Escena del ritual completado (con llave)
-  sceneRitualCompleto: {
-    id: "sceneRitualCompleto",
-    text: "El ritual se completa de manera exitosa gracias a la llave, y una puerta mágica se abre revelando una cámara oculta llena de misterios.",
-    options: [
-      {
-        id: 1,
-        text: "Entrar por la puerta mágica.",
-        nextSceneId: {
-          success: "sceneSubterraneo",
-          failure: "sceneFailGenerico",
-        },
-      },
-    ],
-  },
-
-  // Escena Subterránea, tras la puerta mágica
-  sceneSubterraneo: {
-    id: "sceneSubterraneo",
-    text: "Descendiendo por una escalera oculta, llegas a una cámara subterránea con inscripciones arcanas y artefactos olvidados. Sientes que este lugar guarda la llave de antiguos secretos.",
-    options: [
-      {
-        id: 1,
-        text: "Explorar la cámara en busca de respuestas.",
-        nextSceneId: {
-          success: "sceneConocimiento",
-          failure: "sceneFailGenerico",
-        },
-      },
-    ],
-  },
-
-  // Escena Torre de las Sombras
-  sceneTorreSombras: {
-    id: "sceneTorreSombras",
-    text: "Llegas a una torre oscura, alta y amenazante. Un ser enigmático te espera en la entrada, ofreciendo conocimiento a cambio de un sacrificio.",
-    options: [
-      {
-        id: 1,
-        text: "Aceptar la oferta del ser enigmático.",
-        nextSceneId: {
-          success: "sceneConocimiento",
-          failure: "sceneFailGenerico",
-        },
-      },
-      {
-        id: 2,
-        text: "Rechazar la oferta y explorar la torre por tu cuenta.",
-        nextSceneId: {
-          success: "sceneRefugio",
-          failure: "sceneFailGenerico",
-        },
-      },
-    ],
-  },
-
-  // Escena de Conocimiento (resultado de ritual, torre o ritual sin llave)
-  sceneConocimiento: {
-    id: "sceneConocimiento",
-    text: "El conocimiento y los secretos que adquieres te abren la mente a nuevos caminos. Comprendes que tu destino está ligado a la antigua magia del bosque.",
-    options: [
-      {
-        id: 1,
-        text: "Usar el conocimiento para encontrar el tesoro perdido.",
-        nextSceneId: {
-          success: "sceneTesoro",
-          failure: "sceneFailGenerico",
-        },
-      },
-      {
-        id: 2,
-        text: "Buscar el origen del poder que acabas de conocer.",
-        nextSceneId: {
-          success: "sceneSubterraneo",
-          failure: "sceneFailGenerico",
-        },
-      },
-    ],
-  },
-
-  // Escena de Refugio
-  sceneRefugio: {
-    id: "sceneRefugio",
-    text: "Llegas a un refugio seguro oculto en el bosque, donde puedes recobrar energías y planificar tus próximos movimientos con calma.",
-    options: [
-      {
-        id: 1,
-        text: "Revisar el mapa y continuar la aventura.",
-        nextSceneId: {
-          success: "sceneTesoro",
-          failure: "sceneFailGenerico",
-        },
-      },
-      {
-        id: 2,
-        text: "Descansar y estudiar los escritos antiguos encontrados.",
-        nextSceneId: {
-          success: "sceneConocimiento",
-          failure: "sceneFailGenerico",
-        },
-      },
-    ],
-  },
-
-  // Escena del Pantano
-  scenePantano: {
-    id: "scenePantano",
-    text: "El pantano es inhóspito, con aguas turbias y lodo traicionero. A pesar de los peligros, sientes que esconde secretos olvidados hace mucho.",
-    options: [
-      {
-        id: 1,
-        text: "Buscar pistas entre la vegetación y las aguas.",
-        nextSceneId: {
-          success: "sceneTesoro",
-          failure: "sceneFailGenerico",
-        },
-      },
-      {
-        id: 2,
-        text: "Intentar encontrar una ruta segura a través del pantano.",
-        nextSceneId: {
-          success: "sceneRefugio",
-          failure: "sceneFailGenerico",
-        },
-      },
-    ],
-  },
-
-  // Escena del Tesoro
-  sceneTesoro: {
-    id: "sceneTesoro",
-    text: "Sigues las pistas y finalmente descubres un cofre repleto de riquezas y conocimientos ancestrales. ¡Has triunfado en tu aventura!",
+  // Rama especial: Final Chi-Responsable2
+  sceneFinalChiResponsable2: {
+    id: "sceneFinalChiResponsable2",
+    text: "Has demostrado ser el Doctor más responsable del Mundo!.",
     options: [],
     isEnding: true,
   },
@@ -410,8 +210,9 @@ export const storyData: StoryData = {
   // Escena de fallo genérico
   sceneFailGenerico: {
     id: "sceneFailGenerico",
-    text: "Algo salió mal y tu aventura terminó abruptamente. El misterio del bosque permanece sin resolver.",
+    text: "Tu interrupción provocó que el cirujano realizara un daño irreparable, la niña muere.",
     options: [],
     isEnding: true,
   },
-};
+}
+

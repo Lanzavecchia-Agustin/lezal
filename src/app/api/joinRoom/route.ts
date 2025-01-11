@@ -1,8 +1,7 @@
 // app/api/join/route.ts
-
 import { NextResponse } from "next/server";
 import Pusher from "pusher";
-import rooms, { Player, ATRIBUTOS_DISPONIBLES } from "../../../../roomsStore";
+import rooms, { Player, ATRIBUTOS_DISPONIBLES, LOCKED_ATTRIBUTES } from "../../../../roomsStore";
 import { storyData } from "../../../../storyData";
 
 const pusher = new Pusher({
@@ -20,18 +19,11 @@ export async function GET(req: Request) {
   const typeParam = searchParams.get("type") || "Normal";
   const attributesParam = searchParams.get("attributes") || "";
 
-  console.log("[JOIN] Incoming params =>", {
-    roomId,
-    userName,
-    typeParam,
-    attributesParam,
-  });
+  console.log("[JOIN] Incoming params =>", { roomId, userName, typeParam, attributesParam });
 
   if (!roomId || !userName) {
     console.log("[JOIN] Error: roomId y userName son requeridos");
-    return NextResponse.json({
-      error: "roomId y userName son requeridos"
-    }, { status: 400 });
+    return NextResponse.json({ error: "roomId y userName son requeridos" }, { status: 400 });
   }
 
   // Crear sala si no existe
@@ -42,7 +34,12 @@ export async function GET(req: Request) {
       votes: {},
       userVoted: new Set(),
       players: {},
-      optionVotes: {},  // IMPORTANT: Initialize empty
+      optionVotes: {},
+      // Inicializamos los contadores de condiciones para cada atributo bloqueado
+      lockedConditions: LOCKED_ATTRIBUTES.reduce((acc, attr) => {
+        acc[attr] = 0;
+        return acc;
+      }, {} as Record<string, number>),
     };
   }
 
@@ -72,9 +69,7 @@ export async function GET(req: Request) {
   for (const attr of attributeArray) {
     if (!ATRIBUTOS_DISPONIBLES.includes(attr)) {
       console.log("[JOIN] Error: Atributo inválido =>", attr);
-      return NextResponse.json({
-        error: `Atributo '${attr}' no es válido.`
-      }, { status: 400 });
+      return NextResponse.json({ error: `Atributo '${attr}' no es válido.` }, { status: 400 });
     }
   }
 

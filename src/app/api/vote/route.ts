@@ -1,9 +1,8 @@
-// app/api/vote/route.ts
 import { NextResponse } from "next/server";
 import Pusher from "pusher";
 import rooms from "../../../../roomsStore";
 import { storyData } from "../../../../storyData";
-import { SceneOption } from "../../../../roomsStore";
+import { SceneOption, UNLOCK_THRESHOLDS } from "../../../../roomsStore";
 
 const pusher = new Pusher({
   appId: process.env.PUSHER_APP_ID!,
@@ -46,10 +45,15 @@ export async function GET(req: Request) {
 
   // Revisar maxVotes:
   const currentVotes = room.votes[optionIdNum] || 0;
-  console.log(`[VOTE] currentVotes for option ${optionIdNum}: ${currentVotes}, maxVotes: ${sceneOption.maxVotes ?? "∞"}`);
+  console.log(
+    `[VOTE] currentVotes for option ${optionIdNum}: ${currentVotes}, maxVotes: ${sceneOption.maxVotes ?? "∞"}`
+  );
   if (sceneOption.maxVotes != null && currentVotes >= sceneOption.maxVotes) {
     console.log("[VOTE] Se alcanzó el máximo de votos para esta opción");
-    return NextResponse.json({ error: "Se alcanzó el máximo de votos para esta opción" }, { status: 400 });
+    return NextResponse.json(
+      { error: "Se alcanzó el máximo de votos para esta opción" },
+      { status: 400 }
+    );
   }
 
   // Verificar si el usuario es Líder (voto doble)
@@ -65,7 +69,9 @@ export async function GET(req: Request) {
       room.optionVotes[optionIdNum] = new Set();
     }
     room.optionVotes[optionIdNum].add(userName);
-    console.log(`[VOTE] ${userName} voted for option ${optionIdNum}. New total = ${room.votes[optionIdNum]}`);
+    console.log(
+      `[VOTE] ${userName} voted for option ${optionIdNum}. New total = ${room.votes[optionIdNum]}`
+    );
   } else {
     console.log(`[VOTE] ${userName} ya votó anteriormente. Ignorando.`);
   }
@@ -76,11 +82,11 @@ export async function GET(req: Request) {
     userVoted: Array.from(room.userVoted),
   });
 
-  // Si la opción tiene maxVotes y se alcanza ese límite, se cierra la votación.
-  // En caso contrario (sin maxVotes), se espera que TODOS hayan votado.
+  // Si se cumplen las condiciones de cierre de votación
   if (
     (sceneOption.maxVotes != null && room.votes[optionIdNum] >= sceneOption.maxVotes) ||
-    (sceneOption.maxVotes == null && room.userVoted.size === Object.keys(room.players).length)
+    (sceneOption.maxVotes == null &&
+      room.userVoted.size === Object.keys(room.players).length)
   ) {
     console.log("[VOTE] Condición alcanzada, cerramos votación...");
     await closeVotingAndAdvance(roomId);
@@ -117,17 +123,45 @@ async function closeVotingAndAdvance(roomId: string) {
     return;
   }
   console.log("[closeVotingAndAdvance] Winning option ID =>", winningOptionId);
-  const winningOption = room.scene.options.find((o: SceneOption) => o.id === winningOptionId);
+  const winningOption = room.scene.options.find(
+    (o: SceneOption) => o.id === winningOptionId
+  );
   if (!winningOption) {
     console.log("[closeVotingAndAdvance] Invalid option =>", winningOptionId);
     return;
   }
 
+  // Si la opción tiene incremento para un atributo bloqueado, actualizar el contador
+  if (winningOption.lockedAttributeIncrement) {
+    const { attribute, increment } = winningOption.lockedAttributeIncrement;
+    if (room.lockedConditions[attribute] !== undefined) {
+      room.lockedConditions[attribute] += increment;
+      console.log(
+        `[closeVotingAndAdvance] Se suma ${increment} a ${attribute}. Total: ${room.lockedConditions[attribute]}`
+      );
+    }
+  }
+
+  // Verificar si alguno de los atributos bloqueados alcanza su umbral
+  Object.keys(room.lockedConditions).forEach(attribute => {
+    if (room.lockedConditions[attribute] >= UNLOCK_THRESHOLDS[attribute]) {
+      // Desbloquear para todos los jugadores: se agrega el atributo si aún no lo tienen
+      Object.values(room.players).forEach(player => {
+        if (!player.attributes.includes(attribute)) {
+          player.attributes.push(attribute);
+          console.log(`[closeVotingAndAdvance] ${attribute} desbloqueado para ${player.name}`);
+        }
+      });
+      // (Opcional) Reiniciar el contador para el atributo desbloqueado:
+      // room.lockedConditions[attribute] = 0;
+    }
+  });
+
   const nextKey = evaluateRequirement(room, winningOption);
   console.log("[closeVotingAndAdvance] Next key =>", nextKey);
   const nextScene = storyData[nextKey];
   if (!nextScene) {
-    console.log("[closeVotingAndAdvance] No scene found for key:", nextKey);
+    console.log("[closeVotingAndAdvance] Error: Next scene not found for key:", nextKey);
     return;
   }
   room.scene = nextScene;
@@ -142,6 +176,7 @@ async function closeVotingAndAdvance(roomId: string) {
     votes: room.votes,
     users: Object.values(room.players).map((p) => p.name),
     userVoted: Array.from(room.userVoted),
+    lockedConditions: room.lockedConditions,
   });
 }
 
@@ -149,23 +184,27 @@ function evaluateRequirement(room: any, option: SceneOption): string {
   console.log("[evaluateRequirement] Checking requirements for option:", option.id);
   console.log("[evaluateRequirement] Option requirement:", option.requirement);
 
-  // 1) Si no hay requisitos, retorna directamente success.
+  // 1) Sin requisitos → retorna success
   if (!option.requirement || option.requirement.length === 0) {
     console.log("    - No requirement, returning SUCCESS");
     return option.nextSceneId.success;
   }
-  // 2) Si no hay votantes para esa opción, retorna failure.
+
+  // 2) Si no hay votantes, retorna failure
   const votersSet: Set<string> = room.optionVotes[option.id] || new Set();
   console.log("    - Voters for this option:", Array.from(votersSet));
   if (votersSet.size === 0) {
     console.log("    - No voters, returning FAILURE");
     return option.nextSceneId.failure;
   }
-  const requirements = option.requirement; // ya es un array de strings
+
+  // 3) Revisar requisitos
+  const requirements = option.requirement; // array de strings
   console.log("    - Requirements array:", requirements);
 
   let atLeastOneHasAll = false;
   let atLeastOneHasSome = false;
+
   for (const voter of Array.from(votersSet)) {
     const player = room.players[voter];
     if (!player) continue;
@@ -182,13 +221,13 @@ function evaluateRequirement(room: any, option: SceneOption): string {
     }
   }
   if (atLeastOneHasAll) {
-    console.log("    - At least one has ALL, returning SUCCESS");
+    console.log("    - At least one has all requirements, returning SUCCESS");
     return option.nextSceneId.success;
   }
   if (atLeastOneHasSome && option.nextSceneId.partial) {
-    console.log("    - At least one has SOME, returning PARTIAL");
+    console.log("    - At least one has partial requirements, returning PARTIAL");
     return option.nextSceneId.partial;
   }
-  console.log("    - No compliance, returning FAILURE");
+  console.log("    - Nobody satisfies any requirement or no partial route, returning FAILURE");
   return option.nextSceneId.failure;
 }

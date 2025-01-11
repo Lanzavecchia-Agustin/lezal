@@ -5,17 +5,14 @@ import Pusher from "pusher-js";
 import { API_ROUTES } from "../../utils/apiConfig";
 import { ATRIBUTOS_DISPONIBLES } from "../../roomsStore";
 
-// Atributos disponibles (puedes moverlo a un archivo común si prefieres)
-
-// -- Tipos de datos locales para la UI --
+// Tipos de datos locales para la UI
 interface Scene {
   id: string;
   text: string;
   options: { 
     id: number; 
     text: string; 
-    nextSceneId: string 
-    // O si en tu back-end usas { success, failure, partial }, ajusta
+    nextSceneId: any; // Puede ser un objeto {success, failure, partial?}
   }[];
   isEnding?: boolean;
 }
@@ -35,36 +32,24 @@ interface VoteUpdatePayload {
 export default function StoryGame() {
   const [roomId, setRoomId] = useState<string | null>(null);
   const [userName, setUserName] = useState<string>("");
-
-  // Tipo de jugador y atributos elegidos:
   const [userType, setUserType] = useState<"Normal" | "Líder">("Normal");
   const [chosenAttributes, setChosenAttributes] = useState<string[]>([]);
-
   const [joined, setJoined] = useState(false);
   const [scene, setScene] = useState<Scene | null>(null);
   const [votes, setVotes] = useState<{ [optionId: number]: number }>({});
   const [users, setUsers] = useState<string[]>([]);
   const [hasVoted, setHasVoted] = useState(false);
-
   const pusherRef = useRef<Pusher | null>(null);
-
-  // (Opcional) Activa/Desactiva "debugMode" si deseas ocultarlo fácilmente
   const debugMode = true;
 
-  // ----------------------------
-  // Efecto para suscribir a Pusher
-  // ----------------------------
   useEffect(() => {
     if (roomId) {
-      // Inicializar pusher si no existe
       if (!pusherRef.current) {
         pusherRef.current = new Pusher(process.env.NEXT_PUBLIC_PUSHER_KEY!, {
           cluster: process.env.NEXT_PUBLIC_PUSHER_CLUSTER!,
         });
       }
-
       const channel = pusherRef.current.subscribe(`room-${roomId}`);
-
       channel.bind("sceneUpdate", (payload: SceneUpdatePayload) => {
         setScene(payload.scene);
         setVotes(payload.votes);
@@ -74,7 +59,6 @@ export default function StoryGame() {
           console.log("[sceneUpdate] Payload:", payload);
         }
       });
-
       channel.bind("voteUpdate", (payload: VoteUpdatePayload) => {
         setVotes(payload.votes);
         setHasVoted(payload.userVoted?.includes(userName) || false);
@@ -82,11 +66,9 @@ export default function StoryGame() {
           console.log("[voteUpdate] Payload:", payload);
         }
       });
-
       channel.bind("error", (error: string) => {
         alert(`Error: ${error}`);
       });
-
       return () => {
         channel.unbind_all();
         channel.unsubscribe();
@@ -94,27 +76,17 @@ export default function StoryGame() {
     }
   }, [roomId, userName, debugMode]);
 
-  // ----------------------------
-  // 1) Crear Sala
-  // ----------------------------
+  // Crear Sala
   const handleCreateRoom = async () => {
-    console.log("chosenAttributes antes de crear sala =>", chosenAttributes);
     if (!userName.trim()) {
       alert("Por favor, ingresa tu nombre para continuar.");
       return;
     }
-
-    // Generar un RoomID
     const generatedRoomId = `room-${Math.random().toString(36).substring(2, 10)}`;
     setRoomId(generatedRoomId);
-
-    // Construir la URL con type y attributes
     const attrString = chosenAttributes.join(",");
     const joinUrl = API_ROUTES.joinRoom(generatedRoomId, userName, userType, attrString);
-
-    // Para debug
     console.log("[handleCreateRoom] Join URL =>", joinUrl);
-
     const response = await fetch(joinUrl, { method: "GET" });
     if (response.ok) {
       setJoined(true);
@@ -124,20 +96,15 @@ export default function StoryGame() {
     }
   };
 
-  // ----------------------------
-  // 2) Unirse a Sala
-  // ----------------------------
+  // Unirse a Sala
   const handleJoinRoom = async () => {
     if (!userName.trim() || !roomId) {
       alert("Por favor, ingresa tu nombre y el ID de la sala.");
       return;
     }
-
     const attrString = chosenAttributes.join(",");
     const joinUrl = API_ROUTES.joinRoom(roomId, userName, userType, attrString);
-
     console.log("[handleJoinRoom] Join URL =>", joinUrl);
-
     const response = await fetch(joinUrl, { method: "GET" });
     if (response.ok) {
       setJoined(true);
@@ -147,19 +114,15 @@ export default function StoryGame() {
     }
   };
 
-  // ----------------------------
-  // 3) Votar
-  // ----------------------------
+  // Votar
   const handleVote = async (optionId: number) => {
     if (!scene || scene.isEnding || hasVoted) return;
     if (!roomId) {
       alert("No estás en una sala.");
       return;
     }
-
     const voteUrl = API_ROUTES.vote(roomId, userName, optionId);
     console.log("[handleVote] Vote URL =>", voteUrl);
-
     try {
       const response = await fetch(voteUrl, { method: "GET" });
       if (!response.ok) {
@@ -171,18 +134,14 @@ export default function StoryGame() {
     }
   };
 
-  // ----------------------------
-  // 4) Cerrar votación manualmente (si se desea)
-  // ----------------------------
+  // Cerrar votación manualmente
   const handleCloseVoting = async () => {
     if (!roomId) {
       alert("No estás en una sala.");
       return;
     }
-
     const closeUrl = API_ROUTES.closeVoting(roomId);
     console.log("[handleCloseVoting] Close URL =>", closeUrl);
-
     try {
       const response = await fetch(closeUrl, { method: "GET" });
       if (!response.ok) {
@@ -194,9 +153,6 @@ export default function StoryGame() {
     }
   };
 
-  // ----------------------------
-  // Render: Selección de atributos y tipo antes de unirse
-  // ----------------------------
   if (!joined) {
     return (
       <div className="h-screen flex flex-col items-center justify-center space-y-4">
@@ -208,8 +164,6 @@ export default function StoryGame() {
           onChange={(e) => setUserName(e.target.value)}
           className="border px-4 py-2"
         />
-
-        {/* Seleccionar el tipo: Normal o Líder */}
         <div className="flex items-center space-x-2">
           <label htmlFor="userType" className="text-sm font-bold">
             Tipo de jugador:
@@ -218,43 +172,38 @@ export default function StoryGame() {
             id="userType"
             value={userType}
             onChange={(e) => setUserType(e.target.value as "Normal" | "Líder")}
-            className="border px-2 py-1 bg-blue-500"
+            className="border px-2 py-1 bg-bl"
           >
             <option value="Normal">Normal</option>
             <option value="Líder">Líder</option>
           </select>
         </div>
-
-        {/* Seleccionar atributos: máximo 2 */}
         <div className="flex flex-col items-start">
           <p className="font-bold">Elige hasta 2 atributos:</p>
           <div className="flex flex-wrap">
-          {ATRIBUTOS_DISPONIBLES.map((attr) => {
-  const isSelected = chosenAttributes.includes(attr);
-  const disabled = !isSelected && chosenAttributes.length >= 2;
-  return (
-    <label key={attr} className="mr-4">
-      <input
-        type="checkbox"
-        checked={isSelected}
-        disabled={disabled}
-        onChange={() => {
-          setChosenAttributes((prev) =>
-            isSelected
-              ? prev.filter((a) => a !== attr) // Quitar si ya estaba seleccionado
-              : [...prev, attr]               // Agregar si no estaba
-          );
-        }}
-      />
-      <span className="ml-1">{attr}</span>
-    </label>
-  );
-})}
-
+            {ATRIBUTOS_DISPONIBLES.map((attr) => {
+              const isSelected = chosenAttributes.includes(attr);
+              const disabled = !isSelected && chosenAttributes.length >= 2;
+              return (
+                <label key={attr} className="mr-4">
+                  <input
+                    type="checkbox"
+                    checked={isSelected}
+                    disabled={disabled}
+                    onChange={() => {
+                      setChosenAttributes((prev) =>
+                        isSelected
+                          ? prev.filter((a) => a !== attr)
+                          : [...prev, attr]
+                      );
+                    }}
+                  />
+                  <span className="ml-1">{attr}</span>
+                </label>
+              );
+            })}
           </div>
         </div>
-
-        {/* Botones para Crear Sala o Unirse a una Sala */}
         <div className="space-y-2 mt-4">
           <button
             onClick={handleCreateRoom}
@@ -282,9 +231,6 @@ export default function StoryGame() {
     );
   }
 
-  // ----------------------------
-  // Render: Escena actual
-  // ----------------------------
   if (!scene) {
     return (
       <div className="h-screen flex flex-col items-center justify-center">
@@ -293,32 +239,27 @@ export default function StoryGame() {
     );
   }
 
-  // ----------------------------
-  // Render final si ya estamos dentro de la sala
-  // ----------------------------
   return (
     <div className="h-screen flex flex-col justify-center items-center p-4 space-y-4">
       <h1 className="text-2xl font-bold">{scene.text}</h1>
       <div className="text-sm">Usuarios en la sala: {users.join(", ")}</div>
-
-      {/* DEBUG: Mostrar ID de la escena actual */}
       {debugMode && (
         <div className="text-xs text-gray-400">
-          <p><strong>DEBUG - ID de escena actual:</strong> {scene.id}</p>
+          <p>
+            <strong>DEBUG - ID de escena actual:</strong> {scene.id}
+          </p>
         </div>
       )}
-
-      {/* Info del jugador local */}
       <div className="p-2 rounded-md text-center">
         <p className="text-sm font-bold">Tu información:</p>
         <p>Tipo: {userType}</p>
         <p>Atributos: {chosenAttributes.join(", ") || "Ninguno"}</p>
       </div>
-
-      {/* Mostrar y copiar el roomId para compartir */}
       {roomId && (
         <div className="mb-2 text-center">
-          <p><strong>ID de Sala:</strong> {roomId}</p>
+          <p>
+            <strong>ID de Sala:</strong> {roomId}
+          </p>
           <button
             onClick={() => {
               navigator.clipboard.writeText(roomId);
@@ -330,24 +271,23 @@ export default function StoryGame() {
           </button>
         </div>
       )}
-
-      {/* Listado de opciones de la escena */}
       {!scene.isEnding &&
         scene.options.map((option) => {
-          // Pueden haber más campos en "option", si tu back-end lo envía
           const debugOption = option as any;
           const debugRequirement = debugOption.requirement ?? "(sin requirement)";
           const debugMaxVotes = debugOption.maxVotes ?? "(sin límite)";
-
           let debugNextScene = "";
           if (debugOption.nextSceneId?.success) {
-            debugNextScene = `Success: ${debugOption.nextSceneId.success}, ` +
-                             `Failure: ${debugOption.nextSceneId.failure ?? "N/A"}, ` +
-                             `Partial: ${debugOption.nextSceneId.partial ?? "N/A"}`;
+            debugNextScene =
+              "Success: " +
+              debugOption.nextSceneId.success +
+              ", Failure: " +
+              (debugOption.nextSceneId.failure ?? "N/A") +
+              ", Partial: " +
+              (debugOption.nextSceneId.partial ?? "N/A");
           } else {
-            debugNextScene = `-> nextSceneId: ${option.nextSceneId}`;
+            debugNextScene = "-> nextSceneId: " + option.nextSceneId;
           }
-
           return (
             <div key={option.id} className="w-full max-w-md">
               <button
@@ -360,7 +300,6 @@ export default function StoryGame() {
                 {option.text}
                 <span className="ml-2">({votes?.[option.id] ?? 0} votos)</span>
               </button>
-
               {debugMode && (
                 <div className="ml-2 text-xs text-yellow-400">
                   <p>· Req: <em>{debugRequirement}</em></p>
@@ -370,10 +309,7 @@ export default function StoryGame() {
               )}
             </div>
           );
-        })
-      }
-
-      {/* Si es final, mostrar mensaje */}
+        })}
       {scene.isEnding && (
         <div className="bg-yellow-800 p-4 rounded-md text-white">
           <p className="text-xl font-semibold">¡Has llegado a un final!</p>

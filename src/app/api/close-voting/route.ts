@@ -103,7 +103,7 @@ function evaluateRequirement(room: any, option: SceneOption): string {
   console.log("[evaluateRequirement] Option requirement:", option.requirement);
 
   // 1) Sin requisitos => success directo
-  if (!option.requirement) {
+  if (!option.requirement || option.requirement.length === 0) {
     console.log("    - No requirement, returning SUCCESS");
     return option.nextSceneId.success;
   }
@@ -117,10 +117,8 @@ function evaluateRequirement(room: any, option: SceneOption): string {
     return option.nextSceneId.failure;
   }
 
-  // 3) Manejar el requirement como un solo atributo si no contiene comas
-  const requirements = option.requirement.includes(",") 
-    ? option.requirement.split(",").map(r => r.trim())
-    : [option.requirement];
+  // 3) Usar directamente `option.requirement` como un array
+  const requirements = option.requirement; // ya es un array de strings
 
   console.log("    - Requirements array:", requirements);
 

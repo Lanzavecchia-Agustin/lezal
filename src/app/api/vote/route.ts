@@ -21,7 +21,6 @@ export async function GET(req: Request) {
   const optionId = searchParams.get("optionId");
 
   console.log("[VOTE] Params =>", { roomId, userName, optionId });
-
   if (!roomId || !userName || !optionId) {
     console.log("[VOTE] Error: Parámetros inválidos");
     return NextResponse.json({ error: "Parámetros inválidos" }, { status: 400 });
@@ -45,31 +44,28 @@ export async function GET(req: Request) {
     return NextResponse.json({ error: "Opción inválida" }, { status: 400 });
   }
 
-  // Revisar maxVotes
+  // Revisar maxVotes:
   const currentVotes = room.votes[optionIdNum] || 0;
   console.log(`[VOTE] currentVotes for option ${optionIdNum}: ${currentVotes}, maxVotes: ${sceneOption.maxVotes ?? "∞"}`);
-
   if (sceneOption.maxVotes != null && currentVotes >= sceneOption.maxVotes) {
     console.log("[VOTE] Se alcanzó el máximo de votos para esta opción");
     return NextResponse.json({ error: "Se alcanzó el máximo de votos para esta opción" }, { status: 400 });
   }
 
-  // Verificar si es líder
+  // Verificar si el usuario es Líder (voto doble)
   const isLeader = room.players?.[userName]?.type === "Líder";
   const voteValue = isLeader ? 2 : 1;
   console.log(`[VOTE] ${userName} isLeader=${isLeader} => voteValue=${voteValue}`);
 
-  // Si no ha votado antes
+  // Si el usuario aún no ha votado
   if (!room.userVoted.has(userName)) {
     room.votes[optionIdNum] = currentVotes + voteValue;
     room.userVoted.add(userName);
-
     if (!room.optionVotes[optionIdNum]) {
       room.optionVotes[optionIdNum] = new Set();
     }
     room.optionVotes[optionIdNum].add(userName);
-
-    console.log(`[VOTE] ${userName} voted for option ${optionIdNum}. new total = ${room.votes[optionIdNum]}`);
+    console.log(`[VOTE] ${userName} voted for option ${optionIdNum}. New total = ${room.votes[optionIdNum]}`);
   } else {
     console.log(`[VOTE] ${userName} ya votó anteriormente. Ignorando.`);
   }
@@ -80,9 +76,13 @@ export async function GET(req: Request) {
     userVoted: Array.from(room.userVoted),
   });
 
-  // Si todos ya votaron
-  if (room.userVoted.size === Object.keys(room.players).length) {
-    console.log("[VOTE] Todos han votado, cerramos votación...");
+  // Si la opción tiene maxVotes y se alcanza ese límite, se cierra la votación.
+  // En caso contrario (sin maxVotes), se espera que TODOS hayan votado.
+  if (
+    (sceneOption.maxVotes != null && room.votes[optionIdNum] >= sceneOption.maxVotes) ||
+    (sceneOption.maxVotes == null && room.userVoted.size === Object.keys(room.players).length)
+  ) {
+    console.log("[VOTE] Condición alcanzada, cerramos votación...");
     await closeVotingAndAdvance(roomId);
   }
 
@@ -97,7 +97,7 @@ async function closeVotingAndAdvance(roomId: string) {
   console.log("[closeVotingAndAdvance] Called =>", roomId);
   const room = rooms[roomId];
   if (!room) {
-    console.log("[closeVotingAndAdvance] room not found =>", roomId);
+    console.log("[closeVotingAndAdvance] Room not found =>", roomId);
     return;
   }
 
@@ -106,6 +106,7 @@ async function closeVotingAndAdvance(roomId: string) {
   let winningOptionId: number | null = null;
   for (const [optId, voteCount] of Object.entries(room.votes)) {
     const vc = Number(voteCount);
+    console.log(`    Option ${optId} has ${vc} votes`);
     if (vc > maxVotes) {
       maxVotes = vc;
       winningOptionId = parseInt(optId, 10);
@@ -115,23 +116,20 @@ async function closeVotingAndAdvance(roomId: string) {
     console.log("[closeVotingAndAdvance] No votes found, returning.");
     return;
   }
-  console.log("[closeVotingAndAdvance] winningOptionId =>", winningOptionId);
-
-  const winningOption = room.scene.options.find(o => o.id === winningOptionId);
+  console.log("[closeVotingAndAdvance] Winning option ID =>", winningOptionId);
+  const winningOption = room.scene.options.find((o: SceneOption) => o.id === winningOptionId);
   if (!winningOption) {
     console.log("[closeVotingAndAdvance] Invalid option =>", winningOptionId);
     return;
   }
 
   const nextKey = evaluateRequirement(room, winningOption);
-  console.log("[closeVotingAndAdvance] nextKey =>", nextKey);
-
+  console.log("[closeVotingAndAdvance] Next key =>", nextKey);
   const nextScene = storyData[nextKey];
   if (!nextScene) {
-    console.log("[closeVotingAndAdvance] No scene found for =>", nextKey);
+    console.log("[closeVotingAndAdvance] No scene found for key:", nextKey);
     return;
   }
-
   room.scene = nextScene;
   if (!room.scene.isEnding) {
     console.log("[closeVotingAndAdvance] Not an ending, resetting votes, userVoted, optionVotes");
@@ -139,63 +137,58 @@ async function closeVotingAndAdvance(roomId: string) {
     room.userVoted.clear();
     room.optionVotes = {};
   }
-
   await pusher.trigger(`room-${roomId}`, "sceneUpdate", {
     scene: room.scene,
     votes: room.votes,
-    users: Object.values(room.players).map(p => p.name),
+    users: Object.values(room.players).map((p) => p.name),
     userVoted: Array.from(room.userVoted),
   });
 }
 
 function evaluateRequirement(room: any, option: SceneOption): string {
-  console.log("[evaluateRequirement] Checking =>", option.id, " requirement:", option.requirement);
-  
-  if (!option.requirement) {
-    console.log("   => No requirement => success");
+  console.log("[evaluateRequirement] Checking requirements for option:", option.id);
+  console.log("[evaluateRequirement] Option requirement:", option.requirement);
+
+  // 1) Si no hay requisitos, retorna directamente success.
+  if (!option.requirement || option.requirement.length === 0) {
+    console.log("    - No requirement, returning SUCCESS");
     return option.nextSceneId.success;
   }
-
+  // 2) Si no hay votantes para esa opción, retorna failure.
   const votersSet: Set<string> = room.optionVotes[option.id] || new Set();
+  console.log("    - Voters for this option:", Array.from(votersSet));
   if (votersSet.size === 0) {
-    console.log("   => No voters => failure");
+    console.log("    - No voters, returning FAILURE");
     return option.nextSceneId.failure;
   }
-
-  // Si manejas la posibilidad de varios requisitos con comas:
-  const requirements = option.requirement.includes(",")
-    ? option.requirement.split(",").map(r => r.trim())
-    : [option.requirement];
+  const requirements = option.requirement; // ya es un array de strings
+  console.log("    - Requirements array:", requirements);
 
   let atLeastOneHasAll = false;
   let atLeastOneHasSome = false;
-
   for (const voter of Array.from(votersSet)) {
     const player = room.players[voter];
     if (!player) continue;
-
+    console.log(`    - Checking voter: ${voter}, attributes: ${player.attributes}`);
     const matchCount = requirements.filter((req) =>
       player.attributes.includes(req)
     ).length;
-
-    // Cumple TODOS
+    console.log(`      -> Voter ${voter} matches ${matchCount} of ${requirements.length}`);
     if (matchCount === requirements.length) {
       atLeastOneHasAll = true;
     }
-    // Cumple al menos uno
     if (matchCount > 0) {
       atLeastOneHasSome = true;
     }
   }
-
   if (atLeastOneHasAll) {
-    console.log("   => At least one has ALL => SUCCESS");
+    console.log("    - At least one has ALL, returning SUCCESS");
     return option.nextSceneId.success;
   }
   if (atLeastOneHasSome && option.nextSceneId.partial) {
-    console.log("   => At least one has SOME => PARTIAL");
+    console.log("    - At least one has SOME, returning PARTIAL");
     return option.nextSceneId.partial;
   }
-  console.log("   => No compliance => FAILURE");
+  console.log("    - No compliance, returning FAILURE");
   return option.nextSceneId.failure;
 }

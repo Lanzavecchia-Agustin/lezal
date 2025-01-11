@@ -15,7 +15,7 @@ export interface SceneOption {
   id: number;
   text: string;
   maxVotes?: number;
-  requirement?: string;
+  requirement?: string[];
   nextSceneId: {
     success: string;
     failure: string;

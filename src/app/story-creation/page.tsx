@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { Fragment, useState } from "react";
 
 const ATRIBUTOS_DISPONIBLES = [
   //ESTO TIENE Q VENIR DESDE roomsStore.ts
@@ -16,6 +16,8 @@ type AtributosDisponibles = (typeof ATRIBUTOS_DISPONIBLES)[number]; // Esto crea
 type LockedAttributes = (typeof LOCKED_ATTRIBUTES)[number]; // Esto crea un tipo de unión con los valores de LOCKED_Attributes
 
 const Page: React.FC = () => {
+  const [unlocksLockedAttribute, setUnlocksLockedAttribute] =
+    useState<Boolean>(false);
   const [formSceneBasicData, setFormSceneBasicData] = useState({
     id: "",
     text: "",
@@ -25,10 +27,10 @@ const Page: React.FC = () => {
     id: 1,
     text: "",
     maxVotes: 0,
-    requirement:  "" as AtributosDisponibles | "", // Aquí especificamos que `requirement` es un arreglo de valores que solo puede contener valores de ATRIBUTOS_DISPONIBLES
+    requirement: "" as AtributosDisponibles | "", // Aquí especificamos que `requirement` es un arreglo de valores que solo puede contener valores de ATRIBUTOS_DISPONIBLES
     lockedAttributeIncrement: {
-      attribute:  "" as LockedAttributes | "",
-      increment: 1,
+      attribute: "" as LockedAttributes | "",
+      increment: 0,
     },
     nextSceneId: {
       success: "",
@@ -49,7 +51,7 @@ const Page: React.FC = () => {
 
   const handleSelectChange = (
     e: React.ChangeEvent<HTMLSelectElement>,
-    field: string,
+    field: keyof typeof formSceneOptionData,
     nestedField?: string
   ) => {
     const value = Array.from(
@@ -63,7 +65,7 @@ const Page: React.FC = () => {
         return {
           ...prevState,
           [field]: {
-            ...prevState[field],
+            ...(prevState as Record<string, any>),
             [nestedField]: value,
           },
         };
@@ -87,8 +89,7 @@ const Page: React.FC = () => {
     }));
   };
 
-  const handleChange = (
-    //TODOOOO CAMBIAR nombre A handleBASIC CHANGE!!!!!!!!!!!!!!!!!!
+  const handleBasicChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target;
@@ -101,16 +102,28 @@ const Page: React.FC = () => {
   const handleAddOption = () => {
     setSceneOptions((prevSceneOptions) => [
       ...prevSceneOptions,
-      formSceneOptionData,
+      unlocksLockedAttribute
+        ? formSceneOptionData // Si unlocksLockedAttribute es true, no cambiamos nada
+        : {
+            ...formSceneOptionData,
+            lockedAttributeIncrement: undefined, // Si es false, eliminamos el atributo (lo asignamos como undefined)
+          },
     ]);
+
     // Reset the form state after adding the option
     setFormSceneOptionData({
       id: formSceneOptionData.id + 1,
       text: "",
       maxVotes: 0,
-      requirement: [],
-      lockedAttributeIncrement: { attribute: [], increment: 1 },
+      requirement: "" as AtributosDisponibles | "",
+      lockedAttributeIncrement: {
+        attribute: "" as LockedAttributes | "",
+        increment: 0,
+      },
       nextSceneId: { success: "", failure: "", partial: "" },
+    });
+    document.getElementById("headerOption")?.scrollIntoView({
+      behavior: "smooth",
     });
   };
 
@@ -119,17 +132,32 @@ const Page: React.FC = () => {
     const newScene = {
       ...formSceneBasicData,
       options: sceneOptions,
-      id: "scene" + formSceneBasicData.id,
+      id: "scene" + formSceneBasicData.id.replace(/ /g, ''), //saca espacios
     };
     const sceneObject = { [newScene.id]: newScene };
     setNewScenes((prevScenes) => ({
       ...prevScenes,
       [newScene.id]: newScene, // Añadir la nueva escena como un atributo del objeto
     }));
+    setSceneOptions([]); //borra las opciones que venías creando
+    setFormSceneBasicData({
+      //borra el titulo y eso
+      id: "",
+      text: "",
+      isEnding: false,
+    });
+    setFormSceneOptionData({
+      //reinicia los id de las opciones del form opciones
+      ...formSceneOptionData,
+      id: 1,
+    });
+    document.getElementById("header")?.scrollIntoView({
+      behavior: "smooth",
+    });
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-slate-100">
+    <div id="header" className="min-h-screen flex flex-col bg-slate-100">
       <div className="flex justify-center mt-8">
         <form
           onSubmit={handleSubmit}
@@ -155,7 +183,7 @@ const Page: React.FC = () => {
                 id="id"
                 name="id"
                 value={formSceneBasicData.id}
-                onChange={handleChange}
+                onChange={handleBasicChange}
                 className="shadow appearance-none border rounded w-full py-2 pr-3 text-slate-700 leading-tight focus:outline-none focus:ring-2 focus:ring-slate-400 focus:border-transparent"
                 placeholder="OtakuCompletamenteLoco"
               />
@@ -173,7 +201,7 @@ const Page: React.FC = () => {
               id="text"
               name="text"
               value={formSceneBasicData.text}
-              onChange={handleChange}
+              onChange={handleBasicChange}
               className="shadow appearance-none border rounded w-full py-2 px-3 text-slate-700 leading-tight focus:outline-none focus:ring-2 focus:ring-slate-400 focus:border-transparent"
               placeholder="El otaku estaba completamente loco. Ninguna persona cuerda consideraría algo de lo que pasaba por su mente como 'normal'."
             />
@@ -208,21 +236,29 @@ const Page: React.FC = () => {
 
           {/* Agregar una opción*/}
           {!formSceneBasicData.isEnding && (
-            <div>
+            <div id="headerOption">
               <div className="flex justify-center">
                 <h1 className="text-xl font-bold text-slate-700 mb-2 pt-2">
                   Creador de opciones
                 </h1>
               </div>
               <div className="mb-6">
-                {sceneOptions.map((opcion) => (
-                  <div
-                    className="bg-slate-400 py-2 my-3 px-4 rounded-md w-full text-left text-white"
-                    key={opcion.id}
-                  >
-                    {opcion.id},{opcion.text}
-                  </div>
-                ))}
+                {sceneOptions.map(
+                  (
+                    opcion //Renderizar opciones ya creadas
+                  ) => (
+                    <div
+                      className="bg-slate-400 py-2 my-3 px-4 rounded-md w-full text-left text-white"
+                      key={opcion.id}
+                    >
+                      {opcion.id}: {opcion.text} | Req:{" "}
+                      {opcion.requirement || "Ninguno"} | maxVotos:{" "}
+                      {opcion.maxVotes} | Atrib Oculto:{" "}
+                      {opcion.lockedAttributeIncrement?.attribute || "Ninguno"},
+                      +{opcion.lockedAttributeIncrement?.increment || "0"}
+                    </div>
+                  )
+                )}
               </div>
 
               <div className="max-w-4xl mx-auto p-6 bg-slate-100 rounded-lg shadow-md">
@@ -253,6 +289,7 @@ const Page: React.FC = () => {
                     <input
                       type="number"
                       name="maxVotes"
+                      min="0"
                       value={formSceneOptionData.maxVotes}
                       onChange={handleInputChange}
                       className="border border-slate-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-slate-500"
@@ -281,54 +318,79 @@ const Page: React.FC = () => {
                     </select>
                   </div>
 
-                  <div className="flex">
+                  <div className="mb-4 flex gap-6">
                     <label
-                      htmlFor="lockedAttributeIncrementAttribute"
-                      className="block font-semibold align-middle text-md text-slate-700 w-1/2 mb-1"
+                      htmlFor="isEnding"
+                      className="block text-slate-700 text-md font-bold "
                     >
-                      Desbloqueo de atributo oculto
+                      ¿Esta opción desbloquea algún atributo oculto?
                     </label>
-                    <select
-                      id="lockedAttributeIncrementAttribute"
-                      value={
-                        formSceneOptionData.lockedAttributeIncrement
-                          .attribute || ""
-                      }
-                      onChange={(e) =>
-                        setFormSceneOptionData((prevState) => ({
-                          ...prevState,
-                          lockedAttributeIncrement: {
-                            ...prevState.lockedAttributeIncrement,
-                            attribute: e.target.value as LockedAttributes, // Asegurar el tipo correcto
-                          },
-                        }))
-                      }
-                      className="w-full border border-slate-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-slate-500"
-                    >
-                      <option value="" disabled>
-                        Selecciona un atributo
-                      </option>
-                      {LOCKED_ATTRIBUTES.map((atributo) => (
-                        <option key={atributo} value={atributo}>
-                          {atributo}
-                        </option>
-                      ))}
-                    </select>
+                    <div>
+                      <input
+                        type="checkbox"
+                        onChange={(e) => {
+                          setUnlocksLockedAttribute(!unlocksLockedAttribute);
+                        }}
+                        className="align-middle leading-tight"
+                      />
+                      <span className="text-slate-700 text-sm p-1">Sí</span>
+                    </div>
                   </div>
 
-                  <div className="flex">
-                    <label className="block align-middle font-semibold text-md text-slate-700 w-1/2 mb-1">
-                      Incremento del atributo oculto
-                    </label>
-                    <input
-                      type="number"
-                      value={
-                        formSceneOptionData.lockedAttributeIncrement.increment
-                      }
-                      onChange={handleIncrementChange}
-                      className="border border-slate-300 w-full rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-slate-500"
-                    />
-                  </div>
+                  {unlocksLockedAttribute && (
+                    <Fragment>
+                      <div className="flex">
+                        <label
+                          htmlFor="lockedAttributeIncrementAttribute"
+                          className="block font-semibold align-middle text-md text-slate-700 w-1/2 mb-1"
+                        >
+                          Desbloqueo de atributo oculto
+                        </label>
+                        <select
+                          id="lockedAttributeIncrementAttribute"
+                          value={
+                            formSceneOptionData.lockedAttributeIncrement
+                              .attribute || ""
+                          }
+                          onChange={(e) =>
+                            setFormSceneOptionData((prevState) => ({
+                              ...prevState,
+                              lockedAttributeIncrement: {
+                                ...prevState.lockedAttributeIncrement,
+                                attribute: e.target.value as LockedAttributes, // Asegurar el tipo correcto
+                              },
+                            }))
+                          }
+                          className="w-full border border-slate-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-slate-500"
+                        >
+                          <option value="" disabled>
+                            Elige un atributo
+                          </option>
+                          {LOCKED_ATTRIBUTES.map((atributo) => (
+                            <option key={atributo} value={atributo}>
+                              {atributo}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+
+                      <div className="flex">
+                        <label className="block align-middle font-semibold text-md text-slate-700 w-1/2 mb-1">
+                          Incremento del atributo oculto
+                        </label>
+                        <input
+                          type="number"
+                          min="0"
+                          value={
+                            formSceneOptionData.lockedAttributeIncrement
+                              .increment
+                          }
+                          onChange={handleIncrementChange}
+                          className="border border-slate-300 w-full rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-slate-500"
+                        />
+                      </div>
+                    </Fragment>
+                  )}
 
                   <div className="mb-4 flex">
                     <label
@@ -427,10 +489,10 @@ const Page: React.FC = () => {
       <div className="flex mt-3 justify-center">
         <h1>Salida:</h1>
       </div>
-      <pre className="max-w-4xl mx-auto p-6 bg-black text-wrap text-white rounded-lg shadow-md">
-        {JSON.stringify(newScenes)}
+      <pre className="max-w-4xl mx-auto p-6 bg-black text-wrap w-2/3 text-white rounded-lg shadow-md">
+        {JSON.stringify(newScenes, null, 2)}
       </pre>
-      <div className="flex-grow bg-slate-100">
+      <div className="flex-grow mt-2 bg-slate-100">
         {/* Espacio para el canvas */}
       </div>
     </div>

@@ -100,16 +100,20 @@ const Page: React.FC = () => {
   };
 
   const handleAddOption = () => {
+    let sceneOptionData = {
+      ...formSceneOptionData,
+      lockedAttributeIncrement: unlocksLockedAttribute
+        ? formSceneOptionData.lockedAttributeIncrement
+        : undefined,
+      maxVotes:
+        formSceneOptionData.maxVotes <= 0
+          ? undefined
+          : formSceneOptionData.maxVotes,
+    };
     setSceneOptions((prevSceneOptions) => [
       ...prevSceneOptions,
-      unlocksLockedAttribute
-        ? formSceneOptionData // Si unlocksLockedAttribute es true, no cambiamos nada
-        : {
-            ...formSceneOptionData,
-            lockedAttributeIncrement: undefined, // Si es false, eliminamos el atributo (lo asignamos como undefined)
-          },
+      sceneOptionData,
     ]);
-
     // Reset the form state after adding the option
     setFormSceneOptionData({
       id: formSceneOptionData.id + 1,
@@ -127,12 +131,28 @@ const Page: React.FC = () => {
     });
   };
 
+  const handleDeleteOption = (idToDelete: number) => {
+    // Eliminar la opción con el id correspondiente
+    const updatedSceneOptions = sceneOptions.filter(
+      (option) => option.id !== idToDelete
+    );
+  
+    // Reasignar los ids de las opciones restantes para mantener el orden consecutivo
+    const renumberedSceneOptions = updatedSceneOptions.map((option, index) => ({
+      ...option,
+      id: index + 1, // Nuevo id basado en el índice (comienza desde 1)
+    }));
+  
+    // Actualizar el estado con las opciones reordenadas
+    setSceneOptions(renumberedSceneOptions);
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const newScene = {
       ...formSceneBasicData,
       options: sceneOptions,
-      id: "scene" + formSceneBasicData.id.replace(/ /g, ''), //saca espacios
+      id: "scene" + formSceneBasicData.id.replace(/ /g, ""), //saca espacios
     };
     const sceneObject = { [newScene.id]: newScene };
     setNewScenes((prevScenes) => ({
@@ -251,11 +271,18 @@ const Page: React.FC = () => {
                       className="bg-slate-400 py-2 my-3 px-4 rounded-md w-full text-left text-white"
                       key={opcion.id}
                     >
-                      {opcion.id}: {opcion.text} | Req:{" "}
-                      {opcion.requirement || "Ninguno"} | maxVotos:{" "}
-                      {opcion.maxVotes} | Atrib Oculto:{" "}
-                      {opcion.lockedAttributeIncrement?.attribute || "Ninguno"},
-                      +{opcion.lockedAttributeIncrement?.increment || "0"}
+                      {" "}
+                      <p className="inline-block">
+                        {opcion.id}: {opcion.text} | Req:{" "}
+                        {opcion.requirement || "Ninguno"} | maxVotos:{" "}
+                        {opcion.maxVotes} | Atrib Oculto:{" "}
+                        {opcion.lockedAttributeIncrement?.attribute ||
+                          "Ninguno"}
+                        , +{opcion.lockedAttributeIncrement?.increment || "0"}
+                      </p>
+                      <p className="inline mx-2 text-rose-700 underline cursor-pointer" onClick={()=>handleDeleteOption(opcion.id)}>
+                        Eliminar
+                      </p>
                     </div>
                   )
                 )}
@@ -283,8 +310,11 @@ const Page: React.FC = () => {
                   </div>
 
                   <div className="flex flex-col">
-                    <label className="text-slate-700 font-semibold mb-2">
-                      Máximo de votos
+                    <label className="text-slate-700 flex gap-2 font-semibold mb-2">
+                      Máximo de votos{" "}
+                      <p className="text-slate-500 text-xs  pt-1.5">
+                        "0" es ninguno.
+                      </p>
                     </label>
                     <input
                       type="number"
@@ -299,7 +329,7 @@ const Page: React.FC = () => {
                   <div className="flex flex-col">
                     <label className="text-slate-700 flex gap-2 font-semibold mb-2">
                       Requerimientos{" "}
-                      <p className="text-slate-500 text-sm align-text-bottom">
+                      <p className="text-slate-500 text-xs pt-1.5">
                         Elige varios con ctrl.
                       </p>
                     </label>
@@ -380,7 +410,7 @@ const Page: React.FC = () => {
                         </label>
                         <input
                           type="number"
-                          min="0"
+                          min="1"
                           value={
                             formSceneOptionData.lockedAttributeIncrement
                               .increment

@@ -12,7 +12,7 @@ interface Scene {
   options: { 
     id: number; 
     text: string; 
-    nextSceneId: any; // Puede ser un objeto {success, failure, partial?}
+    nextSceneId: any;
   }[];
   isEnding?: boolean;
 }
@@ -22,6 +22,8 @@ interface SceneUpdatePayload {
   votes: { [optionId: number]: number };
   users: string[];
   userVoted: string[];
+  // Condiciones de atributos bloqueados
+  lockedConditions?: { [attribute: string]: number };
 }
 
 interface VoteUpdatePayload {
@@ -39,6 +41,8 @@ export default function StoryGame() {
   const [votes, setVotes] = useState<{ [optionId: number]: number }>({});
   const [users, setUsers] = useState<string[]>([]);
   const [hasVoted, setHasVoted] = useState(false);
+  // Estado para mostrar condiciones de desbloqueo
+  const [lockedConditions, setLockedConditions] = useState<{ [attribute: string]: number }>({});
   const pusherRef = useRef<Pusher | null>(null);
   const debugMode = true;
 
@@ -55,6 +59,9 @@ export default function StoryGame() {
         setVotes(payload.votes);
         setUsers(payload.users);
         setHasVoted(payload.userVoted?.includes(userName) || false);
+        if (payload.lockedConditions) {
+          setLockedConditions(payload.lockedConditions);
+        }
         if (debugMode) {
           console.log("[sceneUpdate] Payload:", payload);
         }
@@ -172,14 +179,14 @@ export default function StoryGame() {
             id="userType"
             value={userType}
             onChange={(e) => setUserType(e.target.value as "Normal" | "Líder")}
-            className="border px-2 py-1 bg-bl"
+            className="border px-2 py-1"
           >
             <option value="Normal">Normal</option>
             <option value="Líder">Líder</option>
           </select>
         </div>
         <div className="flex flex-col items-start">
-          <p className="font-bold">Elige hasta 2 atributos:</p>
+          <p className="font-bold">Elige hasta 2 atributos iniciales:</p>
           <div className="flex flex-wrap">
             {ATRIBUTOS_DISPONIBLES.map((attr) => {
               const isSelected = chosenAttributes.includes(attr);
@@ -190,13 +197,11 @@ export default function StoryGame() {
                     type="checkbox"
                     checked={isSelected}
                     disabled={disabled}
-                    onChange={() => {
+                    onChange={() =>
                       setChosenAttributes((prev) =>
-                        isSelected
-                          ? prev.filter((a) => a !== attr)
-                          : [...prev, attr]
-                      );
-                    }}
+                        isSelected ? prev.filter((a) => a !== attr) : [...prev, attr]
+                      )
+                    }
                   />
                   <span className="ml-1">{attr}</span>
                 </label>
@@ -205,10 +210,7 @@ export default function StoryGame() {
           </div>
         </div>
         <div className="space-y-2 mt-4">
-          <button
-            onClick={handleCreateRoom}
-            className="px-6 py-2 bg-blue-500 text-white rounded-md"
-          >
+          <button onClick={handleCreateRoom} className="px-6 py-2 bg-blue-500 text-white rounded-md">
             Crear Sala
           </button>
           <div className="flex space-x-2">
@@ -219,10 +221,7 @@ export default function StoryGame() {
               onChange={(e) => setRoomId(e.target.value)}
               className="border px-4 py-2"
             />
-            <button
-              onClick={handleJoinRoom}
-              className="px-6 py-2 bg-green-500 text-white rounded-md"
-            >
+            <button onClick={handleJoinRoom} className="px-6 py-2 bg-green-500 text-white rounded-md">
               Unirse a la Sala
             </button>
           </div>
@@ -246,14 +245,25 @@ export default function StoryGame() {
       {debugMode && (
         <div className="text-xs text-gray-400">
           <p>
-            <strong>DEBUG - ID de escena actual:</strong> {scene.id}
+            <strong>DEBUG - Escena actual:</strong> {scene.id}
           </p>
+          {/* Mostrar condiciones de desbloqueo */}
+          <div>
+            <strong>Condiciones desbloqueo:</strong>
+            {Object.entries(lockedConditions).map(([attr, count]) => (
+              <div key={attr}>
+                <span className="text-primary">
+                  {attr}: {count} {count >= 5 ? "(Desbloqueado)" : "(En progreso)"}
+                </span>
+              </div>
+            ))}
+          </div>
         </div>
       )}
       <div className="p-2 rounded-md text-center">
         <p className="text-sm font-bold">Tu información:</p>
         <p>Tipo: {userType}</p>
-        <p>Atributos: {chosenAttributes.join(", ") || "Ninguno"}</p>
+        <p>Atributos iniciales: {chosenAttributes.join(", ") || "Ninguno"}</p>
       </div>
       {roomId && (
         <div className="mb-2 text-center">
@@ -283,13 +293,16 @@ export default function StoryGame() {
               debugOption.nextSceneId.success +
               ", Failure: " +
               (debugOption.nextSceneId.failure ?? "N/A") +
-              ", Partial: " +
-              (debugOption.nextSceneId.partial ?? "N/A");
+              (debugOption.nextSceneId.partial ? `, Partial: ${debugOption.nextSceneId.partial}` : "");
           } else {
             debugNextScene = "-> nextSceneId: " + option.nextSceneId;
           }
+          // Mostrar la info de desbloqueo si existe
+          const lockedInfo = debugOption.lockedAttributeIncrement
+            ? `Desbloqueo: ${debugOption.lockedAttributeIncrement.attribute} (+${debugOption.lockedAttributeIncrement.increment})`
+            : "";
           return (
-            <div key={option.id} className="w-full max-w-md">
+            <div key={option.id} className="w-full max-w-md mb-4">
               <button
                 onClick={() => handleVote(option.id)}
                 disabled={hasVoted}
@@ -297,12 +310,19 @@ export default function StoryGame() {
                   hasVoted ? "opacity-50 cursor-not-allowed" : ""
                 }`}
               >
-                {option.text}
-                <span className="ml-2">({votes?.[option.id] ?? 0} votos)</span>
+                {option.text}{" "}
+                <span className="ml-2">
+                  ({votes?.[option.id] ?? 0} votos)
+                </span>
+                {lockedInfo && (
+                  <span className="ml-2 text-sm italic">{lockedInfo}</span>
+                )}
               </button>
               {debugMode && (
                 <div className="ml-2 text-xs text-yellow-400">
-                  <p>· Req: <em>{debugRequirement}</em></p>
+                  <p>
+                    · Req: <em>{debugRequirement}</em>
+                  </p>
                   <p>· maxVotes: {debugMaxVotes}</p>
                   <p>· Destinos: {debugNextScene}</p>
                 </div>

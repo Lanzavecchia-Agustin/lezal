@@ -1,9 +1,9 @@
 // roomsStore.ts
 
 // Atributos disponibles
-export const ATRIBUTOS_DISPONIBLES = ["fuerte", "inteligente", "carismatico", "trolo", "autista", "otaku"]
+export const ATRIBUTOS_DISPONIBLES: string[] = ["fuerte", "inteligente", "carismatico", "trolo", "autista", "otaku"]
 
-export const LOCKED_ATTRIBUTES = ['chi-inutil', 'chi-responsable']
+export const LOCKED_ATTRIBUTES:string[] = ['chi-inutil', 'chi-responsable']
 
 // Definimos los umbrales para desbloquear cada atributo secreto
 export const UNLOCK_THRESHOLDS: Record<string, number> = {

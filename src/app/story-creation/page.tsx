@@ -10,7 +10,7 @@ type LockedAttributes = (typeof LOCKED_ATTRIBUTES)[number] | ""; // Esto crea un
 
 const Page: React.FC = () => {
   const [unlocksLockedAttribute, setUnlocksLockedAttribute] =
-    useState<Boolean>(false);
+    useState<boolean>(false);
   const [formSceneBasicData, setFormSceneBasicData] = useState<FormSceneBasicData>({
     id: "",
     text: "",

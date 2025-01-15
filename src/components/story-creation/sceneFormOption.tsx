@@ -71,6 +71,7 @@ export default function Home({
         partial: "",
       },
     });
+    setUnlocksLockedAttribute(false);
     document.getElementById("headerOption")?.scrollIntoView({
       behavior: "smooth",
     });
@@ -183,6 +184,7 @@ export default function Home({
                 <div>
                   <input
                     type="checkbox"
+                    checked={unlocksLockedAttribute}
                     onChange={(e) => {
                       setUnlocksLockedAttribute(!unlocksLockedAttribute);
                     }}

@@ -1,0 +1,251 @@
+{
+  "attributes": [
+    {
+      "id": "1",
+      "name": "fuerte",
+      "unlockable": false
+    },
+    {
+      "id": "2",
+      "name": "inteligente",
+      "unlockable": false
+    },
+    {
+      "id": "3",
+      "name": "carismatico",
+      "unlockable": false
+    },
+    {
+      "id": "4",
+      "name": "trolo",
+      "unlockable": false
+    },
+    {
+      "id": "5",
+      "name": "autista",
+      "unlockable": false
+    },
+    {
+      "id": "6",
+      "name": "otaku",
+      "unlockable": false
+    },
+    {
+      "id": "7",
+      "name": "chi-inutil",
+      "unlockable": true,
+      "unlock_threshold": 5
+    },
+    {
+      "id": "8",
+      "name": "chi-responsable",
+      "unlockable": true,
+      "unlock_threshold": 10
+    }
+  ],
+  "scenes": [
+    {
+      "id": "scene1",
+      "text": "Doctor, nos encontramos en el hospital central. Tus decisiones definirán si eres responsable, o un completo inútil.",
+      "isEnding": false,
+      "options": [
+        {
+          "id": 1,
+          "text": "quién es el paciente de mayor urgencia?.",
+          "requirement": [
+            "inteligente"
+          ],
+          "maxVotes": 1,
+          "lockedAttributeIncrement": {
+            "attribute": "chi-responsable",
+            "increment": 2
+          },
+          "nextSceneId": {
+            "success": "sceneNormal2",
+            "failure": "sceneNormal2"
+          }
+        },
+        {
+          "id": 2,
+          "text": "Debería alimentarme para pensar mejor",
+          "requirement": [
+            "carismatico"
+          ],
+          "maxVotes": 1,
+          "lockedAttributeIncrement": {
+            "attribute": "chi-responsable",
+            "increment": 1
+          },
+          "nextSceneId": {
+            "success": "sceneNormal2",
+            "failure": "sceneNormal2"
+          }
+        },
+        {
+          "id": 3,
+          "text": "Acercarte a la bella mujer de mirada triste que se encuentra en el pasillo.",
+          "requirement": [
+            "carismatico",
+            "fuerte"
+          ],
+          "maxVotes": 1,
+          "nextSceneId": {
+            "success": "sceneChiResponsableIntro",
+            "failure": "sceneNormal2",
+            "partial": "sceneNormal2"
+          }
+        }
+      ]
+    },
+    {
+      "id": "sceneNormal2",
+      "text": "Una puerta se abre de golpe antes de que puedas reaccionar. Una enfermera lleva a una niña en una camilla a toda velocidad, rodeada por 2 médicos más.",
+      "isEnding": false,
+      "options": [
+        {
+          "id": 1,
+          "text": "Entrar a socorrer.",
+          "requirement": [
+            "carismatico",
+            "Inteligente"
+          ],
+          "lockedAttributeIncrement": {
+            "attribute": "chi-inutil",
+            "increment": 1
+          },
+          "nextSceneId": {
+            "success": "sceneNormal3",
+            "failure": "sceneChiResponsableIntro",
+            "partial": "sceneChiInutilIntro"
+          }
+        },
+        {
+          "id": 2,
+          "text": "Exigir que te brinden información sobre la muchacha, quizás tu ojo experto pueda ayudar.",
+          "requirement": [
+            "autista",
+            "Inteligente"
+          ],
+          "lockedAttributeIncrement": {
+            "attribute": "chi-responsable",
+            "increment": 1
+          },
+          "nextSceneId": {
+            "success": "sceneNormal3",
+            "failure": "sceneChiResponsableIntro"
+          }
+        }
+      ]
+    },
+    {
+      "id": "sceneNormal3",
+      "text": "Sarcoidosis. Lo que pensabas. Están por operar. ¿Qué es lo que los otros médicos no han visto?",
+      "isEnding": false,
+      "options": [
+        {
+          "id": 1,
+          "text": "No tiene salvación. Morirá de todas formas, es innecesario operar.",
+          "requirement": [
+            "autista",
+            "Inteligente"
+          ],
+          "nextSceneId": {
+            "success": "sceneNormalFinal",
+            "failure": "sceneFailGenerico"
+          }
+        }
+      ]
+    },
+    {
+      "id": "sceneNormalFinal",
+      "text": "Has salvado los órganos, gente en terapia intensiva te lo agradecerá, la niña muere de manera pacífica.",
+      "isEnding": true,
+      "options": []
+    },
+    {
+      "id": "sceneChiInutilIntro",
+      "text": "El poder caótico de 'chi-inutil' comienza a manifestarse en ti. Sientes una energía inusual que te prepara para desafíos únicos en un nuevo camino.",
+      "isEnding": false,
+      "options": [
+        {
+          "id": 1,
+          "text": "Seguir el camino influenciado por 'chi-inutil'.",
+          "nextSceneId": {
+            "success": "sceneFinalChiInutil",
+            "failure": "sceneFailGenerico"
+          }
+        }
+      ]
+    },
+    {
+      "id": "sceneFinalChiInutil",
+      "text": "TODO escribir final chi inutil.",
+      "isEnding": true,
+      "options": []
+    },
+    {
+      "id": "sceneChiResponsableIntro",
+      "text": "Tu ojo no falla. La mujer del pasillo te cuenta que su hija está en grave peligro. Los médicos dicen que es Sarcoidosis, pero tú notas algo distinto solo con verla",
+      "isEnding": false,
+      "options": [
+        {
+          "id": 1,
+          "text": "Las manchas en su mano'",
+          "maxVotes": 1,
+          "lockedAttributeIncrement": {
+            "attribute": "chi-responsable",
+            "increment": 0
+          },
+          "nextSceneId": {
+            "success": "sceneFinalChiResponsable",
+            "failure": "sceneFailGenerico"
+          }
+        },
+        {
+          "id": 2,
+          "text": "Su falta de cabello.",
+          "maxVotes": 1,
+          "lockedAttributeIncrement": {
+            "attribute": "chi-responsable",
+            "increment": 3
+          },
+          "nextSceneId": {
+            "success": "sceneFinalChiResponsable",
+            "failure": "sceneFailGenerico"
+          }
+        }
+      ]
+    },
+    {
+      "id": "sceneFinalChiResponsable",
+      "text": "Tu maestría en la disciplina te lleva a moverte directamente hacia el lugar de la cirugía.",
+      "isEnding": false,
+      "options": [
+        {
+          "id": 1,
+          "text": "DETENGAN LA CIRUGÍA!.",
+          "requirement": [
+            "chi-responsable"
+          ],
+          "maxVotes": 1,
+          "nextSceneId": {
+            "success": "sceneFinalChiResponsable2",
+            "failure": "sceneFailGenerico"
+          }
+        }
+      ]
+    },
+    {
+      "id": "sceneFinalChiResponsable2",
+      "text": "Has demostrado ser el Doctor más responsable del Mundo!.",
+      "isEnding": true,
+      "options": []
+    },
+    {
+      "id": "sceneFailGenerico",
+      "text": "Tu interrupción provocó que el cirujano realizara un daño irreparable, la niña muere.",
+      "isEnding": true,
+      "options": []
+    }
+  ]
+}

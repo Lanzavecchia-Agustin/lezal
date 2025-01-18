@@ -1,27 +1,111 @@
+@import url('https://fonts.googleapis.com/css2?family=Audiowide&display=swap');
+
+/* Tailwind directives (asegúrate de tener Tailwind instalado y configurado) */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --color-text: #ddd;
+  --color-bg: #0a0a0a;
+  --color-link: #9f7ae6;
+  --color-link-hover: #ececec;
+  --color-info: #7f6ac8;
+  --gap-horizontal: 8px;
+  --gap-vertical: 4px;
+  --time-anim: 6s;
+  --delay-anim: 5s;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
+/* Estilo general del body */
 body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  @apply bg-gradient-to-b from-gray-900 via-purple-900 to-gray-900 text-gray-200;
 }
 
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
+/* Fuente retro */
+.font-retro {
+  font-family: 'Audiowide', cursive;
+}
+
+/* Título con efecto glitch */
+.content__title {
+  position: relative;
+  font-size: 10vw;
+  font-family: 'Audiowide', cursive;
+  animation: glitch-anim-text var(--time-anim) linear infinite;
+}
+
+/* Keyframes de la animación glitch */
+@keyframes glitch-anim-text {
+  0% {
+    transform: translate3d(calc(-1 * var(--gap-horizontal)), 0, 0) scale3d(-1, -1, 1);
+    clip-path: polygon(0 25%, 100% 25%, 100% 27%, 0 27%);
   }
+  2% {
+    clip-path: polygon(0 38%, 100% 38%, 100% 38%, 0 38%);
+  }
+  4% {
+    clip-path: polygon(0 47%, 100% 47%, 100% 47%, 0 47%);
+  }
+  5% {
+    clip-path: polygon(0 55%, 100% 55%, 100% 25%, 0 25%);
+  }
+  6% {
+    clip-path: polygon(0 75%, 100% 75%, 100% 75%, 0 75%);
+  }
+  7% {
+    clip-path: polygon(0 85%, 100% 85%, 100% 85%, 0 85%);
+  }
+  8% {
+    clip-path: polygon(0 55%, 100% 55%, 100% 60%, 0 60%);
+  }
+  9% {
+    clip-path: polygon(0 75%, 100% 75%, 100% 85%, 0 85%);
+  }
+  10%, 100% {
+    transform: translate3d(0, 0, 0) scale3d(1, 1, 1);
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
+  }
+}
+
+/* 
+   --------------------------------------------------
+   PLANETAS APOCALÍPTICOS: 3 TAMAÑOS DISTINTOS
+   --------------------------------------------------
+*/
+
+/* ANIMACIÓN DE PULSO (latido) COMPARTIDA POR TODOS */
+@keyframes planet-pulse {
+  0%, 100% {
+    transform: scale(1) rotate(0deg);
+  }
+  50% {
+    transform: scale(0.8) rotate(-1deg);
+  }
+}
+
+/* PLANETA PRINCIPAL (tamaño 20vw) */
+.apocalyptic-planet {
+  width: 20vw;
+  height: 20vw;
+  border-radius: 50%;
+  position: relative;
+
+  /* Gradientes para cráteres y zonas quemadas */
+  background:
+    radial-gradient(circle at 25% 30%, rgba(20, 3, 81, 0.805) 5%, transparent 10%),
+    radial-gradient(circle at 70% 60%, rgb(139, 46, 3) 20%, transparent 50%),
+    radial-gradient(circle at 40% 70%, rgb(2, 27, 11) 12%, transparent 30%),
+    radial-gradient(circle at 80% 20%, rgba(120, 40, 0, 0.4) 10%, transparent 30%),
+    radial-gradient(circle at 60% 40%, rgb(24, 1, 45) 8%, transparent 25%),
+    radial-gradient(circle at 30% 50%, rgb(0, 97, 21) 0%, transparent 15%),
+    radial-gradient(circle at 20% 80%, rgb(93, 2, 196) 12%, transparent 60%),
+    radial-gradient(circle farthest-corner at 50% 50%, #2a0122 90%, #330555 100%, #100137 80%);
+  background-blend-mode: screen;
+
+  box-shadow:
+    0 0 50px 10px rgba(150, 30, 0, 0.5),
+    inset 0 0 20px rgba(0, 0, 0, 0.4);
+
+  animation: planet-pulse 12s infinite ease-in-out;
 }

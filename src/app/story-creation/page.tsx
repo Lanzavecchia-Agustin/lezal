@@ -1,11 +1,16 @@
 "use client";
 import React, { Fragment, useState } from "react";
-import { ATRIBUTOS_DISPONIBLES, LOCKED_ATTRIBUTES, Scene } from "../../../roomsStore";
+import {
+  ATRIBUTOS_DISPONIBLES,
+  LOCKED_ATTRIBUTES,
+  Scene,
+} from "../../../roomsStore";
 import SceneFormOption from "../../components/story-creation/sceneFormOption";
 import {
   FormSceneBasicData,
   FormSceneOptionData,
 } from "@/components/story-creation/InterfacesSceneFormOption";
+import ReadScenes from "@/components/story-creation/readScenes";
 
 type AtributosDisponibles = (typeof ATRIBUTOS_DISPONIBLES)[number] | ""; // Esto crea un tipo de unión con los valores de ATRIBUTOS_DISPONIBLES
 type LockedAttributes = (typeof LOCKED_ATTRIBUTES)[number] | ""; // Esto crea un tipo de unión con los valores de LOCKED_Attributes
@@ -71,14 +76,14 @@ const Page: React.FC = () => {
     });
   };
 
-  const fetchAttributes = async (newScene:Scene) => {
+  const fetchAttributes = async (newScene: Scene) => {
     try {
       const response = await fetch("http://localhost:3001/scenes", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(newScene),
       });
-      console.log("agregado con exito")
+      console.log("agregado con exito");
     } catch (err) {
       console.error(err);
     }
@@ -94,7 +99,7 @@ const Page: React.FC = () => {
     const sceneObject = { [newScene.id]: newScene };
     setNewScenes((prevScenes) => ({
       ...prevScenes,
-      ... newScene, 
+      ...newScene,
     }));
     setSceneOptions([]); //borra las opciones que venías creando
     setFormSceneBasicData({
@@ -109,7 +114,7 @@ const Page: React.FC = () => {
     document.getElementById("header")?.scrollIntoView({
       behavior: "smooth",
     });
-    await fetchAttributes(newScene)
+    await fetchAttributes(newScene);
   };
 
   return (
@@ -212,12 +217,13 @@ const Page: React.FC = () => {
           </div>
         </form>
       </div>
-      <div className="flex mt-3 justify-center">
-        <h1>Salida:</h1>
-      </div>
-      <pre className="max-w-4xl mx-auto p-6 bg-black text-wrap w-2/3 text-white rounded-lg shadow-md">
-        {JSON.stringify(newScenes,null, 2)}
+
+      <hr className="my-5" />
+      <h1 className="text-center text-xl">Escenas anteriores:</h1>
+      <pre className="max-w-screen-xl mx-auto p-6 bg-slate-300 text-wrap w-2/3 text-white rounded-lg shadow-md">
+        <ReadScenes />
       </pre>
+      
     </div>
   );
 };

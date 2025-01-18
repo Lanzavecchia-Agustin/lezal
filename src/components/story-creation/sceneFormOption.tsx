@@ -166,7 +166,7 @@ export default function Home({
                   onChange={(e) => handleSelectChange(e, "requirement")}
                   className="border border-slate-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-slate-500"
                 >
-                  {ATRIBUTOS_DISPONIBLES.map((atributo) => (
+                  {[...ATRIBUTOS_DISPONIBLES, ...LOCKED_ATTRIBUTES].map((atributo) => (
                     <option key={atributo} value={atributo}>
                       {atributo}
                     </option>

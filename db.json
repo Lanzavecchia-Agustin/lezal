@@ -246,6 +246,13 @@
       "text": "Tu interrupción provocó que el cirujano realizara un daño irreparable, la niña muere.",
       "isEnding": true,
       "options": []
+    },
+    {
+      "id": "scenetestingordenrevertido",
+      "text": "esa escena",
+      "isEnding": true,
+      "options": []
     }
+
   ]
 }

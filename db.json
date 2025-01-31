@@ -1,30 +1,125 @@
 {
   "attributes": [
-    { "id": "1", "name": "fuerte", "unlockable": false },
-    { "id": "2", "name": "inteligente", "unlockable": false },
-    { "id": "3", "name": "carismatico", "unlockable": false },
-    { "id": "4", "name": "autista", "unlockable": false },
-    { "id": "5", "name": "otaku", "unlockable": false },
-    { "id": "6", "name": "secret-cat-lover", "unlockable": true, "unlock_threshold": 3 },
-    { "id": "7", "name": "chi-inutil", "unlockable": true, "unlock_threshold": 5 },
-    { "id": "8", "name": "chi-responsable", "unlockable": true, "unlock_threshold": 10 },
-    { "id": "9", "name": "chi-sabio", "unlockable": true, "unlock_threshold": 12 }
+    {
+      "id": 1,
+      "name": "fuerte",
+      "unlockable": false
+    },
+    {
+      "id": 2,
+      "name": "inteligente",
+      "unlockable": false
+    },
+    {
+      "id": 3,
+      "name": "carismatico",
+      "unlockable": false
+    },
+    {
+      "id": 4,
+      "name": "autista",
+      "unlockable": false
+    },
+    {
+      "id": 5,
+      "name": "otaku",
+      "unlockable": false
+    },
+    {
+      "id": 6,
+      "name": "secret-cat-lover",
+      "unlockable": true,
+      "unlock_threshold": 3
+    },
+    {
+      "id": 7,
+      "name": "chi-inutil",
+      "unlockable": true,
+      "unlock_threshold": 5
+    },
+    {
+      "id": 8,
+      "name": "chi-responsable",
+      "unlockable": true,
+      "unlock_threshold": 10
+    },
+    {
+      "id": 9,
+      "name": "chi-sabio",
+      "unlockable": true,
+      "unlock_threshold": 12
+    },
+    {
+      "id": 10,
+      "name": "salame",
+      "unlockable": true,
+      "unlock_threshold": 22
+    },
+    {
+      "id": 11,
+      "name": "Oculto1",
+      "unlockable": true,
+      "unlock_threshold": 12
+    },
+    {
+      "id": 12,
+      "name": "No-oculto",
+      "unlockable": false
+    }
   ],
   "scenes": [
-   
     {
       "id": "scene1",
       "text": "En el Hospital Apocalíptico, todo depende de una única decisión. Este es el comienzo de tu historia.",
       "isEnding": false,
       "options": [
-        { "id": 1, "text": "Iniciar Camino A", "nextSceneId": { "success": "scene2A", "failure": "scene2A_fail", "partial": "scene2A_part" } },
-        { "id": 2, "text": "Iniciar Camino B", "nextSceneId": { "success": "scene2B", "failure": "scene2B_fail", "partial": "scene2B_part" } },
-        { "id": 3, "text": "Iniciar Camino C", "nextSceneId": { "success": "scene2C", "failure": "scene2C_fail", "partial": "scene2C_part" } },
-        { "id": 4, "text": "Iniciar Camino D", "nextSceneId": { "success": "scene2D", "failure": "scene2D_fail", "partial": "scene2D_part" } },
-        { "id": 5, "text": "Iniciar Camino E", "nextSceneId": { "success": "scene2E", "failure": "scene2E_fail", "partial": "scene2E_part" } }
+        {
+          "id": 1,
+          "text": "Iniciar Camino A",
+          "nextSceneId": {
+            "success": "scene2A",
+            "failure": "scene2A_fail",
+            "partial": "scene2A_part"
+          }
+        },
+        {
+          "id": 2,
+          "text": "Iniciar Camino B",
+          "nextSceneId": {
+            "success": "scene2B",
+            "failure": "scene2B_fail",
+            "partial": "scene2B_part"
+          }
+        },
+        {
+          "id": 3,
+          "text": "Iniciar Camino C",
+          "nextSceneId": {
+            "success": "scene2C",
+            "failure": "scene2C_fail",
+            "partial": "scene2C_part"
+          }
+        },
+        {
+          "id": 4,
+          "text": "Iniciar Camino D",
+          "nextSceneId": {
+            "success": "scene2D",
+            "failure": "scene2D_fail",
+            "partial": "scene2D_part"
+          }
+        },
+        {
+          "id": 5,
+          "text": "Iniciar Camino E",
+          "nextSceneId": {
+            "success": "scene2E",
+            "failure": "scene2E_fail",
+            "partial": "scene2E_part"
+          }
+        }
       ]
     },
-
     {
       "id": "scene2A",
       "text": "Camino A: Te adentras en el ala norte del hospital, donde la disciplina y la lógica rigen.",
@@ -34,21 +129,42 @@
           "id": 1,
           "text": "Revisar expedientes médicos",
           "maxVotes": 1,
-          "lockedAttributeIncrement": { "attribute": "chi-responsable", "increment": 2 },
-          "nextSceneId": { "success": "scene3A1", "failure": "scene3A1_fail", "partial": "scene3A1_part" }
+          "lockedAttributeIncrement": {
+            "attribute": "chi-responsable",
+            "increment": 2
+          },
+          "nextSceneId": {
+            "success": "scene3A1",
+            "failure": "scene3A1_fail",
+            "partial": "scene3A1_part"
+          }
         },
         {
           "id": 2,
           "text": "Utilizar tu ingenio para diagnosticar",
-          "requirement": ["inteligente", "carismatico"],
+          "requirement": [
+            "inteligente",
+            "carismatico"
+          ],
           "maxVotes": 1,
-          "lockedAttributeIncrement": { "attribute": "chi-responsable", "increment": 1 },
-          "nextSceneId": { "success": "scene3A2", "failure": "scene3A2_fail", "partial": "scene3A2_part" }
+          "lockedAttributeIncrement": {
+            "attribute": "chi-responsable",
+            "increment": 1
+          },
+          "nextSceneId": {
+            "success": "scene3A2",
+            "failure": "scene3A2_fail",
+            "partial": "scene3A2_part"
+          }
         },
         {
           "id": 3,
           "text": "Preguntar al jefe de turno",
-          "nextSceneId": { "success": "scene3A3", "failure": "scene3A3_fail", "partial": "scene3A3_part" }
+          "nextSceneId": {
+            "success": "scene3A3",
+            "failure": "scene3A3_fail",
+            "partial": "scene3A3_part"
+          }
         }
       ]
     },
@@ -57,7 +173,14 @@
       "text": "Camino A (Failure): Un error en la revisión conduce a un mal diagnóstico, pero recuperas datos de otra fuente y sigues adelante.",
       "isEnding": false,
       "options": [
-        { "id": 1, "text": "Reenfocar el diagnóstico", "nextSceneId": { "success": "scene3A2", "partial": "scene3A2_failover" } }
+        {
+          "id": 1,
+          "text": "Reenfocar el diagnóstico",
+          "nextSceneId": {
+            "success": "scene3A2",
+            "partial": "scene3A2_failover"
+          }
+        }
       ]
     },
     {
@@ -65,10 +188,16 @@
       "text": "Camino A (Partial): La información es incompleta y avanzas con riesgo, sintiendo la incertidumbre de cada paso.",
       "isEnding": false,
       "options": [
-        { "id": 1, "text": "Intentar obtener más datos", "nextSceneId": { "success": "scene3A1", "failure": "scene3A1_fail" } }
+        {
+          "id": 1,
+          "text": "Intentar obtener más datos",
+          "nextSceneId": {
+            "success": "scene3A1",
+            "failure": "scene3A1_fail"
+          }
+        }
       ]
     },
-
     {
       "id": "scene2B",
       "text": "Camino B: En el ala sur, el caos y la improvisación dominan cada decisión.",
@@ -77,18 +206,32 @@
         {
           "id": 1,
           "text": "Investigar registros desordenados",
-          "nextSceneId": { "success": "scene3B1", "failure": "scene3B1_fail", "partial": "scene3B1_part" }
+          "nextSceneId": {
+            "success": "scene3B1",
+            "failure": "scene3B1_fail",
+            "partial": "scene3B1_part"
+          }
         },
         {
           "id": 2,
           "text": "Conversar con médicos veteranos",
-          "requirement": ["carismatico"],
-          "nextSceneId": { "success": "scene3B2", "failure": "scene3B2_fail", "partial": "scene3B2_part" }
+          "requirement": [
+            "carismatico"
+          ],
+          "nextSceneId": {
+            "success": "scene3B2",
+            "failure": "scene3B2_fail",
+            "partial": "scene3B2_part"
+          }
         },
         {
           "id": 3,
           "text": "Explorar zonas restringidas",
-          "nextSceneId": { "success": "scene3B3", "failure": "scene3B3_fail", "partial": "scene3B3_part" }
+          "nextSceneId": {
+            "success": "scene3B3",
+            "failure": "scene3B3_fail",
+            "partial": "scene3B3_part"
+          }
         }
       ]
     },
@@ -97,7 +240,14 @@
       "text": "Camino B (Failure): La información en los registros resulta confusa y te retrasas, pero logras reorientarte.",
       "isEnding": false,
       "options": [
-        { "id": 1, "text": "Reintentar con un nuevo enfoque", "nextSceneId": { "success": "scene3B2", "partial": "scene3B2_failover" } }
+        {
+          "id": 1,
+          "text": "Reintentar con un nuevo enfoque",
+          "nextSceneId": {
+            "success": "scene3B2",
+            "partial": "scene3B2_failover"
+          }
+        }
       ]
     },
     {
@@ -105,10 +255,16 @@
       "text": "Camino B (Partial): Avanzas con pérdidas de información, pero logras recomponer las piezas para continuar.",
       "isEnding": false,
       "options": [
-        { "id": 1, "text": "Refinar la reconstrucción", "nextSceneId": { "success": "scene3B1", "failure": "scene3B1_fail" } }
+        {
+          "id": 1,
+          "text": "Refinar la reconstrucción",
+          "nextSceneId": {
+            "success": "scene3B1",
+            "failure": "scene3B1_fail"
+          }
+        }
       ]
     },
-
     {
       "id": "scene2C",
       "text": "Camino C: Un pasillo oscuro y lleno de secretos te envuelve.",
@@ -117,18 +273,32 @@
         {
           "id": 1,
           "text": "Descubrir archivos antiguos",
-          "nextSceneId": { "success": "scene3C1", "failure": "scene3C1_fail", "partial": "scene3C1_part" }
+          "nextSceneId": {
+            "success": "scene3C1",
+            "failure": "scene3C1_fail",
+            "partial": "scene3C1_part"
+          }
         },
         {
           "id": 2,
           "text": "Descifrar códigos ocultos",
-          "requirement": ["inteligente"],
-          "nextSceneId": { "success": "scene3C2", "failure": "scene3C2_fail", "partial": "scene3C2_part" }
+          "requirement": [
+            "inteligente"
+          ],
+          "nextSceneId": {
+            "success": "scene3C2",
+            "failure": "scene3C2_fail",
+            "partial": "scene3C2_part"
+          }
         },
         {
           "id": 3,
           "text": "Investigar laboratorios cerrados",
-          "nextSceneId": { "success": "scene3C3", "failure": "scene3C3_fail", "partial": "scene3C3_part" }
+          "nextSceneId": {
+            "success": "scene3C3",
+            "failure": "scene3C3_fail",
+            "partial": "scene3C3_part"
+          }
         }
       ]
     },
@@ -137,7 +307,13 @@
       "text": "Camino C (Failure): Los secretos te abruman y te dejan con dudas irreparables, pero encuentras un atisbo de verdad.",
       "isEnding": false,
       "options": [
-        { "id": 1, "text": "Buscar ayuda externa para clarificar", "nextSceneId": { "success": "scene3C2" } }
+        {
+          "id": 1,
+          "text": "Buscar ayuda externa para clarificar",
+          "nextSceneId": {
+            "success": "scene3C2"
+          }
+        }
       ]
     },
     {
@@ -145,10 +321,15 @@
       "text": "Camino C (Partial): Avanzas con información limitada, dejando caminos inciertos.",
       "isEnding": false,
       "options": [
-        { "id": 1, "text": "Recabar más datos de apoyo", "nextSceneId": { "success": "scene3C1" } }
+        {
+          "id": 1,
+          "text": "Recabar más datos de apoyo",
+          "nextSceneId": {
+            "success": "scene3C1"
+          }
+        }
       ]
     },
-
     {
       "id": "scene2D",
       "text": "Camino D: Te sumerges en la zona de quirófanos, donde la vida y la muerte se entrelazan.",
@@ -157,18 +338,32 @@
         {
           "id": 1,
           "text": "Participar en una cirugía arriesgada",
-          "nextSceneId": { "success": "scene3D1", "failure": "scene3D1_fail", "partial": "scene3D1_part" }
+          "nextSceneId": {
+            "success": "scene3D1",
+            "failure": "scene3D1_fail",
+            "partial": "scene3D1_part"
+          }
         },
         {
           "id": 2,
           "text": "Analizar detalladamente los protocolos quirúrgicos",
-          "requirement": ["autista"],
-          "nextSceneId": { "success": "scene3D2", "failure": "scene3D2_fail", "partial": "scene3D2_part" }
+          "requirement": [
+            "autista"
+          ],
+          "nextSceneId": {
+            "success": "scene3D2",
+            "failure": "scene3D2_fail",
+            "partial": "scene3D2_part"
+          }
         },
         {
           "id": 3,
           "text": "Consultar con un cirujano veterano",
-          "nextSceneId": { "success": "scene3D3", "failure": "scene3D3_fail", "partial": "scene3D3_part" }
+          "nextSceneId": {
+            "success": "scene3D3",
+            "failure": "scene3D3_fail",
+            "partial": "scene3D3_part"
+          }
         }
       ]
     },
@@ -183,10 +378,15 @@
       "text": "Camino D (Partial): Un análisis parcial deja la operación con altos riesgos, pero aún tienes opciones.",
       "isEnding": false,
       "options": [
-        { "id": 1, "text": "Reevaluar la situación con ayuda externa", "nextSceneId": { "success": "scene3D2" } }
+        {
+          "id": 1,
+          "text": "Reevaluar la situación con ayuda externa",
+          "nextSceneId": {
+            "success": "scene3D2"
+          }
+        }
       ]
     },
-
     {
       "id": "scene2E",
       "text": "Camino E: La entrada principal se transforma en un escenario de intrigas y esperanza.",
@@ -195,17 +395,29 @@
         {
           "id": 1,
           "text": "Reorganizar el personal administrativo",
-          "nextSceneId": { "success": "scene3E1", "failure": "scene3E1_fail", "partial": "scene3E1_part" }
+          "nextSceneId": {
+            "success": "scene3E1",
+            "failure": "scene3E1_fail",
+            "partial": "scene3E1_part"
+          }
         },
         {
           "id": 2,
           "text": "Reevaluar los recursos y suministros",
-          "nextSceneId": { "success": "scene3E2", "failure": "scene3E2_fail", "partial": "scene3E2_part" }
+          "nextSceneId": {
+            "success": "scene3E2",
+            "failure": "scene3E2_fail",
+            "partial": "scene3E2_part"
+          }
         },
         {
           "id": 3,
           "text": "Dar un discurso motivador a la comunidad",
-          "nextSceneId": { "success": "scene3E3", "failure": "scene3E3_fail", "partial": "scene3E3_part" }
+          "nextSceneId": {
+            "success": "scene3E3",
+            "failure": "scene3E3_fail",
+            "partial": "scene3E3_part"
+          }
         }
       ]
     },
@@ -220,18 +432,42 @@
       "text": "Camino E (Partial): El discurso es insuficiente para cambiar el panorama. Fin intermedio.",
       "isEnding": false,
       "options": [
-        { "id": 1, "text": "Intentar un plan alternativo", "nextSceneId": { "success": "scene3E2" } }
+        {
+          "id": 1,
+          "text": "Intentar un plan alternativo",
+          "nextSceneId": {
+            "success": "scene3E2"
+          }
+        }
       ]
     },
-
     {
       "id": "scene3A1",
       "text": "Camino A1: En la sala de emergencias, actúas con rapidez para salvar vidas.",
       "isEnding": false,
       "options": [
-        { "id": 1, "text": "Realizar un rescate con precisión", "nextSceneId": { "success": "scene4A1" } },
-        { "id": 2, "text": "Observar y analizar la situación", "nextSceneId": { "success": "scene4A2", "partial": "scene4A2_part" } },
-        { "id": 3, "text": "Pedir consejo al equipo", "nextSceneId": { "success": "scene4A3" } }
+        {
+          "id": 1,
+          "text": "Realizar un rescate con precisión",
+          "nextSceneId": {
+            "success": "scene4A1"
+          }
+        },
+        {
+          "id": 2,
+          "text": "Observar y analizar la situación",
+          "nextSceneId": {
+            "success": "scene4A2",
+            "partial": "scene4A2_part"
+          }
+        },
+        {
+          "id": 3,
+          "text": "Pedir consejo al equipo",
+          "nextSceneId": {
+            "success": "scene4A3"
+          }
+        }
       ]
     },
     {
@@ -245,9 +481,28 @@
       "text": "Camino A2: Diagnosticas rápidamente, pero el sistema colapsa en la coordinación.",
       "isEnding": false,
       "options": [
-        { "id": 1, "text": "Emitir un diagnóstico alternativo", "nextSceneId": { "success": "scene4A4" } },
-        { "id": 2, "text": "Ajustar el tratamiento en el último instante", "nextSceneId": { "success": "scene4A5", "partial": "scene4A5_part" } },
-        { "id": 3, "text": "Solicitar ayuda adicional", "nextSceneId": { "success": "scene4A6" } }
+        {
+          "id": 1,
+          "text": "Emitir un diagnóstico alternativo",
+          "nextSceneId": {
+            "success": "scene4A4"
+          }
+        },
+        {
+          "id": 2,
+          "text": "Ajustar el tratamiento en el último instante",
+          "nextSceneId": {
+            "success": "scene4A5",
+            "partial": "scene4A5_part"
+          }
+        },
+        {
+          "id": 3,
+          "text": "Solicitar ayuda adicional",
+          "nextSceneId": {
+            "success": "scene4A6"
+          }
+        }
       ]
     },
     {
@@ -255,20 +510,58 @@
       "text": "Camino A3: Un veterano te ofrece un consejo crucial que divide tu confianza.",
       "isEnding": false,
       "options": [
-        { "id": 1, "text": "Seguir el consejo sin vacilación", "nextSceneId": { "success": "scene4A7" } },
-        { "id": 2, "text": "Combinar su recomendación con tu intuición", "nextSceneId": { "success": "scene4A8", "failure": "scene4A8_fail" } },
-        { "id": 3, "text": "Ignorar el consejo y decidir por ti mismo", "nextSceneId": { "success": "scene4A9", "partial": "scene4A9_part" } }
+        {
+          "id": 1,
+          "text": "Seguir el consejo sin vacilación",
+          "nextSceneId": {
+            "success": "scene4A7"
+          }
+        },
+        {
+          "id": 2,
+          "text": "Combinar su recomendación con tu intuición",
+          "nextSceneId": {
+            "success": "scene4A8",
+            "failure": "scene4A8_fail"
+          }
+        },
+        {
+          "id": 3,
+          "text": "Ignorar el consejo y decidir por ti mismo",
+          "nextSceneId": {
+            "success": "scene4A9",
+            "partial": "scene4A9_part"
+          }
+        }
       ]
     },
-
     {
       "id": "scene3B1",
       "text": "Camino B1: Los registros revelan un pasado oscuro y olvidado del hospital.",
       "isEnding": false,
       "options": [
-        { "id": 1, "text": "Reconstruir el historial de un paciente clave", "nextSceneId": { "success": "scene4B1" } },
-        { "id": 2, "text": "Descifrar un código en documentos antiguos", "nextSceneId": { "success": "scene4B2", "failure": "scene4B2_fail" } },
-        { "id": 3, "text": "Informar a la administración sobre irregularidades", "nextSceneId": { "success": "scene4B3" } }
+        {
+          "id": 1,
+          "text": "Reconstruir el historial de un paciente clave",
+          "nextSceneId": {
+            "success": "scene4B1"
+          }
+        },
+        {
+          "id": 2,
+          "text": "Descifrar un código en documentos antiguos",
+          "nextSceneId": {
+            "success": "scene4B2",
+            "failure": "scene4B2_fail"
+          }
+        },
+        {
+          "id": 3,
+          "text": "Informar a la administración sobre irregularidades",
+          "nextSceneId": {
+            "success": "scene4B3"
+          }
+        }
       ]
     },
     {
@@ -276,9 +569,27 @@
       "text": "Camino B2: Conversaciones con colegas muestran tensiones internas y conflictos latentes.",
       "isEnding": false,
       "options": [
-        { "id": 1, "text": "Unir fuerzas con expertos de confianza", "nextSceneId": { "success": "scene4B4" } },
-        { "id": 2, "text": "Presentar un plan alternativo audaz", "nextSceneId": { "success": "scene4B5" } },
-        { "id": 3, "text": "Documentar la crisis para futuras investigaciones", "nextSceneId": { "success": "scene4B6" } }
+        {
+          "id": 1,
+          "text": "Unir fuerzas con expertos de confianza",
+          "nextSceneId": {
+            "success": "scene4B4"
+          }
+        },
+        {
+          "id": 2,
+          "text": "Presentar un plan alternativo audaz",
+          "nextSceneId": {
+            "success": "scene4B5"
+          }
+        },
+        {
+          "id": 3,
+          "text": "Documentar la crisis para futuras investigaciones",
+          "nextSceneId": {
+            "success": "scene4B6"
+          }
+        }
       ]
     },
     {
@@ -286,20 +597,56 @@
       "text": "Camino B3: La espera se vuelve insoportable y la inercia domina.",
       "isEnding": false,
       "options": [
-        { "id": 1, "text": "Meditar profundamente para encontrar claridad", "nextSceneId": { "success": "scene4B7" } },
-        { "id": 2, "text": "Hacer un llamado urgente al personal", "nextSceneId": { "success": "scene4B8" } },
-        { "id": 3, "text": "Actuar en secreto mientras esperas", "nextSceneId": { "success": "scene4B9", "partial": "scene4B9_part" } }
+        {
+          "id": 1,
+          "text": "Meditar profundamente para encontrar claridad",
+          "nextSceneId": {
+            "success": "scene4B7"
+          }
+        },
+        {
+          "id": 2,
+          "text": "Hacer un llamado urgente al personal",
+          "nextSceneId": {
+            "success": "scene4B8"
+          }
+        },
+        {
+          "id": 3,
+          "text": "Actuar en secreto mientras esperas",
+          "nextSceneId": {
+            "success": "scene4B9",
+            "partial": "scene4B9_part"
+          }
+        }
       ]
     },
-
     {
       "id": "scene3C1",
       "text": "Camino C1: En un almacén olvidado, descubres secretos que han estado ocultos por décadas.",
       "isEnding": false,
       "options": [
-        { "id": 1, "text": "Registrar hallazgos y pistas", "nextSceneId": { "success": "scene2A_additional1" } },
-        { "id": 2, "text": "Explorar cajas abandonadas en busca de documentos", "nextSceneId": { "success": "scene4C2" } },
-        { "id": 3, "text": "Contactar a un historiador especializado", "nextSceneId": { "success": "scene4C3" } }
+        {
+          "id": 1,
+          "text": "Registrar hallazgos y pistas",
+          "nextSceneId": {
+            "success": "scene2A_additional1"
+          }
+        },
+        {
+          "id": 2,
+          "text": "Explorar cajas abandonadas en busca de documentos",
+          "nextSceneId": {
+            "success": "scene4C2"
+          }
+        },
+        {
+          "id": 3,
+          "text": "Contactar a un historiador especializado",
+          "nextSceneId": {
+            "success": "scene4C3"
+          }
+        }
       ]
     },
     {
@@ -307,9 +654,27 @@
       "text": "Camino C2: Investigas en el hospital, descartando leyendas de tesoros para enfocarte en la verdad.",
       "isEnding": false,
       "options": [
-        { "id": 1, "text": "Hurgar en archivos clínicos", "nextSceneId": { "success": "scene4C4" } },
-        { "id": 2, "text": "Consultar informes de medios locales", "nextSceneId": { "success": "scene4C5" } },
-        { "id": 3, "text": "Organizar un simulacro para observar reacciones", "nextSceneId": { "success": "scene4C6" } }
+        {
+          "id": 1,
+          "text": "Hurgar en archivos clínicos",
+          "nextSceneId": {
+            "success": "scene4C4"
+          }
+        },
+        {
+          "id": 2,
+          "text": "Consultar informes de medios locales",
+          "nextSceneId": {
+            "success": "scene4C5"
+          }
+        },
+        {
+          "id": 3,
+          "text": "Organizar un simulacro para observar reacciones",
+          "nextSceneId": {
+            "success": "scene4C6"
+          }
+        }
       ]
     },
     {
@@ -317,20 +682,55 @@
       "text": "Camino C3: Decides acampar y reflexionar solo en el hospital, rodeado de misterios.",
       "isEnding": false,
       "options": [
-        { "id": 1, "text": "Meditar en medio del caos", "nextSceneId": { "success": "scene4C7" } },
-        { "id": 2, "text": "Escribir un diario íntimo de la experiencia", "nextSceneId": { "success": "scene4C8" } },
-        { "id": 3, "text": "Contactar a alguien cercano para obtener apoyo", "nextSceneId": { "success": "scene4C9" } }
+        {
+          "id": 1,
+          "text": "Meditar en medio del caos",
+          "nextSceneId": {
+            "success": "scene4C7"
+          }
+        },
+        {
+          "id": 2,
+          "text": "Escribir un diario íntimo de la experiencia",
+          "nextSceneId": {
+            "success": "scene4C8"
+          }
+        },
+        {
+          "id": 3,
+          "text": "Contactar a alguien cercano para obtener apoyo",
+          "nextSceneId": {
+            "success": "scene4C9"
+          }
+        }
       ]
     },
-
     {
       "id": "scene3D1",
       "text": "Camino D1: Durante una cirugía, te enfrentas a una decisión crítica.",
       "isEnding": false,
       "options": [
-        { "id": 1, "text": "Actuar de forma decisiva", "nextSceneId": { "success": "scene4D1" } },
-        { "id": 2, "text": "Optar por un enfoque conservador", "nextSceneId": { "success": "scene4D2" } },
-        { "id": 3, "text": "Delegar en un colega de confianza", "nextSceneId": { "success": "scene4D3" } }
+        {
+          "id": 1,
+          "text": "Actuar de forma decisiva",
+          "nextSceneId": {
+            "success": "scene4D1"
+          }
+        },
+        {
+          "id": 2,
+          "text": "Optar por un enfoque conservador",
+          "nextSceneId": {
+            "success": "scene4D2"
+          }
+        },
+        {
+          "id": 3,
+          "text": "Delegar en un colega de confianza",
+          "nextSceneId": {
+            "success": "scene4D3"
+          }
+        }
       ]
     },
     {
@@ -338,9 +738,27 @@
       "text": "Camino D2: Analizas minuciosamente los protocolos quirúrgicos.",
       "isEnding": false,
       "options": [
-        { "id": 1, "text": "Detectar y corregir un fallo en el plan", "nextSceneId": { "success": "scene4D4" } },
-        { "id": 2, "text": "Proponer una modificación crítica", "nextSceneId": { "success": "scene4D5" } },
-        { "id": 3, "text": "Validar la viabilidad de la operación", "nextSceneId": { "success": "scene4D6" } }
+        {
+          "id": 1,
+          "text": "Detectar y corregir un fallo en el plan",
+          "nextSceneId": {
+            "success": "scene4D4"
+          }
+        },
+        {
+          "id": 2,
+          "text": "Proponer una modificación crítica",
+          "nextSceneId": {
+            "success": "scene4D5"
+          }
+        },
+        {
+          "id": 3,
+          "text": "Validar la viabilidad de la operación",
+          "nextSceneId": {
+            "success": "scene4D6"
+          }
+        }
       ]
     },
     {
@@ -348,20 +766,57 @@
       "text": "Camino D3: Un cirujano veterano te aconseja en medio del caos.",
       "isEnding": false,
       "options": [
-        { "id": 1, "text": "Seguir su consejo al pie de la letra", "nextSceneId": { "success": "scene4D7" } },
-        { "id": 2, "text": "Combinar su recomendación con tu intuición", "nextSceneId": { "success": "scene4D8", "failure": "scene4D8_fail" } },
-        { "id": 3, "text": "Decidir por cuenta propia", "nextSceneId": { "success": "scene4D9", "partial": "scene4D9_partial" } }
+        {
+          "id": 1,
+          "text": "Seguir su consejo al pie de la letra",
+          "nextSceneId": {
+            "success": "scene4D7"
+          }
+        },
+        {
+          "id": 2,
+          "text": "Combinar su recomendación con tu intuición",
+          "nextSceneId": {
+            "success": "scene4D8",
+            "failure": "scene4D8_fail"
+          }
+        },
+        {
+          "id": 3,
+          "text": "Decidir por cuenta propia",
+          "nextSceneId": {
+            "success": "scene4D9",
+            "partial": "scene4D9_partial"
+          }
+        }
       ]
     },
-
     {
       "id": "scene3E1",
       "text": "Camino E1: Reuniendo al personal, logras unificar esfuerzos.",
       "isEnding": false,
       "options": [
-        { "id": 1, "text": "Motivar al equipo con un discurso apasionado", "nextSceneId": { "success": "scene4E1" } },
-        { "id": 2, "text": "Definir roles claros en la crisis", "nextSceneId": { "success": "scene4E2" } },
-        { "id": 3, "text": "Planificar estrategias inmediatas", "nextSceneId": { "success": "scene4E3" } }
+        {
+          "id": 1,
+          "text": "Motivar al equipo con un discurso apasionado",
+          "nextSceneId": {
+            "success": "scene4E1"
+          }
+        },
+        {
+          "id": 2,
+          "text": "Definir roles claros en la crisis",
+          "nextSceneId": {
+            "success": "scene4E2"
+          }
+        },
+        {
+          "id": 3,
+          "text": "Planificar estrategias inmediatas",
+          "nextSceneId": {
+            "success": "scene4E3"
+          }
+        }
       ]
     },
     {
@@ -369,9 +824,28 @@
       "text": "Camino E2: La revisión de recursos revela problemas ocultos.",
       "isEnding": false,
       "options": [
-        { "id": 1, "text": "Reorganizar la logística de inmediato", "nextSceneId": { "success": "scene4E4" } },
-        { "id": 2, "text": "Solicitar suministros críticos", "nextSceneId": { "success": "scene4E5", "failure": "scene4E5_fail" } },
-        { "id": 3, "text": "Optimizar el uso de recursos existentes", "nextSceneId": { "success": "scene4E6" } }
+        {
+          "id": 1,
+          "text": "Reorganizar la logística de inmediato",
+          "nextSceneId": {
+            "success": "scene4E4"
+          }
+        },
+        {
+          "id": 2,
+          "text": "Solicitar suministros críticos",
+          "nextSceneId": {
+            "success": "scene4E5",
+            "failure": "scene4E5_fail"
+          }
+        },
+        {
+          "id": 3,
+          "text": "Optimizar el uso de recursos existentes",
+          "nextSceneId": {
+            "success": "scene4E6"
+          }
+        }
       ]
     },
     {
@@ -379,171 +853,862 @@
       "text": "Camino E3: Tu discurso inspira a la gente, pero la burocracia se interpone.",
       "isEnding": false,
       "options": [
-        { "id": 1, "text": "Inspirar al equipo a seguir adelante", "nextSceneId": { "success": "scene4E7" } },
-        { "id": 2, "text": "Convencer a la dirección para invertir en mejoras", "nextSceneId": { "success": "scene4E8" } },
-        { "id": 3, "text": "Presentar un plan de recuperación detallado", "nextSceneId": { "success": "scene4E9" } }
+        {
+          "id": 1,
+          "text": "Inspirar al equipo a seguir adelante",
+          "nextSceneId": {
+            "success": "scene4E7"
+          }
+        },
+        {
+          "id": 2,
+          "text": "Convencer a la dirección para invertir en mejoras",
+          "nextSceneId": {
+            "success": "scene4E8"
+          }
+        },
+        {
+          "id": 3,
+          "text": "Presentar un plan de recuperación detallado",
+          "nextSceneId": {
+            "success": "scene4E9"
+          }
+        }
       ]
     },
-
-   
-
-    { "id": "scene4B1", "text": "Final B1: Reconstruir el historial te revela secretos vitales y cambia el rumbo. Fin informativo.", "isEnding": true, "options": [] },
-    { "id": "scene4B2", "text": "Final B2: Descifrar el código abre nuevas oportunidades. Fin revelador.", "isEnding": true, "options": [] },
-    { "id": "scene4B2_fail", "text": "Final B2 (Failure): El descifrado falla y se pierden oportunidades. Fin desastroso.", "isEnding": true, "options": [] },
-    { "id": "scene4B3", "text": "Final B3: Informar a la administración detiene el caos temporalmente. Fin efímero.", "isEnding": true, "options": [] },
-    { "id": "scene4B4", "text": "Final B4: Te unes a expertos y lideras la recuperación. Fin inspirador.", "isEnding": true, "options": [] },
-    { "id": "scene4B5", "text": "Final B5: Tu plan alternativo marca un giro audaz. Fin audaz.", "isEnding": true, "options": [] },
-    { "id": "scene4B6", "text": "Final B6: La documentación revela verdades impactantes. Fin impactante.", "isEnding": true, "options": [] },
-    { "id": "scene4B7", "text": "Final B7: La meditación te llena de claridad y te impulsa a avanzar. Fin pacífico.", "isEnding": true, "options": [] },
-    { "id": "scene4B8", "text": "Final B8: Un llamado urgente une a todo el personal. Fin colectivo.", "isEnding": true, "options": [] },
-    { "id": "scene4B9", "text": "Final B9: Actúas en la sombra y cambias el destino. Fin rebelde.", "isEnding": true, "options": [] },
-
-    { "id": "scene4C1", "text": "Final C1: En el almacén descubres un secreto milenario. Fin misterioso.", "isEnding": true, "options": [] },
-    { "id": "scene4C2", "text": "Final C2: Cajas abandonadas revelan pistas cruciales, pero implican riesgos. Fin enigmático.", "isEnding": true, "options": [] },
-    { "id": "scene4C3", "text": "Final C3: El historiador te ofrece respuestas a un alto costo. Fin reflexivo.", "isEnding": true, "options": [] },
-    { "id": "scene4C4", "text": "Final C4: Los archivos te otorgan la clave para avanzar con éxito. Fin victorioso.", "isEnding": true, "options": [] },
-    { "id": "scene4C5", "text": "Final C5: Los medios relatan la verdadera historia, cambiando el destino. Fin informativo.", "isEnding": true, "options": [] },
-    { "id": "scene4C6", "text": "Final C6: Un simulacro desencadena eventos sorprendentes. Fin sorprendente.", "isEnding": true, "options": [] },
-    { "id": "scene4C7", "text": "Final C7: La meditación transforma tu ser y encuentras paz interior. Fin espiritual.", "isEnding": true, "options": [] },
-    { "id": "scene4C8", "text": "Final C8: Escribir en tu diario se vuelve catártico. Fin íntimo.", "isEnding": true, "options": [] },
-    { "id": "scene4C9", "text": "Final C9: El apoyo de los tuyos te impulsa a seguir. Fin cálido.", "isEnding": true, "options": [] },
-
-    { "id": "scene4D1", "text": "Final D1: Intervenir radicalmente cambia el destino de varios pacientes. Fin heroico.", "isEnding": true, "options": [] },
-    { "id": "scene4D2", "text": "Final D2: Un enfoque conservador salva vidas, aunque a un costo. Fin prudente.", "isEnding": true, "options": [] },
-    { "id": "scene4D3", "text": "Final D3: Delegar resulta en un error fatal. Fin desastroso.", "isEnding": true, "options": [] },
-    { "id": "scene4D4", "text": "Final D4: Detectas y corriges un fallo crucial a tiempo. Fin brillante.", "isEnding": true, "options": [] },
-    { "id": "scene4D5", "text": "Final D5: La modificación al plan es innovadora y exitosa. Fin innovador.", "isEnding": true, "options": [] },
-    { "id": "scene4D6", "text": "Final D6: Confirmar la operación te otorga el reconocimiento merecido. Fin consolidado.", "isEnding": true, "options": [] },
-    { "id": "scene4D7", "text": "Final D7: Sigues el consejo y lideras un cambio radical. Fin inspirador.", "isEnding": true, "options": [] },
-    { "id": "scene4D8", "text": "Final D8: La combinación de recomendaciones provoca un milagro médico. Fin excepcional.", "isEnding": true, "options": [] },
-    { "id": "scene4D9", "text": "Final D9: Una decisión independiente te lleva a un destino incierto. Fin arriesgado.", "isEnding": true, "options": [] },
-    { "id": "scene4D9_partial", "text": "Final D9 (Partial): Tu decisión parcial te deja con dudas. Fin intermedio.", "isEnding": true, "options": [] },
-
-    { "id": "scene4E1", "text": "Final E1: Motivar al equipo inyecta esperanza y unidad. Fin contagioso.", "isEnding": true, "options": [] },
-    { "id": "scene4E2", "text": "Final E2: Definir roles en la crisis reorganiza la estructura. Fin estructurado.", "isEnding": true, "options": [] },
-    { "id": "scene4E3", "text": "Final E3: La planificación estratégica da resultados decisivos. Fin planificado.", "isEnding": true, "options": [] },
-    { "id": "scene4E4", "text": "Final E4: Reorganizar la logística te saca de la crisis de manera eficiente. Fin eficiente.", "isEnding": true, "options": [] },
-    { "id": "scene4E5", "text": "Final E5: Los suministros llegan justo a tiempo y salvas a muchos. Fin oportuno.", "isEnding": true, "options": [] },
-    { "id": "scene4E6", "text": "Final E6: Optimizar recursos permite salvar a la mayoría. Fin pragmático.", "isEnding": true, "options": [] },
-    { "id": "scene4E7", "text": "Final E7: Tu discurso inspira a la comunidad y enciende la esperanza. Fin inspirador.", "isEnding": true, "options": [] },
-    { "id": "scene4E8", "text": "Final E8: Convences a la directiva para inversiones críticas. Fin visionario.", "isEnding": true, "options": [] },
-    { "id": "scene4E9", "text": "Final E9: El plan de recuperación se implementa transformando el hospital. Fin transformador.", "isEnding": true, "options": [] },
-
-    { "id": "scene2A_additional1", "text": "Rama Extra A: Una bifurcación inesperada en Camino A te conduce a una sala secreta con tecnología avanzada.", "isEnding": false, "options": [
-      { "id": 1, "text": "Utilizar la tecnología para mejorar diagnósticos", "nextSceneId": { "success": "sceneExtraA1", "failure": "sceneExtraA1_fail", "partial": "sceneExtraA1_part" } },
-      { "id": 2, "text": "Robar información para ganar ventaja", "nextSceneId": { "success": "sceneExtraA2", "failure": "sceneExtraA2_fail", "partial": "sceneExtraA2_part" } },
-      { "id": 3, "text": "Advertir a los superiores del descubrimiento", "nextSceneId": { "success": "sceneExtraA3", "failure": "sceneExtraA3_fail", "partial": "sceneExtraA3_part" } }
-    ]},
-    { "id": "scene2B_additional1", "text": "Rama Extra B: Una anomalía en los registros revela un proyecto secreto de investigación.", "isEnding": false, "options": [
-      { "id": 1, "text": "Investigar el proyecto a fondo", "nextSceneId": { "success": "sceneExtraB1", "failure": "sceneExtraB1_fail", "partial": "sceneExtraB1_part" } },
-      { "id": 2, "text": "Filtrar la información a la prensa", "nextSceneId": { "success": "sceneExtraB2", "failure": "sceneExtraB2_fail", "partial": "sceneExtraB2_part" } },
-      { "id": 3, "text": "Contactar a un investigador externo", "nextSceneId": { "success": "sceneExtraB3", "failure": "sceneExtraB3_fail", "partial": "sceneExtraB3_part" } }
-    ]},
-    { "id": "scene2C_additional1", "text": "Rama Extra C: Un descubrimiento en laboratorios olvidados abre la puerta a técnicas avanzadas.", "isEnding": false, "options": [
-      { "id": 1, "text": "Adoptar la nueva técnica en tu práctica", "nextSceneId": { "success": "sceneExtraC1", "failure": "sceneExtraC1_fail", "partial": "sceneExtraC1_part" } },
-      { "id": 2, "text": "Entrenar a otros en este método innovador", "nextSceneId": { "success": "sceneExtraC2", "failure": "sceneExtraC2_fail", "partial": "sceneExtraC2_part" } },
-      { "id": 3, "text": "Investigar la fuente de la tecnología", "nextSceneId": { "success": "sceneExtraC3", "failure": "sceneExtraC3_fail", "partial": "sceneExtraC3_part" } }
-    ]},
-    { "id": "scene2D_additional1", "text": "Rama Extra D: Un documento confidencial encontrado en quirófanos te conduce a una trama de conspiración médica.", "isEnding": false, "options": [
-      { "id": 1, "text": "Analizar el documento detenidamente", "nextSceneId": { "success": "sceneExtraD1", "failure": "sceneExtraD1_fail", "partial": "sceneExtraD1_part" } },
-      { "id": 2, "text": "Compartir la información con aliados", "nextSceneId": { "success": "sceneExtraD2", "failure": "sceneExtraD2_fail", "partial": "sceneExtraD2_part" } },
-      { "id": 3, "text": "Ocultar el hallazgo para evitar problemas", "nextSceneId": { "success": "sceneExtraD3", "failure": "sceneExtraD3_fail", "partial": "sceneExtraD3_part" } }
-    ]},
-    { "id": "scene2E_additional1", "text": "Rama Extra E: Una declaración inesperada en la entrada principal revela una red oculta de apoyo.",
-      "isEnding": false, "options": [
-      { "id": 1, "text": "Investigar la red y sus conexiones", "nextSceneId": { "success": "sceneExtraE1", "failure": "sceneExtraE1_fail", "partial": "sceneExtraE1_part" } },
-      { "id": 2, "text": "Utilizar la red para obtener recursos extra", "nextSceneId": { "success": "sceneExtraE2", "failure": "sceneExtraE2_fail", "partial": "sceneExtraE2_part" } },
-      { "id": 3, "text": "Informar a un superior sobre la anomalía", "nextSceneId": { "success": "sceneExtraE3", "failure": "sceneExtraE3_fail", "partial": "sceneExtraE3_part" } }
-    ]},
-    { "id": "scene2E_additional2", "text": "Rama Extra F: Una controversia interna en la administración se desata.", "isEnding": false, "options": [
-      { "id": 1, "text": "Exponer la corrupción públicamente", "nextSceneId": { "success": "sceneExtraF1", "failure": "sceneExtraF1_fail", "partial": "sceneExtraF1_part" } },
-      { "id": 2, "text": "Aliarte para derrocar la gerencia", "nextSceneId": { "success": "sceneExtraF2", "failure": "sceneExtraF2_fail", "partial": "sceneExtraF2_part" } },
-      { "id": 3, "text": "Ignorar la controversia y seguir trabajando", "nextSceneId": { "success": "sceneExtraF3", "failure": "sceneExtraF3_fail", "partial": "sceneExtraF3_part" } }
-    ]},
-
-    { "id": "sceneExtraA1", "text": "Final Extra A1: La tecnología avanzada revoluciona tus diagnósticos. Fin innovador.", "isEnding": true, "options": [] },
-    { "id": "sceneExtraA1_fail", "text": "Final Extra A1 (Failure): La tecnología falla en el momento crucial. Fin desafortunado.", "isEnding": true, "options": [] },
-    { "id": "sceneExtraA1_part", "text": "Final Extra A1 (Partial): Algunos diagnósticos se mejoran, pero el resultado es mixto. Fin intermedio.", "isEnding": true, "options": [] },
-
-    { "id": "sceneExtraA2", "text": "Final Extra A2: Robar información te coloca como un rival temido. Fin oscuro.", "isEnding": true, "options": [] },
-    { "id": "sceneExtraA2_fail", "text": "Final Extra A2 (Failure): La traición te cuesta caro y pierdes credibilidad. Fin trágico.", "isEnding": true, "options": [] },
-    { "id": "sceneExtraA2_part", "text": "Final Extra A2 (Partial): La información es incompleta y generas incertidumbre. Fin intermedio.", "isEnding": true, "options": [] },
-
-    { "id": "sceneExtraA3", "text": "Final Extra A3: Advertir a tus superiores desencadena cambios positivos. Fin inspirador.", "isEnding": true, "options": [] },
-    { "id": "sceneExtraA3_fail", "text": "Final Extra A3 (Failure): La advertencia es ignorada y el sistema colapsa. Fin desastroso.", "isEnding": true, "options": [] },
-    { "id": "sceneExtraA3_part", "text": "Final Extra A3 (Partial): La advertencia tiene efecto limitado. Fin intermedio.", "isEnding": true, "options": [] },
-
-    { "id": "sceneExtraB1", "text": "Final Extra B1: El proyecto secreto te abre nuevas oportunidades y revoluciona la investigación. Fin revolucionario.", "isEnding": true, "options": [] },
-    { "id": "sceneExtraB1_fail", "text": "Final Extra B1 (Failure): La investigación fracasa y se ocultan los secretos. Fin oscuro.", "isEnding": true, "options": [] },
-    { "id": "sceneExtraB1_part", "text": "Final Extra B1 (Partial): Descubres fragmentos del proyecto, pero faltan datos cruciales. Fin intermedio.", "isEnding": true, "options": [] },
-
-    { "id": "sceneExtraB2", "text": "Final Extra B2: Filtrar la información cambia el panorama mediático. Fin polémico.", "isEnding": true, "options": [] },
-    { "id": "sceneExtraB2_fail", "text": "Final Extra B2 (Failure): La filtración es detenida y persisten los secretos. Fin frustrante.", "isEnding": true, "options": [] },
-    { "id": "sceneExtraB2_part", "text": "Final Extra B2 (Partial): Solo parte de la información se hace pública. Fin intermedio.", "isEnding": true, "options": [] },
-
-    { "id": "sceneExtraB3", "text": "Final Extra B3: El contacto con el investigador externo te abre el camino a grandes revelaciones. Fin esclarecedor.", "isEnding": true, "options": [] },
-    { "id": "sceneExtraB3_fail", "text": "Final Extra B3 (Failure): La conexión se pierde y el camino se oscurece. Fin incierto.", "isEnding": true, "options": [] },
-    { "id": "sceneExtraB3_part", "text": "Final Extra B3 (Partial): La investigación es a medias y quedan muchas preguntas. Fin intermedio.", "isEnding": true, "options": [] },
-
-    { "id": "sceneExtraC1", "text": "Final Extra C1: Adoptas la nueva técnica y revolucionas la medicina. Fin triunfal.", "isEnding": true, "options": [] },
-    { "id": "sceneExtraC1_fail", "text": "Final Extra C1 (Failure): La técnica falla y causa complicaciones graves. Fin desafortunado.", "isEnding": true, "options": [] },
-    { "id": "sceneExtraC1_part", "text": "Final Extra C1 (Partial): La implementación es parcial y los resultados son mixtos. Fin intermedio.", "isEnding": true, "options": [] },
-
-    { "id": "sceneExtraC2", "text": "Final Extra C2: Entrenas a otros médicos y expandes tu influencia. Fin inspirador.", "isEnding": true, "options": [] },
-    { "id": "sceneExtraC2_fail", "text": "Final Extra C2 (Failure): La capacitación fracasa y se dispersa el conocimiento. Fin negativo.", "isEnding": true, "options": [] },
-    { "id": "sceneExtraC2_part", "text": "Final Extra C2 (Partial): Solo algunos se capacitan, con resultados parciales. Fin intermedio.", "isEnding": true, "options": [] },
-
-    { "id": "sceneExtraC3", "text": "Final Extra C3: Investigas el origen de la tecnología y descubres un secreto revolucionario. Fin revelador.", "isEnding": true, "options": [] },
-    { "id": "sceneExtraC3_fail", "text": "Final Extra C3 (Failure): La búsqueda te deja con más preguntas que respuestas. Fin oscuro.", "isEnding": true, "options": [] },
-    { "id": "sceneExtraC3_part", "text": "Final Extra C3 (Partial): Encuentras pistas, pero la verdad queda parcialmente oculta. Fin intermedio.", "isEnding": true, "options": [] },
-
-    { "id": "sceneExtraD1", "text": "Final Extra D1: El documento confidencial impulsa una reforma médica radical. Fin transformador.", "isEnding": true, "options": [] },
-    { "id": "sceneExtraD1_fail", "text": "Final Extra D1 (Failure): La reforma fracasa y la corrupción prevalece. Fin trágico.", "isEnding": true, "options": [] },
-    { "id": "sceneExtraD1_part", "text": "Final Extra D1 (Partial): La reforma se implementa parcialmente, dejando dudas. Fin intermedio.", "isEnding": true, "options": [] },
-
-    { "id": "sceneExtraD2", "text": "Final Extra D2: Compartir el documento te posiciona como líder del cambio. Fin inspirador.", "isEnding": true, "options": [] },
-    { "id": "sceneExtraD2_fail", "text": "Final Extra D2 (Failure): La filtración se frustra y quedas aislado. Fin negativo.", "isEnding": true, "options": [] },
-    { "id": "sceneExtraD2_part", "text": "Final Extra D2 (Partial): La información se difunde parcialmente y el cambio es limitado. Fin intermedio.", "isEnding": true, "options": [] },
-
-    { "id": "sceneExtraD3", "text": "Final Extra D3: Ocultar el hallazgo te salva de un escándalo, pero con incertidumbre. Fin ambiguo.", "isEnding": true, "options": [] },
-    { "id": "sceneExtraD3_fail", "text": "Final Extra D3 (Failure): La ocultación genera sospechas y el sistema colapsa. Fin trágico.", "isEnding": true, "options": [] },
-    { "id": "sceneExtraD3_part", "text": "Final Extra D3 (Partial): Parte de la información se filtra y el cambio es moderado. Fin intermedio.", "isEnding": true, "options": [] },
-
-    { "id": "sceneExtraE1", "text": "Final Extra E1: La red oculta se consolida y obtienes recursos vitales. Fin estratégico.", "isEnding": true, "options": [] },
-    { "id": "sceneExtraE1_fail", "text": "Final Extra E1 (Failure): La red se derrumba por conflictos internos. Fin desastroso.", "isEnding": true, "options": [] },
-    { "id": "sceneExtraE1_part", "text": "Final Extra E1 (Partial): Solo parte de la red funciona, generando oportunidades limitadas. Fin intermedio.", "isEnding": true, "options": [] },
-
-    { "id": "sceneExtraE2", "text": "Final Extra E2: Usar la red te permite conseguir suministros de emergencia. Fin oportuno.", "isEnding": true, "options": [] },
-    { "id": "sceneExtraE2_fail", "text": "Final Extra E2 (Failure): Los suministros no llegan y la situación empeora. Fin crítico.", "isEnding": true, "options": [] },
-    { "id": "sceneExtraE2_part", "text": "Final Extra E2 (Partial): Obtienes recursos limitados. Fin intermedio.", "isEnding": true, "options": [] },
-
-    { "id": "sceneExtraE3", "text": "Final Extra E3: Informar a un superior genera cambios estructurales. Fin visionario.", "isEnding": true, "options": [] },
-    { "id": "sceneExtraE3_fail", "text": "Final Extra E3 (Failure): La dirección ignora la información y todo se deteriora. Fin negativo.", "isEnding": true, "options": [] },
-    { "id": "sceneExtraE3_part", "text": "Final Extra E3 (Partial): La acción es parcial y los cambios son limitados. Fin intermedio.", "isEnding": true, "options": [] },
-
-    { "id": "sceneExtraF1", "text": "Final Extra F1: Exponer la corrupción te convierte en leyenda. Fin revolucionario.", "isEnding": true, "options": [] },
-    { "id": "sceneExtraF1_fail", "text": "Final Extra F1 (Failure): La exposición se censura y quedas marginado. Fin desalentador.", "isEnding": true, "options": [] },
-    { "id": "sceneExtraF1_part", "text": "Final Extra F1 (Partial): Logras exponer parcialmente la corrupción; el cambio es lento. Fin intermedio.", "isEnding": true, "options": [] },
-
-    { "id": "sceneExtraF2", "text": "Final Extra F2: Aliarte para derrocar la gerencia te coloca en una posición de poder. Fin audaz.", "isEnding": true, "options": [] },
-    { "id": "sceneExtraF2_fail", "text": "Final Extra F2 (Failure): La rebelión fracasa y el caos se incrementa. Fin trágico.", "isEnding": true, "options": [] },
-    { "id": "sceneExtraF2_part", "text": "Final Extra F2 (Partial): La insurgencia tiene éxito parcial, con resultados ambiguos. Fin intermedio.", "isEnding": true, "options": [] },
-
-    { "id": "sceneExtraF3", "text": "Final Extra F3: Ignorar la corrupción te permite continuar, pero el precio es alto. Fin neutral.", "isEnding": true, "options": [] },
-    { "id": "sceneExtraF3_fail", "text": "Final Extra F3 (Failure): La inacción te condena a un destino sombrío. Fin negativo.", "isEnding": true, "options": [] },
-    { "id": "sceneExtraF3_part", "text": "Final Extra F3 (Partial): Tu inacción salva momentáneamente, pero con grandes pérdidas. Fin intermedio.", "isEnding": true, "options": [] },
-    { "id": "scene4A1", "text": "Final A1: Tu rápida acción salva vidas y reduce el caos. Fin heroico.", "isEnding": true, "options": [] },
-    { "id": "scene4A2", "text": "Final A2: Recoges datos cruciales, pero el tiempo se agota. Fin ambiguo.", "isEnding": true, "options": [] },
-    { "id": "scene4A2_partial", "text": "Final A2 (Partial): Avanzas con incertidumbre. Fin intermedio.", "isEnding": true, "options": [] },
-    { "id": "scene4A3", "text": "Final A3: El consejo del equipo no fue suficiente para salvar el día. Fin desalentador.", "isEnding": true, "options": [] },
-    { "id": "scene4A4", "text": "Final A4: Tu diagnóstico preciso estabiliza al paciente. Fin exitoso.", "isEnding": true, "options": [] },
-    { "id": "scene4A5", "text": "Final A5: Ajustar el tratamiento de último minuto te cuesta caro, pero el paciente se salva. Fin emotivo.", "isEnding": true, "options": [] },
-    { "id": "scene4A5_partial", "text": "Final A5 (Partial): Logras salvar al paciente, pero quedan secuelas. Fin ambiguo.", "isEnding": true, "options": [] },
-    { "id": "scene4A6", "text": "Final A6: La solicitud de ayuda extra marca la diferencia y el paciente se recupera. Fin satisfactorio.", "isEnding": true, "options": [] },
-    { "id": "scene4A7", "text": "Final A7: Sigues el consejo y triunfas con honor. Fin brillante.", "isEnding": true, "options": [] },
-    { "id": "scene4A8", "text": "Final A8: Al combinar tu intuición logras evitar el desastre. Fin inspirador.", "isEnding": true, "options": [] },
-    { "id": "scene4A8_fail", "text": "Final A8 (Failure): La mezcla de intuición y consejo falla, resultando en un error fatal. Fin trágico.", "isEnding": true, "options": [] },
-    { "id": "scene4A9", "text": "Final A9: Tu decisión independiente te conduce a un destino incierto. Fin caótico.", "isEnding": true, "options": [] },
-    { "id": "scene4A9_partial", "text": "Final A9 (Partial): La independencia parcial te deja con dudas y el destino es incierto. Fin intermedio.", "isEnding": true, "options": [] }
+    {
+      "id": "scene4B1",
+      "text": "Final B1: Reconstruir el historial te revela secretos vitales y cambia el rumbo. Fin informativo.",
+      "isEnding": true,
+      "options": []
+    },
+    {
+      "id": "scene4B2",
+      "text": "Final B2: Descifrar el código abre nuevas oportunidades. Fin revelador.",
+      "isEnding": true,
+      "options": []
+    },
+    {
+      "id": "scene4B2_fail",
+      "text": "Final B2 (Failure): El descifrado falla y se pierden oportunidades. Fin desastroso.",
+      "isEnding": true,
+      "options": []
+    },
+    {
+      "id": "scene4B3",
+      "text": "Final B3: Informar a la administración detiene el caos temporalmente. Fin efímero.",
+      "isEnding": true,
+      "options": []
+    },
+    {
+      "id": "scene4B4",
+      "text": "Final B4: Te unes a expertos y lideras la recuperación. Fin inspirador.",
+      "isEnding": true,
+      "options": []
+    },
+    {
+      "id": "scene4B5",
+      "text": "Final B5: Tu plan alternativo marca un giro audaz. Fin audaz.",
+      "isEnding": true,
+      "options": []
+    },
+    {
+      "id": "scene4B6",
+      "text": "Final B6: La documentación revela verdades impactantes. Fin impactante.",
+      "isEnding": true,
+      "options": []
+    },
+    {
+      "id": "scene4B7",
+      "text": "Final B7: La meditación te llena de claridad y te impulsa a avanzar. Fin pacífico.",
+      "isEnding": true,
+      "options": []
+    },
+    {
+      "id": "scene4B8",
+      "text": "Final B8: Un llamado urgente une a todo el personal. Fin colectivo.",
+      "isEnding": true,
+      "options": []
+    },
+    {
+      "id": "scene4B9",
+      "text": "Final B9: Actúas en la sombra y cambias el destino. Fin rebelde.",
+      "isEnding": true,
+      "options": []
+    },
+    {
+      "id": "scene4C1",
+      "text": "Final C1: En el almacén descubres un secreto milenario. Fin misterioso.",
+      "isEnding": true,
+      "options": []
+    },
+    {
+      "id": "scene4C2",
+      "text": "Final C2: Cajas abandonadas revelan pistas cruciales, pero implican riesgos. Fin enigmático.",
+      "isEnding": true,
+      "options": []
+    },
+    {
+      "id": "scene4C3",
+      "text": "Final C3: El historiador te ofrece respuestas a un alto costo. Fin reflexivo.",
+      "isEnding": true,
+      "options": []
+    },
+    {
+      "id": "scene4C4",
+      "text": "Final C4: Los archivos te otorgan la clave para avanzar con éxito. Fin victorioso.",
+      "isEnding": true,
+      "options": []
+    },
+    {
+      "id": "scene4C5",
+      "text": "Final C5: Los medios relatan la verdadera historia, cambiando el destino. Fin informativo.",
+      "isEnding": true,
+      "options": []
+    },
+    {
+      "id": "scene4C6",
+      "text": "Final C6: Un simulacro desencadena eventos sorprendentes. Fin sorprendente.",
+      "isEnding": true,
+      "options": []
+    },
+    {
+      "id": "scene4C7",
+      "text": "Final C7: La meditación transforma tu ser y encuentras paz interior. Fin espiritual.",
+      "isEnding": true,
+      "options": []
+    },
+    {
+      "id": "scene4C8",
+      "text": "Final C8: Escribir en tu diario se vuelve catártico. Fin íntimo.",
+      "isEnding": true,
+      "options": []
+    },
+    {
+      "id": "scene4C9",
+      "text": "Final C9: El apoyo de los tuyos te impulsa a seguir. Fin cálido.",
+      "isEnding": true,
+      "options": []
+    },
+    {
+      "id": "scene4D1",
+      "text": "Final D1: Intervenir radicalmente cambia el destino de varios pacientes. Fin heroico.",
+      "isEnding": true,
+      "options": []
+    },
+    {
+      "id": "scene4D2",
+      "text": "Final D2: Un enfoque conservador salva vidas, aunque a un costo. Fin prudente.",
+      "isEnding": true,
+      "options": []
+    },
+    {
+      "id": "scene4D3",
+      "text": "Final D3: Delegar resulta en un error fatal. Fin desastroso.",
+      "isEnding": true,
+      "options": []
+    },
+    {
+      "id": "scene4D4",
+      "text": "Final D4: Detectas y corriges un fallo crucial a tiempo. Fin brillante.",
+      "isEnding": true,
+      "options": []
+    },
+    {
+      "id": "scene4D5",
+      "text": "Final D5: La modificación al plan es innovadora y exitosa. Fin innovador.",
+      "isEnding": true,
+      "options": []
+    },
+    {
+      "id": "scene4D6",
+      "text": "Final D6: Confirmar la operación te otorga el reconocimiento merecido. Fin consolidado.",
+      "isEnding": true,
+      "options": []
+    },
+    {
+      "id": "scene4D7",
+      "text": "Final D7: Sigues el consejo y lideras un cambio radical. Fin inspirador.",
+      "isEnding": true,
+      "options": []
+    },
+    {
+      "id": "scene4D8",
+      "text": "Final D8: La combinación de recomendaciones provoca un milagro médico. Fin excepcional.",
+      "isEnding": true,
+      "options": []
+    },
+    {
+      "id": "scene4D9",
+      "text": "Final D9: Una decisión independiente te lleva a un destino incierto. Fin arriesgado.",
+      "isEnding": true,
+      "options": []
+    },
+    {
+      "id": "scene4D9_partial",
+      "text": "Final D9 (Partial): Tu decisión parcial te deja con dudas. Fin intermedio.",
+      "isEnding": true,
+      "options": []
+    },
+    {
+      "id": "scene4E1",
+      "text": "Final E1: Motivar al equipo inyecta esperanza y unidad. Fin contagioso.",
+      "isEnding": true,
+      "options": []
+    },
+    {
+      "id": "scene4E2",
+      "text": "Final E2: Definir roles en la crisis reorganiza la estructura. Fin estructurado.",
+      "isEnding": true,
+      "options": []
+    },
+    {
+      "id": "scene4E3",
+      "text": "Final E3: La planificación estratégica da resultados decisivos. Fin planificado.",
+      "isEnding": true,
+      "options": []
+    },
+    {
+      "id": "scene4E4",
+      "text": "Final E4: Reorganizar la logística te saca de la crisis de manera eficiente. Fin eficiente.",
+      "isEnding": true,
+      "options": []
+    },
+    {
+      "id": "scene4E5",
+      "text": "Final E5: Los suministros llegan justo a tiempo y salvas a muchos. Fin oportuno.",
+      "isEnding": true,
+      "options": []
+    },
+    {
+      "id": "scene4E6",
+      "text": "Final E6: Optimizar recursos permite salvar a la mayoría. Fin pragmático.",
+      "isEnding": true,
+      "options": []
+    },
+    {
+      "id": "scene4E7",
+      "text": "Final E7: Tu discurso inspira a la comunidad y enciende la esperanza. Fin inspirador.",
+      "isEnding": true,
+      "options": []
+    },
+    {
+      "id": "scene4E8",
+      "text": "Final E8: Convences a la directiva para inversiones críticas. Fin visionario.",
+      "isEnding": true,
+      "options": []
+    },
+    {
+      "id": "scene4E9",
+      "text": "Final E9: El plan de recuperación se implementa transformando el hospital. Fin transformador.",
+      "isEnding": true,
+      "options": []
+    },
+    {
+      "id": "scene2A_additional1",
+      "text": "Rama Extra A: Una bifurcación inesperada en Camino A te conduce a una sala secreta con tecnología avanzada.",
+      "isEnding": false,
+      "options": [
+        {
+          "id": 1,
+          "text": "Utilizar la tecnología para mejorar diagnósticos",
+          "nextSceneId": {
+            "success": "sceneExtraA1",
+            "failure": "sceneExtraA1_fail",
+            "partial": "sceneExtraA1_part"
+          }
+        },
+        {
+          "id": 2,
+          "text": "Robar información para ganar ventaja",
+          "nextSceneId": {
+            "success": "sceneExtraA2",
+            "failure": "sceneExtraA2_fail",
+            "partial": "sceneExtraA2_part"
+          }
+        },
+        {
+          "id": 3,
+          "text": "Advertir a los superiores del descubrimiento",
+          "nextSceneId": {
+            "success": "sceneExtraA3",
+            "failure": "sceneExtraA3_fail",
+            "partial": "sceneExtraA3_part"
+          }
+        }
+      ]
+    },
+    {
+      "id": "scene2B_additional1",
+      "text": "Rama Extra B: Una anomalía en los registros revela un proyecto secreto de investigación.",
+      "isEnding": false,
+      "options": [
+        {
+          "id": 1,
+          "text": "Investigar el proyecto a fondo",
+          "nextSceneId": {
+            "success": "sceneExtraB1",
+            "failure": "sceneExtraB1_fail",
+            "partial": "sceneExtraB1_part"
+          }
+        },
+        {
+          "id": 2,
+          "text": "Filtrar la información a la prensa",
+          "nextSceneId": {
+            "success": "sceneExtraB2",
+            "failure": "sceneExtraB2_fail",
+            "partial": "sceneExtraB2_part"
+          }
+        },
+        {
+          "id": 3,
+          "text": "Contactar a un investigador externo",
+          "nextSceneId": {
+            "success": "sceneExtraB3",
+            "failure": "sceneExtraB3_fail",
+            "partial": "sceneExtraB3_part"
+          }
+        }
+      ]
+    },
+    {
+      "id": "scene2C_additional1",
+      "text": "Rama Extra C: Un descubrimiento en laboratorios olvidados abre la puerta a técnicas avanzadas.",
+      "isEnding": false,
+      "options": [
+        {
+          "id": 1,
+          "text": "Adoptar la nueva técnica en tu práctica",
+          "nextSceneId": {
+            "success": "sceneExtraC1",
+            "failure": "sceneExtraC1_fail",
+            "partial": "sceneExtraC1_part"
+          }
+        },
+        {
+          "id": 2,
+          "text": "Entrenar a otros en este método innovador",
+          "nextSceneId": {
+            "success": "sceneExtraC2",
+            "failure": "sceneExtraC2_fail",
+            "partial": "sceneExtraC2_part"
+          }
+        },
+        {
+          "id": 3,
+          "text": "Investigar la fuente de la tecnología",
+          "nextSceneId": {
+            "success": "sceneExtraC3",
+            "failure": "sceneExtraC3_fail",
+            "partial": "sceneExtraC3_part"
+          }
+        }
+      ]
+    },
+    {
+      "id": "scene2D_additional1",
+      "text": "Rama Extra D: Un documento confidencial encontrado en quirófanos te conduce a una trama de conspiración médica.",
+      "isEnding": false,
+      "options": [
+        {
+          "id": 1,
+          "text": "Analizar el documento detenidamente",
+          "nextSceneId": {
+            "success": "sceneExtraD1",
+            "failure": "sceneExtraD1_fail",
+            "partial": "sceneExtraD1_part"
+          }
+        },
+        {
+          "id": 2,
+          "text": "Compartir la información con aliados",
+          "nextSceneId": {
+            "success": "sceneExtraD2",
+            "failure": "sceneExtraD2_fail",
+            "partial": "sceneExtraD2_part"
+          }
+        },
+        {
+          "id": 3,
+          "text": "Ocultar el hallazgo para evitar problemas",
+          "nextSceneId": {
+            "success": "sceneExtraD3",
+            "failure": "sceneExtraD3_fail",
+            "partial": "sceneExtraD3_part"
+          }
+        }
+      ]
+    },
+    {
+      "id": "scene2E_additional1",
+      "text": "Rama Extra E: Una declaración inesperada en la entrada principal revela una red oculta de apoyo.",
+      "isEnding": false,
+      "options": [
+        {
+          "id": 1,
+          "text": "Investigar la red y sus conexiones",
+          "nextSceneId": {
+            "success": "sceneExtraE1",
+            "failure": "sceneExtraE1_fail",
+            "partial": "sceneExtraE1_part"
+          }
+        },
+        {
+          "id": 2,
+          "text": "Utilizar la red para obtener recursos extra",
+          "nextSceneId": {
+            "success": "sceneExtraE2",
+            "failure": "sceneExtraE2_fail",
+            "partial": "sceneExtraE2_part"
+          }
+        },
+        {
+          "id": 3,
+          "text": "Informar a un superior sobre la anomalía",
+          "nextSceneId": {
+            "success": "sceneExtraE3",
+            "failure": "sceneExtraE3_fail",
+            "partial": "sceneExtraE3_part"
+          }
+        }
+      ]
+    },
+    {
+      "id": "scene2E_additional2",
+      "text": "Rama Extra F: Una controversia interna en la administración se desata.",
+      "isEnding": false,
+      "options": [
+        {
+          "id": 1,
+          "text": "Exponer la corrupción públicamente",
+          "nextSceneId": {
+            "success": "sceneExtraF1",
+            "failure": "sceneExtraF1_fail",
+            "partial": "sceneExtraF1_part"
+          }
+        },
+        {
+          "id": 2,
+          "text": "Aliarte para derrocar la gerencia",
+          "nextSceneId": {
+            "success": "sceneExtraF2",
+            "failure": "sceneExtraF2_fail",
+            "partial": "sceneExtraF2_part"
+          }
+        },
+        {
+          "id": 3,
+          "text": "Ignorar la controversia y seguir trabajando",
+          "nextSceneId": {
+            "success": "sceneExtraF3",
+            "failure": "sceneExtraF3_fail",
+            "partial": "sceneExtraF3_part"
+          }
+        }
+      ]
+    },
+    {
+      "id": "sceneExtraA1",
+      "text": "Final Extra A1: La tecnología avanzada revoluciona tus diagnósticos. Fin innovador.",
+      "isEnding": true,
+      "options": []
+    },
+    {
+      "id": "sceneExtraA1_fail",
+      "text": "Final Extra A1 (Failure): La tecnología falla en el momento crucial. Fin desafortunado.",
+      "isEnding": true,
+      "options": []
+    },
+    {
+      "id": "sceneExtraA1_part",
+      "text": "Final Extra A1 (Partial): Algunos diagnósticos se mejoran, pero el resultado es mixto. Fin intermedio.",
+      "isEnding": true,
+      "options": []
+    },
+    {
+      "id": "sceneExtraA2",
+      "text": "Final Extra A2: Robar información te coloca como un rival temido. Fin oscuro.",
+      "isEnding": true,
+      "options": []
+    },
+    {
+      "id": "sceneExtraA2_fail",
+      "text": "Final Extra A2 (Failure): La traición te cuesta caro y pierdes credibilidad. Fin trágico.",
+      "isEnding": true,
+      "options": []
+    },
+    {
+      "id": "sceneExtraA2_part",
+      "text": "Final Extra A2 (Partial): La información es incompleta y generas incertidumbre. Fin intermedio.",
+      "isEnding": true,
+      "options": []
+    },
+    {
+      "id": "sceneExtraA3",
+      "text": "Final Extra A3: Advertir a tus superiores desencadena cambios positivos. Fin inspirador.",
+      "isEnding": true,
+      "options": []
+    },
+    {
+      "id": "sceneExtraA3_fail",
+      "text": "Final Extra A3 (Failure): La advertencia es ignorada y el sistema colapsa. Fin desastroso.",
+      "isEnding": true,
+      "options": []
+    },
+    {
+      "id": "sceneExtraA3_part",
+      "text": "Final Extra A3 (Partial): La advertencia tiene efecto limitado. Fin intermedio.",
+      "isEnding": true,
+      "options": []
+    },
+    {
+      "id": "sceneExtraB1",
+      "text": "Final Extra B1: El proyecto secreto te abre nuevas oportunidades y revoluciona la investigación. Fin revolucionario.",
+      "isEnding": true,
+      "options": []
+    },
+    {
+      "id": "sceneExtraB1_fail",
+      "text": "Final Extra B1 (Failure): La investigación fracasa y se ocultan los secretos. Fin oscuro.",
+      "isEnding": true,
+      "options": []
+    },
+    {
+      "id": "sceneExtraB1_part",
+      "text": "Final Extra B1 (Partial): Descubres fragmentos del proyecto, pero faltan datos cruciales. Fin intermedio.",
+      "isEnding": true,
+      "options": []
+    },
+    {
+      "id": "sceneExtraB2",
+      "text": "Final Extra B2: Filtrar la información cambia el panorama mediático. Fin polémico.",
+      "isEnding": true,
+      "options": []
+    },
+    {
+      "id": "sceneExtraB2_fail",
+      "text": "Final Extra B2 (Failure): La filtración es detenida y persisten los secretos. Fin frustrante.",
+      "isEnding": true,
+      "options": []
+    },
+    {
+      "id": "sceneExtraB2_part",
+      "text": "Final Extra B2 (Partial): Solo parte de la información se hace pública. Fin intermedio.",
+      "isEnding": true,
+      "options": []
+    },
+    {
+      "id": "sceneExtraB3",
+      "text": "Final Extra B3: El contacto con el investigador externo te abre el camino a grandes revelaciones. Fin esclarecedor.",
+      "isEnding": true,
+      "options": []
+    },
+    {
+      "id": "sceneExtraB3_fail",
+      "text": "Final Extra B3 (Failure): La conexión se pierde y el camino se oscurece. Fin incierto.",
+      "isEnding": true,
+      "options": []
+    },
+    {
+      "id": "sceneExtraB3_part",
+      "text": "Final Extra B3 (Partial): La investigación es a medias y quedan muchas preguntas. Fin intermedio.",
+      "isEnding": true,
+      "options": []
+    },
+    {
+      "id": "sceneExtraC1",
+      "text": "Final Extra C1: Adoptas la nueva técnica y revolucionas la medicina. Fin triunfal.",
+      "isEnding": true,
+      "options": []
+    },
+    {
+      "id": "sceneExtraC1_fail",
+      "text": "Final Extra C1 (Failure): La técnica falla y causa complicaciones graves. Fin desafortunado.",
+      "isEnding": true,
+      "options": []
+    },
+    {
+      "id": "sceneExtraC1_part",
+      "text": "Final Extra C1 (Partial): La implementación es parcial y los resultados son mixtos. Fin intermedio.",
+      "isEnding": true,
+      "options": []
+    },
+    {
+      "id": "sceneExtraC2",
+      "text": "Final Extra C2: Entrenas a otros médicos y expandes tu influencia. Fin inspirador.",
+      "isEnding": true,
+      "options": []
+    },
+    {
+      "id": "sceneExtraC2_fail",
+      "text": "Final Extra C2 (Failure): La capacitación fracasa y se dispersa el conocimiento. Fin negativo.",
+      "isEnding": true,
+      "options": []
+    },
+    {
+      "id": "sceneExtraC2_part",
+      "text": "Final Extra C2 (Partial): Solo algunos se capacitan, con resultados parciales. Fin intermedio.",
+      "isEnding": true,
+      "options": []
+    },
+    {
+      "id": "sceneExtraC3",
+      "text": "Final Extra C3: Investigas el origen de la tecnología y descubres un secreto revolucionario. Fin revelador.",
+      "isEnding": true,
+      "options": []
+    },
+    {
+      "id": "sceneExtraC3_fail",
+      "text": "Final Extra C3 (Failure): La búsqueda te deja con más preguntas que respuestas. Fin oscuro.",
+      "isEnding": true,
+      "options": []
+    },
+    {
+      "id": "sceneExtraC3_part",
+      "text": "Final Extra C3 (Partial): Encuentras pistas, pero la verdad queda parcialmente oculta. Fin intermedio.",
+      "isEnding": true,
+      "options": []
+    },
+    {
+      "id": "sceneExtraD1",
+      "text": "Final Extra D1: El documento confidencial impulsa una reforma médica radical. Fin transformador.",
+      "isEnding": true,
+      "options": []
+    },
+    {
+      "id": "sceneExtraD1_fail",
+      "text": "Final Extra D1 (Failure): La reforma fracasa y la corrupción prevalece. Fin trágico.",
+      "isEnding": true,
+      "options": []
+    },
+    {
+      "id": "sceneExtraD1_part",
+      "text": "Final Extra D1 (Partial): La reforma se implementa parcialmente, dejando dudas. Fin intermedio.",
+      "isEnding": true,
+      "options": []
+    },
+    {
+      "id": "sceneExtraD2",
+      "text": "Final Extra D2: Compartir el documento te posiciona como líder del cambio. Fin inspirador.",
+      "isEnding": true,
+      "options": []
+    },
+    {
+      "id": "sceneExtraD2_fail",
+      "text": "Final Extra D2 (Failure): La filtración se frustra y quedas aislado. Fin negativo.",
+      "isEnding": true,
+      "options": []
+    },
+    {
+      "id": "sceneExtraD2_part",
+      "text": "Final Extra D2 (Partial): La información se difunde parcialmente y el cambio es limitado. Fin intermedio.",
+      "isEnding": true,
+      "options": []
+    },
+    {
+      "id": "sceneExtraD3",
+      "text": "Final Extra D3: Ocultar el hallazgo te salva de un escándalo, pero con incertidumbre. Fin ambiguo.",
+      "isEnding": true,
+      "options": []
+    },
+    {
+      "id": "sceneExtraD3_fail",
+      "text": "Final Extra D3 (Failure): La ocultación genera sospechas y el sistema colapsa. Fin trágico.",
+      "isEnding": true,
+      "options": []
+    },
+    {
+      "id": "sceneExtraD3_part",
+      "text": "Final Extra D3 (Partial): Parte de la información se filtra y el cambio es moderado. Fin intermedio.",
+      "isEnding": true,
+      "options": []
+    },
+    {
+      "id": "sceneExtraE1",
+      "text": "Final Extra E1: La red oculta se consolida y obtienes recursos vitales. Fin estratégico.",
+      "isEnding": true,
+      "options": []
+    },
+    {
+      "id": "sceneExtraE1_fail",
+      "text": "Final Extra E1 (Failure): La red se derrumba por conflictos internos. Fin desastroso.",
+      "isEnding": true,
+      "options": []
+    },
+    {
+      "id": "sceneExtraE1_part",
+      "text": "Final Extra E1 (Partial): Solo parte de la red funciona, generando oportunidades limitadas. Fin intermedio.",
+      "isEnding": true,
+      "options": []
+    },
+    {
+      "id": "sceneExtraE2",
+      "text": "Final Extra E2: Usar la red te permite conseguir suministros de emergencia. Fin oportuno.",
+      "isEnding": true,
+      "options": []
+    },
+    {
+      "id": "sceneExtraE2_fail",
+      "text": "Final Extra E2 (Failure): Los suministros no llegan y la situación empeora. Fin crítico.",
+      "isEnding": true,
+      "options": []
+    },
+    {
+      "id": "sceneExtraE2_part",
+      "text": "Final Extra E2 (Partial): Obtienes recursos limitados. Fin intermedio.",
+      "isEnding": true,
+      "options": []
+    },
+    {
+      "id": "sceneExtraE3",
+      "text": "Final Extra E3: Informar a un superior genera cambios estructurales. Fin visionario.",
+      "isEnding": true,
+      "options": []
+    },
+    {
+      "id": "sceneExtraE3_fail",
+      "text": "Final Extra E3 (Failure): La dirección ignora la información y todo se deteriora. Fin negativo.",
+      "isEnding": true,
+      "options": []
+    },
+    {
+      "id": "sceneExtraE3_part",
+      "text": "Final Extra E3 (Partial): La acción es parcial y los cambios son limitados. Fin intermedio.",
+      "isEnding": true,
+      "options": []
+    },
+    {
+      "id": "sceneExtraF1",
+      "text": "Final Extra F1: Exponer la corrupción te convierte en leyenda. Fin revolucionario.",
+      "isEnding": true,
+      "options": []
+    },
+    {
+      "id": "sceneExtraF1_fail",
+      "text": "Final Extra F1 (Failure): La exposición se censura y quedas marginado. Fin desalentador.",
+      "isEnding": true,
+      "options": []
+    },
+    {
+      "id": "sceneExtraF1_part",
+      "text": "Final Extra F1 (Partial): Logras exponer parcialmente la corrupción; el cambio es lento. Fin intermedio.",
+      "isEnding": true,
+      "options": []
+    },
+    {
+      "id": "sceneExtraF2",
+      "text": "Final Extra F2: Aliarte para derrocar la gerencia te coloca en una posición de poder. Fin audaz.",
+      "isEnding": true,
+      "options": []
+    },
+    {
+      "id": "sceneExtraF2_fail",
+      "text": "Final Extra F2 (Failure): La rebelión fracasa y el caos se incrementa. Fin trágico.",
+      "isEnding": true,
+      "options": []
+    },
+    {
+      "id": "sceneExtraF2_part",
+      "text": "Final Extra F2 (Partial): La insurgencia tiene éxito parcial, con resultados ambiguos. Fin intermedio.",
+      "isEnding": true,
+      "options": []
+    },
+    {
+      "id": "sceneExtraF3",
+      "text": "Final Extra F3: Ignorar la corrupción te permite continuar, pero el precio es alto. Fin neutral.",
+      "isEnding": true,
+      "options": []
+    },
+    {
+      "id": "sceneExtraF3_fail",
+      "text": "Final Extra F3 (Failure): La inacción te condena a un destino sombrío. Fin negativo.",
+      "isEnding": true,
+      "options": []
+    },
+    {
+      "id": "sceneExtraF3_part",
+      "text": "Final Extra F3 (Partial): Tu inacción salva momentáneamente, pero con grandes pérdidas. Fin intermedio.",
+      "isEnding": true,
+      "options": []
+    },
+    {
+      "id": "scene4A1",
+      "text": "Final A1: Tu rápida acción salva vidas y reduce el caos. Fin heroico.",
+      "isEnding": true,
+      "options": []
+    },
+    {
+      "id": "scene4A2",
+      "text": "Final A2: Recoges datos cruciales, pero el tiempo se agota. Fin ambiguo.",
+      "isEnding": true,
+      "options": []
+    },
+    {
+      "id": "scene4A2_partial",
+      "text": "Final A2 (Partial): Avanzas con incertidumbre. Fin intermedio.",
+      "isEnding": true,
+      "options": []
+    },
+    {
+      "id": "scene4A3",
+      "text": "Final A3: El consejo del equipo no fue suficiente para salvar el día. Fin desalentador.",
+      "isEnding": true,
+      "options": []
+    },
+    {
+      "id": "scene4A4",
+      "text": "Final A4: Tu diagnóstico preciso estabiliza al paciente. Fin exitoso.",
+      "isEnding": true,
+      "options": []
+    },
+    {
+      "id": "scene4A5",
+      "text": "Final A5: Ajustar el tratamiento de último minuto te cuesta caro, pero el paciente se salva. Fin emotivo.",
+      "isEnding": true,
+      "options": []
+    },
+    {
+      "id": "scene4A5_partial",
+      "text": "Final A5 (Partial): Logras salvar al paciente, pero quedan secuelas. Fin ambiguo.",
+      "isEnding": true,
+      "options": []
+    },
+    {
+      "id": "scene4A6",
+      "text": "Final A6: La solicitud de ayuda extra marca la diferencia y el paciente se recupera. Fin satisfactorio.",
+      "isEnding": true,
+      "options": []
+    },
+    {
+      "id": "scene4A7",
+      "text": "Final A7: Sigues el consejo y triunfas con honor. Fin brillante.",
+      "isEnding": true,
+      "options": []
+    },
+    {
+      "id": "scene4A8",
+      "text": "Final A8: Al combinar tu intuición logras evitar el desastre. Fin inspirador.",
+      "isEnding": true,
+      "options": []
+    },
+    {
+      "id": "scene4A8_fail",
+      "text": "Final A8 (Failure): La mezcla de intuición y consejo falla, resultando en un error fatal. Fin trágico.",
+      "isEnding": true,
+      "options": []
+    },
+    {
+      "id": "scene4A9",
+      "text": "Final A9: Tu decisión independiente te conduce a un destino incierto. Fin caótico.",
+      "isEnding": true,
+      "options": []
+    },
+    {
+      "id": "scene4A9_partial",
+      "text": "Final A9 (Partial): La independencia parcial te deja con dudas y el destino es incierto. Fin intermedio.",
+      "isEnding": true,
+      "options": []
+    }
   ]
 }

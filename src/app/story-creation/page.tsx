@@ -2,6 +2,7 @@
 import React, { Fragment, useState } from "react";
 import {
   ATRIBUTOS_DISPONIBLES,
+  Attributes,
   LOCKED_ATTRIBUTES,
   Scene,
 } from "../../../roomsStore";
@@ -11,6 +12,7 @@ import {
   FormSceneOptionData,
 } from "@/components/story-creation/InterfacesSceneFormOption";
 import ReadScenes from "@/components/story-creation/readScenes";
+import FormAttributes from "@/components/story-creation/formAttributes";
 
 type AtributosDisponibles = (typeof ATRIBUTOS_DISPONIBLES)[number] | ""; // Esto crea un tipo de unión con los valores de ATRIBUTOS_DISPONIBLES
 type LockedAttributes = (typeof LOCKED_ATTRIBUTES)[number] | ""; // Esto crea un tipo de unión con los valores de LOCKED_Attributes
@@ -40,8 +42,15 @@ const Page: React.FC = () => {
         partial: "",
       },
     });
+  const [formAttributeData, setFormAttributeData] = useState<Attributes>({
+    id: -1,
+    name: "",
+    unlockable: false,
+    unlock_threshold:1,
+  });
   const [sceneOptions, setSceneOptions] = useState<any[]>([]);
   const [newScenes, setNewScenes] = useState<Array<object>>([]);
+  const [showAttForm, setShowAttForm] = useState<boolean>(false);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -76,7 +85,7 @@ const Page: React.FC = () => {
     });
   };
 
-  const fetchAttributes = async (newScene: Scene) => {
+  const PostScene = async (newScene: Scene) => {
     try {
       const response = await fetch("http://localhost:3001/scenes", {
         method: "POST",
@@ -114,11 +123,25 @@ const Page: React.FC = () => {
     document.getElementById("header")?.scrollIntoView({
       behavior: "smooth",
     });
-    await fetchAttributes(newScene);
+    await PostScene(newScene);
   };
 
   return (
-    <div id="header" className="min-h-screen flex flex-col bg-slate-100">
+    <div id="header" className="min-h-screen text-slate-700 flex flex-col bg-slate-100">
+      <button
+        onClick={() => setShowAttForm(!showAttForm)}
+        className="m-2 flex justify-center text-wrap py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+      >
+        Ver/ocultar formulario para crear atributo
+      </button>
+      <div className="flex justify-center mt-1">
+        {showAttForm && (
+          <FormAttributes
+            formAttributeData={formAttributeData}
+            setFormAttributeData={setFormAttributeData}
+          />
+        )}
+      </div>
       <div className="flex justify-center mt-8">
         <form
           onSubmit={handleSubmit}
@@ -223,7 +246,6 @@ const Page: React.FC = () => {
       <pre className="max-w-screen-xl mx-auto p-6 bg-slate-300 text-wrap w-2/3 text-white rounded-lg shadow-md">
         <ReadScenes />
       </pre>
-      
     </div>
   );
 };

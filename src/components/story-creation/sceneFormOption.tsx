@@ -6,7 +6,7 @@ import {
   LockedAttributes,
 } from "./InterfacesSceneFormOption";
 
-export default function Home({
+export default function SceneFormOption({
   formSceneBasicData,
   sceneOptions,
   setSceneOptions,

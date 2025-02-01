@@ -5,8 +5,8 @@ import {
   Attributes,
   LOCKED_ATTRIBUTES,
   Scene,
-} from "../../../roomsStore";
-import SceneFormOption from "../../components/story-creation/sceneFormOption";
+} from "../../../../roomsStore";
+import SceneFormOption from "@/components/story-creation/sceneFormOption";
 import {
   FormSceneBasicData,
   FormSceneOptionData,

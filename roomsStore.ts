@@ -1,15 +1,26 @@
 // roomsStore.ts
+import db from "./db.json"
 
-// Atributos disponibles
-export const ATRIBUTOS_DISPONIBLES = ["fuerte", "inteligente", "carismatico", "trolo", "autista", "otaku"]
+/*
+A continuación se establecen las constantes de los atributos. 
+Se recorre la base de datos JSON y se agregan los elementos a las constantes.
+*/
+export const ATRIBUTOS_DISPONIBLES: string[] = db.attributes
+      .filter((attribute) => !attribute.unlockable) 
+      .map((attribute) => attribute.name); 
 
-export const LOCKED_ATTRIBUTES = ['chi-inutil', 'chi-responsable']
+export const LOCKED_ATTRIBUTES:string[] = db.attributes
+.filter((attribute) => attribute.unlockable) 
+.map((attribute) => attribute.name);
 
 // Definimos los umbrales para desbloquear cada atributo secreto
-export const UNLOCK_THRESHOLDS: Record<string, number> = {
-  "chi-inutil": 5,
-  "chi-responsable": 5,
-};
+export const UNLOCK_THRESHOLDS: Record<string, number> = db.attributes
+.filter((attribute) => attribute.unlockable)
+.reduce((acc, attribute) => {
+  acc[attribute.name] = attribute.unlock_threshold || 0;
+  return acc;
+}, {} as Record<string, number>);
+
 
 export interface Attributes {
   name: string;

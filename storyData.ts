@@ -223,4 +223,3 @@ export const storyData = Object.fromEntries(
   scenesArray.map((scene) => [scene.id, scene])
 ) as { [key: string]: Scene };
 
-console.log(storyData);

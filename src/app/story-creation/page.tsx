@@ -14,8 +14,9 @@ import {
 import ReadScenes from "@/components/story-creation/readScenes";
 import FormAttributes from "@/components/story-creation/formAttributes";
 
-type AtributosDisponibles = (typeof ATRIBUTOS_DISPONIBLES)[number] | ""; // Esto crea un tipo de unión con los valores de ATRIBUTOS_DISPONIBLES
-type LockedAttributes = (typeof LOCKED_ATTRIBUTES)[number] | ""; // Esto crea un tipo de unión con los valores de LOCKED_Attributes
+// Creamos tipos de unión a partir de las constantes importadas
+type AtributosDisponibles = (typeof ATRIBUTOS_DISPONIBLES)[number] | "";
+type LockedAttributes = (typeof LOCKED_ATTRIBUTES)[number] | "";
 
 const Page: React.FC = () => {
   const [unlocksLockedAttribute, setUnlocksLockedAttribute] =
@@ -33,7 +34,7 @@ const Page: React.FC = () => {
       maxVotes: 0,
       requirement: [] as AtributosDisponibles[],
       lockedAttributeIncrement: {
-        attribute: "" as LockedAttributes, // Usa el tipo correcto
+        attribute: "" as LockedAttributes,
         increment: 0,
       },
       nextSceneId: {
@@ -43,10 +44,10 @@ const Page: React.FC = () => {
       },
     });
   const [formAttributeData, setFormAttributeData] = useState<Attributes>({
-    id: '-1',
+    id: "-1", // id es string
     name: "",
     unlockable: false,
-    unlock_threshold:1,
+    unlock_threshold: 1,
   });
   const [sceneOptions, setSceneOptions] = useState<any[]>([]);
   const [newScenes, setNewScenes] = useState<Array<object>>([]);
@@ -67,11 +68,10 @@ const Page: React.FC = () => {
     const value = Array.from(
       e.target.selectedOptions,
       (option) => option.value
-    ) as AtributosDisponibles[]; // Asegura que los valores sean del tipo correcto
-
+    ) as AtributosDisponibles[];
     setFormSceneOptionData((prevState) => ({
       ...prevState,
-      [field]: value as AtributosDisponibles[], // Actualiza requirement como un arreglo
+      [field]: value as AtributosDisponibles[],
     }));
   };
 
@@ -92,7 +92,7 @@ const Page: React.FC = () => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(newScene),
       });
-      console.log("agregado con exito");
+      console.log("Escena agregada con éxito");
     } catch (err) {
       console.error(err);
     }
@@ -100,17 +100,19 @@ const Page: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    // Generar el ID de la escena; se elimina espacios y se antepone "scene"
+    const newSceneId = "scene" + formSceneBasicData.id.replace(/ /g, "");
     const newScene = {
       ...formSceneBasicData,
       options: sceneOptions,
-      id: "scene" + formSceneBasicData.id.replace(/ /g, ""), //saca espacios
+      id: newSceneId,
     };
-    const sceneObject = { [newScene.id]: newScene };
+    // Actualizamos el estado de nuevas escenas (si fuera necesario)
     setNewScenes((prevScenes) => ({
       ...prevScenes,
       ...newScene,
     }));
-    setSceneOptions([]); //borra las opciones que venías creando
+    setSceneOptions([]); // Reiniciamos las opciones
     setFormSceneBasicData({
       id: "",
       text: "",
@@ -152,7 +154,6 @@ const Page: React.FC = () => {
               Creación de Escenas
             </h1>
           </div>
-
           <div className="mb-4">
             <label
               htmlFor="name"
@@ -161,7 +162,7 @@ const Page: React.FC = () => {
               Nombre de la escena
             </label>
             <div className="flex">
-              <p className="pt-1.5 text-slate-600 text-md ">scene</p>
+              <p className="pt-1.5 text-slate-600 text-md">scene</p>
               <input
                 type="text"
                 id="id"
@@ -173,7 +174,6 @@ const Page: React.FC = () => {
               />
             </div>
           </div>
-
           <div className="mb-6">
             <label
               htmlFor="message"
@@ -193,7 +193,7 @@ const Page: React.FC = () => {
           <div className="mb-4 flex gap-6">
             <label
               htmlFor="isEnding"
-              className="block text-slate-700 text-md font-bold "
+              className="block text-slate-700 text-md font-bold"
             >
               ¿Es un ending?
             </label>
@@ -210,14 +210,12 @@ const Page: React.FC = () => {
                   });
                   setSceneOptions([]);
                 }}
-                className=" align-middle leading-tight"
+                className="align-middle leading-tight"
               />
               <span className="text-slate-700 text-sm p-1">Sí</span>
             </div>
           </div>
-
           <hr className="mb-2" />
-
           <SceneFormOption
             formSceneBasicData={formSceneBasicData}
             sceneOptions={sceneOptions}
@@ -229,18 +227,16 @@ const Page: React.FC = () => {
             setUnlocksLockedAttribute={setUnlocksLockedAttribute}
             unlocksLockedAttribute={unlocksLockedAttribute}
           />
-
           <div className="flex items-center justify-end">
             <button
               type="submit"
-              className="bg-slate-700  m-5 self-end hover:bg-slate-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:ring-2 focus:ring-slate-400"
+              className="bg-slate-700 m-5 self-end hover:bg-slate-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:ring-2 focus:ring-slate-400"
             >
               ¡Crear Escena!
             </button>
           </div>
         </form>
       </div>
-
       <hr className="my-5" />
       <h1 className="text-center text-xl">Escenas anteriores:</h1>
       <pre className="max-w-screen-xl mx-auto p-6 bg-slate-300 text-wrap w-2/3 text-white rounded-lg shadow-md">

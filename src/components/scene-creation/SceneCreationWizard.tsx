@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import StepBasicData from "./StepBasicData";
 import StepSceneOptions from "./StepSceneOptions";
 import StepReview from "./StepReview";
@@ -8,6 +8,10 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { motion, AnimatePresence } from "framer-motion";
 import { useToast } from "@/hooks/use-toast";
+
+interface SceneCreationWizardProps {
+  sceneToEdit?: SceneData;
+}
 
 const initialBasicData: FormSceneBasicData = {
   id: "",
@@ -24,25 +28,37 @@ const initialOptionData: FormSceneOptionData = {
   nextSceneId: { success: "", failure: "", partial: "" },
 };
 
-const SceneCreationWizard: React.FC = () => {
-    const { toast } = useToast()
-
+const SceneCreationWizard: React.FC<SceneCreationWizardProps> = ({ sceneToEdit }) => {
+  const { toast } = useToast();
   const [currentStep, setCurrentStep] = useState<number>(1);
 
-  const [basicData, setBasicData] = useState<FormSceneBasicData>(initialBasicData);
-
-  const [sceneOptions, setSceneOptions] = useState<SceneOption[]>([]);
-
+  // Inicializar con la escena a editar o con los valores por defecto
+  const [basicData, setBasicData] = useState<FormSceneBasicData>(
+    sceneToEdit ? { id: sceneToEdit.id, text: sceneToEdit.text, isEnding: sceneToEdit.isEnding } : initialBasicData
+  );
+  const [sceneOptions, setSceneOptions] = useState<SceneOption[]>(
+    sceneToEdit ? sceneToEdit.options : []
+  );
   const [optionData, setOptionData] = useState<FormSceneOptionData>(initialOptionData);
-
   const [submitting, setSubmitting] = useState<boolean>(false);
+
+  // Efecto para actualizar los estados cuando sceneToEdit cambia
+  useEffect(() => {
+    if (sceneToEdit) {
+      setBasicData({ id: sceneToEdit.id, text: sceneToEdit.text, isEnding: sceneToEdit.isEnding });
+      setSceneOptions(sceneToEdit.options);
+    } else {
+      // Si no se pasa una escena para editar, se dejan los valores iniciales
+      setBasicData(initialBasicData);
+      setSceneOptions([]);
+    }
+  }, [sceneToEdit]);
 
   const nextStep = () => setCurrentStep((prev) => Math.min(prev + 1, 3));
   const prevStep = () => setCurrentStep((prev) => Math.max(prev - 1, 1));
 
   const submitScene = async () => {
     setSubmitting(true);
-    // Generar el ID final anteponiendo "scene" y eliminando espacios
     const sceneId = basicData.id.replace(/\s+/g, "");
     const newScene: SceneData = {
       ...basicData,
@@ -50,35 +66,49 @@ const SceneCreationWizard: React.FC = () => {
       options: sceneOptions,
     };
     try {
-      const response = await fetch("http://localhost:3001/scenes", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(newScene),
-      });
-      
-      if (response.ok) {
-        toast({
-          title: "Escena creada",
-          description: "La escena se ha creado exitosamente.",
-          variant: "default",
+      if (sceneToEdit) {
+        // Actualización de una escena existente (modo edición)
+        const response = await fetch(`http://localhost:3001/scenes/${sceneToEdit.id}`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(newScene),
         });
-        // Reiniciamos el wizard
-        setCurrentStep(1);
-        setBasicData(initialBasicData);
-        setSceneOptions([]);
-        setOptionData(initialOptionData);
+        if (response.ok) {
+          toast({
+            title: "Escena actualizada",
+            description: "La escena se ha actualizado correctamente.",
+            variant: "default",
+          });
+        } else {
+          throw new Error("Error al actualizar la escena");
+        }
       } else {
-        toast({
-          title: "Error",
-          description: "No se pudo crear la escena. Intenta nuevamente.",
-          variant: "destructive",
+        // Creación de una nueva escena
+        const response = await fetch("http://localhost:3001/scenes", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(newScene),
         });
+        if (response.ok) {
+          toast({
+            title: "Escena creada",
+            description: "La escena se ha creado exitosamente.",
+            variant: "default",
+          });
+        } else {
+          throw new Error("Error al crear la escena");
+        }
       }
+      // Reiniciar el wizard o navegar a otra vista según convenga
+      setCurrentStep(1);
+      setBasicData(initialBasicData);
+      setSceneOptions([]);
+      setOptionData(initialOptionData);
     } catch (error) {
       console.error("Error al enviar la escena:", error);
       toast({
         title: "Error",
-        description: "Ha ocurrido un error al crear la escena.",
+        description: "Ha ocurrido un error al procesar la escena.",
         variant: "destructive",
       });
     } finally {
@@ -92,8 +122,9 @@ const SceneCreationWizard: React.FC = () => {
     <div className="min-h-screen bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center p-4">
       <Card className="w-full max-w-4xl bg-white shadow-lg">
         <CardContent className="p-6">
-          <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">Creador de Escenas</h2>
-
+          <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">
+            {sceneToEdit ? "Editar Escena" : "Crear Escena"}
+          </h2>
           <div className="flex justify-between items-center mb-8">
             {steps.map((step, index) => (
               <div key={index} className="flex flex-col items-center">
@@ -112,7 +143,6 @@ const SceneCreationWizard: React.FC = () => {
               </div>
             ))}
           </div>
-
           <AnimatePresence mode="wait">
             <motion.div
               key={currentStep}
@@ -134,7 +164,6 @@ const SceneCreationWizard: React.FC = () => {
               {currentStep === 3 && <StepReview basicData={basicData} sceneOptions={sceneOptions} />}
             </motion.div>
           </AnimatePresence>
-
           <div className="flex justify-between mt-8">
             {currentStep > 1 && (
               <Button
@@ -150,12 +179,8 @@ const SceneCreationWizard: React.FC = () => {
                 Siguiente
               </Button>
             ) : (
-              <Button
-                onClick={submitScene}
-                disabled={submitting}
-                className="bg-green-500 hover:bg-green-600 text-white ml-auto"
-              >
-                {submitting ? "Enviando..." : "Crear Escena"}
+              <Button onClick={submitScene} disabled={submitting} className="bg-green-500 hover:bg-green-600 text-white ml-auto">
+                {submitting ? "Enviando..." : sceneToEdit ? "Guardar Cambios" : "Crear Escena"}
               </Button>
             )}
           </div>

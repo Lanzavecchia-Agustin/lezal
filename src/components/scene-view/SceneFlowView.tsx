@@ -89,9 +89,6 @@ export default function SceneFlowView({ scenes }: SceneFlowViewProps) {
         onEdgesChange={onEdgesChange}
         fitView
       >
-        {/* Opcional: Mapa mini, controles, fondo punteado */}
-        <MiniMap />
-        <Controls />
         <Background  gap={12} size={1} />
       </ReactFlow>
     </div>

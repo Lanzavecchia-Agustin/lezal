@@ -2,6 +2,8 @@ import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { Button } from '@/components/ui/button';
+import Link from 'next/link';
 import type { Scene } from '../../../roomsStore';
 
 export function SceneCardCustom({ scene }: { scene: Scene }) {
@@ -17,11 +19,9 @@ export function SceneCardCustom({ scene }: { scene: Scene }) {
           )}
         </CardTitle>
       </CardHeader>
-
       <CardContent className="p-2 text-xs">
         <ScrollArea className="pr-2">
           <p className="mb-2 font-semibold text-gray-100">{scene.text}</p>
-
           {scene.options && scene.options.length > 0 ? (
             <div className="mt-2">
               <strong className="text-purple-400">Opciones:</strong>
@@ -31,28 +31,23 @@ export function SceneCardCustom({ scene }: { scene: Scene }) {
                     <div className="font-semibold mb-1">
                       #{opt.id}: {opt.text}
                     </div>
-
                     {opt.requirement && opt.requirement.length > 0 && (
                       <div className="ml-2 text-gray-300">
                         <span className="text-purple-400">Requiere:</span>{' '}
                         {opt.requirement.join(', ')}
                       </div>
                     )}
-
                     {opt.maxVotes !== undefined && (
                       <div className="ml-2 text-gray-300">
                         <span className="text-purple-400">maxVotes:</span> {opt.maxVotes}
                       </div>
                     )}
-
                     {opt.lockedAttributeIncrement && (
                       <div className="ml-2 text-gray-300">
                         <span className="text-purple-400">Incrementa:</span>{' '}
-                        {opt.lockedAttributeIncrement.attribute} +{' '}
-                        {opt.lockedAttributeIncrement.increment}
+                        {opt.lockedAttributeIncrement.attribute} + {opt.lockedAttributeIncrement.increment}
                       </div>
                     )}
-
                     {opt.nextSceneId && (
                       <div className="ml-2 text-gray-300">
                         <span className="text-purple-400">Camino a:</span>
@@ -86,6 +81,14 @@ export function SceneCardCustom({ scene }: { scene: Scene }) {
           )}
         </ScrollArea>
       </CardContent>
+      <div className="p-2">
+        {/* Botón que redirige a la página de edición pasando la escena a editar */}
+        <Link href={{ pathname: '/scene-creation', query: { scene: JSON.stringify(scene) } }}>
+          <Button variant="outline" size="sm" className="w-full ">
+            Editar
+          </Button>
+        </Link>
+      </div>
     </Card>
   );
 }

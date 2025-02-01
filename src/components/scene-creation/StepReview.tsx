@@ -36,7 +36,7 @@ const StepReview: React.FC<StepReviewProps> = ({ basicData, sceneOptions }) => {
                   {option.id}. {option.text}
                 </p>
                 <p className="text-sm">
-                  <strong>Requerimientos:</strong> {option.requirement.join(", ") || "Ninguno"}
+                    <strong>Requerimientos:</strong> {(option.requirement || []).join(", ") || "Ninguno"}
                 </p>
                 <p className="text-sm">
                   <strong>Máximo de Votos:</strong> {option.maxVotes || 0}

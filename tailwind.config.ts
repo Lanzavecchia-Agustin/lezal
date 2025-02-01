@@ -10,11 +10,23 @@ module.exports = {
     theme: {
       extend: {
         colors: {
-          'text': '#ddd',
-          'bg': '#0a0a0a',
-          'link': '#9f7ae6',
-          'link-hover': '#ececec',
-          'info': '#7f6ac8',
+          text: "var(--color-text)",
+          bg: "var(--color-bg)",
+          link: "var(--color-link)",
+          "link-hover": "var(--color-link-hover)",
+          info: "var(--color-info)",
+          // También puedes agregar tus variables de ShadCN:
+          primary: "var(--primary)",
+          "primary-foreground": "var(--primary-foreground)",
+          secondary: "var(--secondary)",
+          "secondary-foreground": "var(--secondary-foreground)",
+          accent: "var(--accent)",
+          "accent-foreground": "var(--accent-foreground)",
+          muted: "var(--muted)",
+          "muted-foreground": "var(--muted-foreground)",
+          border: "var(--border)",
+          background: "var(--background)",
+          foreground: "var(--foreground)",
         },
         fontFamily: {
           'retro': ['Audiowide', 'cursive'],

@@ -29,19 +29,16 @@ export interface Player {
 export interface SceneOption {
   id: number;
   text: string;
-  maxVotes?: number;
   requirement?: string[];
-  // Nueva propiedad para sumar puntos a la condición de un atributo bloqueado:
-  lockedAttributeIncrement?: {
-    attribute: string; // Debe ser uno de los LOCKED_ATTRIBUTES ('chi-inutil' o 'chi-responsable')
-    increment: number;
-  };
+  maxVotes?: number;
+  lockedAttributeIncrement?: { attribute: string; increment: number };
   nextSceneId: {
     success: string;
-    failure: string;
-    partial?: string;
+    failure?: string;  // ahora es opcional
+    partial?: string;  // ahora es opcional
   };
 }
+
 
 // Escena
 export interface Scene {

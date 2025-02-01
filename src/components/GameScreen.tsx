@@ -4,7 +4,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import Pusher from "pusher-js";
 import { API_ROUTES } from "../../utils/apiConfig";
-import { ATRIBUTOS_DISPONIBLES } from "../../roomsStore";
 
 import JoinForm from "./JoinForm";
 import SceneDisplay from "./SceneDisplay";

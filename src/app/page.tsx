@@ -1,6 +1,5 @@
 'use client';
 import { useState, useEffect } from "react";
-import { useTheme } from "next-themes";
 import GameScreen from "@/components/GameScreen";
 import Particles from "@/components/ui/particles";
 import { Meteors } from "@/components/ui/meteors";
@@ -15,9 +14,8 @@ const themes = [
 ];
 
 export default function Home() {
-  const { resolvedTheme } = useTheme();
   const [showGame, setShowGame] = useState(false);
-  const [currentTheme, setCurrentTheme] = useState(0);
+  const [currentTheme] = useState(0);
 
   useEffect(() => {
     document.body.className = themes[currentTheme];

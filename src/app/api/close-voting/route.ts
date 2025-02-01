@@ -102,63 +102,52 @@ function evaluateRequirement(room: any, option: SceneOption): string {
   console.log("[evaluateRequirement] Checking requirements for option:", option.id);
   console.log("[evaluateRequirement] Option requirement:", option.requirement);
 
-  // 1) Sin requisitos => success directo
+  // 1) Si no hay requisitos, retorna el valor de success (o fallback a cadena vacía)
   if (!option.requirement || option.requirement.length === 0) {
     console.log("    - No requirement, returning SUCCESS");
-    return option.nextSceneId.success;
+    return option.nextSceneId.success ?? "";
   }
 
-  // 2) Si no hay votantes => failure
+  // 2) Si no hay votantes para esta opción, retorna failure (o success si failure no está definido)
   const votersSet: Set<string> = room.optionVotes[option.id] || new Set();
   console.log("    - Voters for this option:", Array.from(votersSet));
-
   if (votersSet.size === 0) {
     console.log("    - No voters, returning FAILURE");
-    return option.nextSceneId.failure;
+    return option.nextSceneId.failure ?? option.nextSceneId.success ?? "";
   }
 
-  // 3) Usar directamente `option.requirement` como un array
-  const requirements = option.requirement; // ya es un array de strings
-
+  // 3) Revisar los requisitos
+  const requirements = option.requirement;
   console.log("    - Requirements array:", requirements);
 
   let atLeastOneHasAll = false;
   let atLeastOneHasSome = false;
 
-  // 4) Revisar a cada votante
   for (const voter of Array.from(votersSet)) {
     const player = room.players[voter];
     if (!player) continue;
-
     console.log(`    - Checking voter: ${voter}, attributes: ${player.attributes}`);
-
-    // Contar cuántos requisitos cumple
     const matchCount = requirements.filter((req) =>
       player.attributes.includes(req)
     ).length;
-
     console.log(`      -> Voter ${voter} matches ${matchCount} of ${requirements.length}`);
-
-    // Cumple todos los requisitos
     if (matchCount === requirements.length) {
       atLeastOneHasAll = true;
     }
-    // Cumple al menos uno
     if (matchCount > 0) {
       atLeastOneHasSome = true;
     }
   }
 
-  // 5) Decidir resultado
   if (atLeastOneHasAll) {
     console.log("    - At least one has all requirements, returning SUCCESS");
-    return option.nextSceneId.success;
+    return option.nextSceneId.success ?? "";
   }
-  if (atLeastOneHasSome && option.nextSceneId.partial) {
+  if (atLeastOneHasSome) {
     console.log("    - At least one has partial requirements, returning PARTIAL");
-    return option.nextSceneId.partial;
+    return option.nextSceneId.partial ?? option.nextSceneId.failure ?? option.nextSceneId.success ?? "";
   }
 
   console.log("    - Nobody satisfies any requirement or no partial route, returning FAILURE");
-  return option.nextSceneId.failure;
+  return option.nextSceneId.failure ?? option.nextSceneId.success ?? "";
 }

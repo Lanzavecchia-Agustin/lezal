@@ -184,21 +184,21 @@ function evaluateRequirement(room: any, option: SceneOption): string {
   console.log("[evaluateRequirement] Checking requirements for option:", option.id);
   console.log("[evaluateRequirement] Option requirement:", option.requirement);
 
-  // 1) Sin requisitos → retorna success
+  // 1) Sin requisitos → retorna el valor de success
   if (!option.requirement || option.requirement.length === 0) {
     console.log("    - No requirement, returning SUCCESS");
     return option.nextSceneId.success;
   }
 
-  // 2) Si no hay votantes, retorna failure
+  // 2) Si no hay votantes, retorna failure (o success si failure no está definido)
   const votersSet: Set<string> = room.optionVotes[option.id] || new Set();
   console.log("    - Voters for this option:", Array.from(votersSet));
   if (votersSet.size === 0) {
     console.log("    - No voters, returning FAILURE");
-    return option.nextSceneId.failure;
+    return option.nextSceneId.failure ?? option.nextSceneId.success;
   }
 
-  // 3) Revisar requisitos
+  // 3) Revisar cada votante para ver cuántos requisitos cumple
   const requirements = option.requirement; // array de strings
   console.log("    - Requirements array:", requirements);
 
@@ -220,14 +220,16 @@ function evaluateRequirement(room: any, option: SceneOption): string {
       atLeastOneHasSome = true;
     }
   }
+
   if (atLeastOneHasAll) {
     console.log("    - At least one has all requirements, returning SUCCESS");
     return option.nextSceneId.success;
   }
-  if (atLeastOneHasSome && option.nextSceneId.partial) {
+  if (atLeastOneHasSome && option.nextSceneId.partial !== undefined) {
     console.log("    - At least one has partial requirements, returning PARTIAL");
     return option.nextSceneId.partial;
   }
   console.log("    - Nobody satisfies any requirement or no partial route, returning FAILURE");
-  return option.nextSceneId.failure;
+  return option.nextSceneId.failure ?? option.nextSceneId.success;
 }
+

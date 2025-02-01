@@ -1,0 +1,1056 @@
+{
+  "attributes": [
+    { "id": "1", "name": "intrépido", "unlockable": false },
+    { "id": "2", "name": "curioso", "unlockable": false },
+    { "id": "3", "name": "analítico", "unlockable": false },
+    { "id": "4", "name": "valiente", "unlockable": false },
+    { "id": "5", "name": "resiliente", "unlockable": false },
+    { "id": "6", "name": "misterioso", "unlockable": true, "unlock_threshold": 4 },
+    { "id": "7", "name": "psíquico", "unlockable": true, "unlock_threshold": 5 },
+    { "id": "8", "name": "siniestro", "unlockable": true, "unlock_threshold": 6 },
+    { "id": "9", "name": "inquisitivo", "unlockable": false },
+    { "id": "10", "name": "esotérico", "unlockable": true, "unlock_threshold": 4 },
+    { "id": "11", "name": "conspirativo", "unlockable": true, "unlock_threshold": 5 },
+    { "id": "12", "name": "redentor", "unlockable": true, "unlock_threshold": 7 }
+  ],
+  "scenes": [
+    {
+      "id": "scene1",
+      "text": "Te despiertas en una nave espacial abandonada, orbitando un planeta enigmático. La atmósfera es tensa y rumores hablan de una amenaza ancestral que acecha en la oscuridad del cosmos. ¿Qué camino tomarás?",
+      "isEnding": false,
+      "options": [
+        {
+          "id": 1,
+          "text": "Elige el camino de la Redención: Enfrenta la amenaza y lucha por salvar la nave.",
+          "nextSceneId": { "success": "scene2A", "failure": "scene2A", "partial": "scene2A" }
+        },
+        {
+          "id": 2,
+          "text": "Elige el camino del Abismo: Abraza el caos y deja que la oscuridad te consuma.",
+          "nextSceneId": { "success": "scene2B", "failure": "scene2B", "partial": "scene2B" }
+        }
+      ]
+    },
+
+    {
+      "id": "scene2A",
+      "text": "Branch A - Scene 2A: En la sala de control, descubres registros caóticos y fragmentos de mensajes que insinúan una conspiración ancestral para contener una fuerza destructiva.",
+      "isEnding": false,
+      "options": [
+        {
+          "id": 1,
+          "text": "Analiza los datos en busca de patrones y pistas ocultas.",
+          "lockedAttributeIncrement": { "attribute": "analítico", "increment": 1 },
+          "nextSceneId": { "success": "scene3A", "failure": "scene3A", "partial": "scene3A" }
+        },
+        {
+          "id": 2,
+          "text": "Revisa los registros de comunicaciones para detectar mensajes cifrados.",
+          "lockedAttributeIncrement": { "attribute": "inquisitivo", "increment": 1 },
+          "nextSceneId": { "success": "scene3A", "failure": "scene3A", "partial": "scene3A" }
+        }
+      ]
+    },
+    {
+      "id": "scene3A",
+      "text": "Branch A - Scene 3A: Los datos revelan la existencia de un sello antiguo, creado para contener a una entidad oscura que amenaza con destruirlo todo.",
+      "isEnding": false,
+      "options": [
+        {
+          "id": 1,
+          "text": "Dirígete a la sala de análisis para descifrar el mensaje y comprender el sello.",
+          "lockedAttributeIncrement": { "attribute": "analítico", "increment": 1 },
+          "nextSceneId": { "success": "scene4A", "failure": "scene4A", "partial": "scene4A" }
+        },
+        {
+          "id": 2,
+          "text": "Reúne a la tripulación para discutir el hallazgo y forjar un plan conjunto.",
+          "lockedAttributeIncrement": { "attribute": "redentor", "increment": 1 },
+          "nextSceneId": { "success": "scene4A", "failure": "scene4A", "partial": "scene4A" }
+        }
+      ]
+    },
+    {
+      "id": "scene4A",
+      "text": "Branch A - Scene 4A: Descifras parte del mensaje que advierte que el sello se debilita. La clave para salvar la nave podría estar en reforzarlo.",
+      "isEnding": false,
+      "options": [
+        {
+          "id": 1,
+          "text": "Prepara una expedición para reforzar el sello en el planeta señalado.",
+          "lockedAttributeIncrement": { "attribute": "valiente", "increment": 1 },
+          "nextSceneId": { "success": "scene5A", "failure": "scene5A", "partial": "scene5A" }
+        },
+        {
+          "id": 2,
+          "text": "Consulta los archivos históricos de la nave para descubrir el origen del sello.",
+          "lockedAttributeIncrement": { "attribute": "conspirativo", "increment": 1 },
+          "nextSceneId": { "success": "scene5A", "failure": "scene5A", "partial": "scene5A" }
+        }
+      ]
+    },
+    {
+      "id": "scene5A",
+      "text": "Branch A - Scene 5A: La expedición se pone en marcha y la nave se encamina hacia un sistema solar olvidado. La esperanza se mezcla con el peligro en cada kilómetro recorrido.",
+      "isEnding": false,
+      "options": [
+        {
+          "id": 1,
+          "text": "Atrévete a atravesar un campo de asteroides a gran velocidad.",
+          "lockedAttributeIncrement": { "attribute": "intrépido", "increment": 1 },
+          "nextSceneId": { "success": "scene6A", "failure": "scene6A", "partial": "scene6A" }
+        },
+        {
+          "id": 2,
+          "text": "Envía sondas para explorar la zona y minimizar riesgos.",
+          "lockedAttributeIncrement": { "attribute": "curioso", "increment": 1 },
+          "nextSceneId": { "success": "scene6A", "failure": "scene6A", "partial": "scene6A" }
+        }
+      ]
+    },
+    {
+      "id": "scene6A",
+      "text": "Branch A - Scene 6A: Llegas al planeta y descubres ruinas flotantes y tecnología alienígena perdida. Las inscripciones hablan de magia y un sello que contenía un gran mal.",
+      "isEnding": false,
+      "options": [
+        {
+          "id": 1,
+          "text": "Explora las ruinas en busca de la tecnología que refuerce el sello.",
+          "lockedAttributeIncrement": { "attribute": "inquisitivo", "increment": 1 },
+          "nextSceneId": { "success": "scene7A", "failure": "scene7A", "partial": "scene7A" }
+        },
+        {
+          "id": 2,
+          "text": "Estudia las inscripciones en busca de pistas sobre la magia ancestral.",
+          "lockedAttributeIncrement": { "attribute": "esotérico", "increment": 1 },
+          "nextSceneId": { "success": "scene7A", "failure": "scene7A", "partial": "scene7A" }
+        }
+      ]
+    },
+    {
+      "id": "scene7A",
+      "text": "Branch A - Scene 7A: Las inscripciones advierten que el sello se debilita con el tiempo y que debe reforzarse antes de que la entidad oscura despierte.",
+      "isEnding": false,
+      "options": [
+        {
+          "id": 1,
+          "text": "Activa un protocolo de contención usando la tecnología recuperada.",
+          "lockedAttributeIncrement": { "attribute": "redentor", "increment": 1 },
+          "nextSceneId": { "success": "scene8A", "failure": "scene8A", "partial": "scene8A" }
+        },
+        {
+          "id": 2,
+          "text": "Reúne más información consultando archivos secretos de la nave.",
+          "lockedAttributeIncrement": { "attribute": "conspirativo", "increment": 1 },
+          "nextSceneId": { "success": "scene8A", "failure": "scene8A", "partial": "scene8A" }
+        }
+      ]
+    },
+    {
+      "id": "scene8A",
+      "text": "Branch A - Scene 8A: Los datos confirman que el sello está en grave peligro. La tripulación se prepara con determinación, sabiendo que el destino de la galaxia está en juego.",
+      "isEnding": false,
+      "options": [
+        {
+          "id": 1,
+          "text": "Organiza a la tripulación para reforzar el sello con precisión quirúrgica.",
+          "lockedAttributeIncrement": { "attribute": "meticuloso", "increment": 1 },
+          "nextSceneId": { "success": "scene9A", "failure": "scene9A", "partial": "scene9A" }
+        },
+        {
+          "id": 2,
+          "text": "Divide la nave en equipos para activar protocolos de emergencia simultáneos.",
+          "lockedAttributeIncrement": { "attribute": "valiente", "increment": 1 },
+          "nextSceneId": { "success": "scene9A", "failure": "scene9A", "partial": "scene9A" }
+        }
+      ]
+    },
+    {
+      "id": "scene9A",
+      "text": "Branch A - Scene 9A: Durante la operación, extrañas visiones te inundan y despiertan un poder interior latente. Sientes el potencial de convertirte en el salvador de la nave.",
+      "isEnding": false,
+      "options": [
+        {
+          "id": 1,
+          "text": "Acepta ese poder y úsalo para intensificar el protocolo, dejando fluir tu aura redentora.",
+          "lockedAttributeIncrement": { "attribute": "redentor", "increment": 2 },
+          "nextSceneId": { "success": "scene10A", "failure": "scene10A", "partial": "scene10A" }
+        },
+        {
+          "id": 2,
+          "text": "Resiste la influencia y confía en la tecnología, manteniendo un enfoque frío y calculador.",
+          "lockedAttributeIncrement": { "attribute": "analítico", "increment": 1 },
+          "nextSceneId": { "success": "scene10A", "failure": "scene10A", "partial": "scene10A" }
+        }
+      ]
+    },
+    {
+      "id": "scene10A",
+      "text": "Branch A - Scene 10A: El protocolo se activa y la nave vibra con una energía purificadora que refuerza el sello.",
+      "isEnding": false,
+      "options": [
+        {
+          "id": 1,
+          "text": "Monitorea los sistemas y ajusta parámetros en tiempo real para asegurar la contención.",
+          "lockedAttributeIncrement": { "attribute": "meticuloso", "increment": 1 },
+          "nextSceneId": { "success": "scene11A", "failure": "scene11A", "partial": "scene11A" }
+        },
+        {
+          "id": 2,
+          "text": "Comunica el progreso a la tripulación, infundiendo esperanza y determinación.",
+          "lockedAttributeIncrement": { "attribute": "curioso", "increment": 1 },
+          "nextSceneId": { "success": "scene11A", "failure": "scene11A", "partial": "scene11A" }
+        }
+      ]
+    },
+    {
+      "id": "scene11A",
+      "text": "Branch A - Scene 11A: La operación muestra signos prometedores, aunque la amenaza oscura aún acecha en las sombras.",
+      "isEnding": false,
+      "options": [
+        {
+          "id": 1,
+          "text": "Decide continuar la operación sin detenerte.",
+          "nextSceneId": { "success": "scene12A", "failure": "scene12A", "partial": "scene12A" }
+        },
+        {
+          "id": 2,
+          "text": "Consulta a la tripulación para evaluar el progreso y ajustar estrategias.",
+          "nextSceneId": { "success": "scene12A", "failure": "scene12A", "partial": "scene12A" }
+        }
+      ]
+    },
+    {
+      "id": "scene12A",
+      "text": "Branch A - Scene 12A: La nave se dirige hacia un sistema solar olvidado, donde se rumorea que se oculta la clave para sellar la amenaza.",
+      "isEnding": false,
+      "options": [
+        {
+          "id": 1,
+          "text": "Prepara la nave para entrar en órbita del planeta señalado.",
+          "lockedAttributeIncrement": { "attribute": "valiente", "increment": 1 },
+          "nextSceneId": { "success": "scene13A", "failure": "scene13A", "partial": "scene13A" }
+        },
+        {
+          "id": 2,
+          "text": "Envía sondas para explorar la superficie sin arriesgar la nave.",
+          "lockedAttributeIncrement": { "attribute": "curioso", "increment": 1 },
+          "nextSceneId": { "success": "scene13A", "failure": "scene13A", "partial": "scene13A" }
+        }
+      ]
+    },
+    {
+      "id": "scene13A",
+      "text": "Branch A - Scene 13A: Al llegar al planeta, descubres ruinas flotantes y tecnología alienígena olvidada, que parece contener el secreto del sello.",
+      "isEnding": false,
+      "options": [
+        {
+          "id": 1,
+          "text": "Investiga las ruinas y extrae datos de la tecnología.",
+          "lockedAttributeIncrement": { "attribute": "inquisitivo", "increment": 1 },
+          "nextSceneId": { "success": "scene14A", "failure": "scene14A", "partial": "scene14A" }
+        },
+        {
+          "id": 2,
+          "text": "Utiliza sondas para mapear la estructura y recopilar información visual.",
+          "nextSceneId": { "success": "scene14A", "failure": "scene14A", "partial": "scene14A" }
+        }
+      ]
+    },
+    {
+      "id": "scene14A",
+      "text": "Branch A - Scene 14A: Los datos revelan que el sello fue creado para contener a una entidad destructiva, pero su poder se debilita con el tiempo.",
+      "isEnding": false,
+      "options": [
+        {
+          "id": 1,
+          "text": "Inicia un protocolo para reforzar el sello usando la tecnología recuperada.",
+          "lockedAttributeIncrement": { "attribute": "redentor", "increment": 1 },
+          "nextSceneId": { "success": "scene15A", "failure": "scene15A", "partial": "scene15A" }
+        },
+        {
+          "id": 2,
+          "text": "Revisa los antiguos registros para aprender el secreto de la creación del sello.",
+          "lockedAttributeIncrement": { "attribute": "conspirativo", "increment": 1 },
+          "nextSceneId": { "success": "scene15A", "failure": "scene15A", "partial": "scene15A" }
+        }
+      ]
+    },
+    {
+      "id": "scene15A",
+      "text": "Branch A - Scene 15A: Con el protocolo en marcha, sientes que algo dentro de ti despierta; un poder latente que conecta tu esencia con el sello.",
+      "isEnding": false,
+      "options": [
+        {
+          "id": 1,
+          "text": "Acepta ese poder y úsalo para intensificar el protocolo.",
+          "lockedAttributeIncrement": { "attribute": "redentor", "increment": 2 },
+          "nextSceneId": { "success": "scene16A", "failure": "scene16A", "partial": "scene16A" }
+        },
+        {
+          "id": 2,
+          "text": "Mantén la calma y confía en la tecnología a bordo.",
+          "nextSceneId": { "success": "scene16A", "failure": "scene16A", "partial": "scene16A" }
+        }
+      ]
+    },
+    {
+      "id": "scene16A",
+      "text": "Branch A - Scene 16A: La operación alcanza su punto crítico; el sello se refuerza, pero la tensión y el terror acechan en cada latido.",
+      "isEnding": false,
+      "options": [
+        {
+          "id": 1,
+          "text": "Monitorea intensamente los sistemas y ajusta parámetros en tiempo real.",
+          "nextSceneId": { "success": "scene17A", "failure": "scene17A", "partial": "scene17A" }
+        },
+        {
+          "id": 2,
+          "text": "Comunica el progreso a la tripulación, infundiéndoles esperanza y determinación.",
+          "nextSceneId": { "success": "scene17A", "failure": "scene17A", "partial": "scene17A" }
+        }
+      ]
+    },
+    {
+      "id": "scene17A",
+      "text": "Branch A - Scene 17A: Mientras la nave vibra con energía, un mensaje holográfico revela que solo aquellos con el don de ser redentores pueden sellar la amenaza.",
+      "isEnding": false,
+      "options": [
+        {
+          "id": 1,
+          "text": "Decide que tú serás el redentor y canaliza ese poder interior.",
+          "lockedAttributeIncrement": { "attribute": "redentor", "increment": 2 },
+          "nextSceneId": { "success": "scene18A", "failure": "scene18A", "partial": "scene18A" }
+        },
+        {
+          "id": 2,
+          "text": "Busca entre la tripulación a alguien que encarne la redención.",
+          "nextSceneId": { "success": "scene18A", "failure": "scene18A", "partial": "scene18A" }
+        }
+      ]
+    },
+    {
+      "id": "scene18A",
+      "text": "Branch A - Scene 18A: La operación se intensifica y la nave comienza a estabilizarse. El futuro de la galaxia pende de un hilo.",
+      "isEnding": false,
+      "options": [
+        {
+          "id": 1,
+          "text": "Lidera la operación con determinación, confiando en el poder redentor que has despertado.",
+          "nextSceneId": { "success": "scene19A", "failure": "scene19A", "partial": "scene19A" }
+        },
+        {
+          "id": 2,
+          "text": "Envía señales a la base central para coordinar una respuesta final.",
+          "nextSceneId": { "success": "scene19A", "failure": "scene19A", "partial": "scene19A" }
+        }
+      ]
+    },
+    {
+      "id": "scene19A",
+      "text": "Branch A - Scene 19A: La contención se consolida y la amenaza parece retroceder. Sin embargo, se avecina una última prueba.",
+      "isEnding": false,
+      "options": [
+        {
+          "id": 1,
+          "text": "Prepara la nave para el enfrentamiento final con la oscuridad.",
+          "nextSceneId": { "success": "scene20A", "failure": "scene20A", "partial": "scene20A" }
+        },
+        {
+          "id": 2,
+          "text": "Confirma que la tripulación esté lista para el desafío final.",
+          "nextSceneId": { "success": "scene20A", "failure": "scene20A", "partial": "scene20A" }
+        }
+      ]
+    },
+    {
+      "id": "scene20A",
+      "text": "Branch A - Scene 20A: Estás a un paso de sellar la amenaza. La tensión y la esperanza se entrelazan en el aire, y la nave se prepara para la decisión final.",
+      "isEnding": false,
+      "options": [
+        {
+          "id": 1,
+          "text": "Activa el protocolo final de contención y redención.",
+          "nextSceneId": { "success": "scene21A", "failure": "scene21A", "partial": "scene21A" }
+        }
+      ]
+    },
+    {
+      "id": "scene21A",
+      "text": "Branch A - Scene 21A: La nave vibra con una energía celestial mientras el sello se cierra lentamente.",
+      "isEnding": false,
+      "options": [
+        {
+          "id": 1,
+          "text": "Observa cómo la energía se concentra y se canaliza a través de ti.",
+          "nextSceneId": { "success": "scene22A", "failure": "scene22A", "partial": "scene22A" }
+        },
+        {
+          "id": 2,
+          "text": "Comunica el avance a la tripulación, llenándolos de esperanza.",
+          "nextSceneId": { "success": "scene22A", "failure": "scene22A", "partial": "scene22A" }
+        }
+      ]
+    },
+    {
+      "id": "scene22A",
+      "text": "Branch A - Scene 22A: La operación se acerca a su clímax. Sientes que la nave y tú están destinados a sellar la amenaza.",
+      "isEnding": false,
+      "options": [
+        {
+          "id": 1,
+          "text": "Da el paso final y activa el sello de redención.",
+          "nextSceneId": { "success": "scene23A", "failure": "scene23A", "partial": "scene23A" }
+        }
+      ]
+    },
+    {
+      "id": "scene23A",
+      "text": "Branch A - Scene 23A: La nave se inunda de luz mientras la amenaza se disipa. La esperanza resurge en cada rincón.",
+      "isEnding": false,
+      "options": [
+        {
+          "id": 1,
+          "text": "Confirma que el sello se ha activado definitivamente.",
+          "nextSceneId": { "success": "scene24A", "failure": "scene24A", "partial": "scene24A" }
+        }
+      ]
+    },
+    {
+      "id": "scene24A",
+      "text": "Branch A - Scene 24A: La operación final se consolida y el ambiente se llena de una energía casi sagrada. La tripulación siente que han marcado la diferencia.",
+      "isEnding": false,
+      "options": [
+        {
+          "id": 1,
+          "text": "Prepara un informe para la base central y consolida tu legado como redentor.",
+          "lockedAttributeIncrement": { "attribute": "redentor", "increment": 1 },
+          "nextSceneId": { "success": "scene25A", "failure": "scene25A", "partial": "scene25A" }
+        }
+      ]
+    },
+    {
+      "id": "scene25A",
+      "text": "Branch A - Scene 25A: El informe es enviado y la galaxia se llena de esperanza. Sin embargo, un último obstáculo se cierne en el horizonte.",
+      "isEnding": false,
+      "options": [
+        {
+          "id": 1,
+          "text": "Enfrenta el obstáculo con tu poder interior y la fe en el destino de la nave.",
+          "lockedAttributeIncrement": { "attribute": "psíquico", "increment": 1 },
+          "nextSceneId": { "success": "scene26A", "failure": "scene26A", "partial": "scene26A" }
+        }
+      ]
+    },
+    {
+      "id": "scene26A",
+      "text": "Branch A - Scene 26A: La nave se estabiliza lentamente, y sientes que la amenaza se desvanece, aunque el destino pende de un hilo.",
+      "isEnding": false,
+      "options": [
+        {
+          "id": 1,
+          "text": "Continúa avanzando con determinación hacia el desenlace.",
+          "nextSceneId": { "success": "scene27A", "failure": "scene27A", "partial": "scene27A" }
+        }
+      ]
+    },
+    {
+      "id": "scene27A",
+      "text": "Branch A - Scene 27A: La tensión disminuye y el sello brilla con una luz celestial, iluminando el puente de mando.",
+      "isEnding": false,
+      "options": [
+        {
+          "id": 1,
+          "text": "Dirígete al puente para confirmar la seguridad de la nave y la tripulación.",
+          "nextSceneId": { "success": "scene28A", "failure": "scene28A", "partial": "scene28A" }
+        }
+      ]
+    },
+    {
+      "id": "scene28A",
+      "text": "Branch A - Scene 28A: La nave y la tripulación se llenan de un sentimiento de redención y paz. Las tensiones se disipan momentáneamente y se vislumbra un futuro prometedor.",
+      "isEnding": false,
+      "options": [
+        {
+          "id": 1,
+          "text": "Dirígete al puente de mando para evaluar la situación y tomar la decisión final.",
+          "nextSceneId": { "success": "scene29A", "failure": "scene29A", "partial": "scene29A" }
+        }
+      ]
+    },
+    {
+      "id": "scene29A",
+      "text": "Branch A - Scene 29A: En el puente de mando, la tripulación se reúne en un ambiente tenso y cargado de esperanza. El destino de la nave y de la galaxia depende de la decisión que tomes.",
+      "isEnding": false,
+      "options": [
+        {
+          "id": 1,
+          "text": "Activa el protocolo final de redención, confiando en el poder latente que has descubierto.",
+          "nextSceneId": { "success": "scene30A", "failure": "scene30A", "partial": "scene30A" }
+        },
+        {
+          "id": 2,
+          "text": "Rechaza el protocolo y ordena evacuar la nave, dejando que la oscuridad se apodere de ella.",
+          "nextSceneId": { "success": "scene30B", "failure": "scene30B", "partial": "scene30B" }
+        }
+      ]
+    },
+    {
+      "id": "scene30A",
+      "text": "Branch A - Scene 30A: Decides activar el protocolo final de redención. La nave se inunda de una luz sanadora que purifica sus sistemas y disipa la amenaza ancestral. Sientes una conexión profunda con el poder que emana de la tecnología alienígena.",
+      "isEnding": false,
+      "options": [
+        {
+          "id": 1,
+          "text": "Consolida la activación del protocolo y observa el milagro en acción.",
+          "nextSceneId": { "success": "scene31A", "failure": "scene31A", "partial": "scene31A" }
+        }
+      ]
+    },
+    {
+      "id": "scene31A",
+      "text": "Final Redención: Con el protocolo activado, el sello se refuerza por completo y la amenaza ancestral es contenida. La nave se transforma en un faro de esperanza, y la tripulación celebra la restauración de la paz en el cosmos. Tu legado queda marcado como el de un redentor estelar.",
+      "isEnding": true,
+      "options": []
+    },
+    {
+      "id": "scene30B",
+      "text": "Branch A - Scene 30B: Rechazas activar el protocolo final y ordenas evacuar la nave. Sin embargo, la entidad ancestral se desata con furia, arrastrando la nave hacia las profundidades de un abismo espacial.",
+      "isEnding": false,
+      "options": [
+        {
+          "id": 1,
+          "text": "Continúa la evacuación mientras la nave se pierde en la oscuridad infinita.",
+          "nextSceneId": { "success": "scene31B", "failure": "scene31B", "partial": "scene31B" }
+        }
+      ]
+    },
+    {
+      "id": "scene31B",
+      "text": "Final Abismo: La nave es consumida por el abismo; la entidad ancestral se desata sin contención y la evacuación fracasa. La oscuridad inunda el espacio, marcando un final trágico y desesperanzador para la tripulación.",
+      "isEnding": true,
+      "options": []
+    },
+
+    {
+      "id": "scene2B",
+      "text": "Branch B - Scene 2B: Rechazas la sala de control y te adentras en los oscuros pasillos de la nave. La iluminación es tenue y cada sombra parece moverse con vida propia.",
+      "isEnding": false,
+      "options": [
+        {
+          "id": 1,
+          "text": "Avanza por el corredor principal, confiando en tu instinto.",
+          "lockedAttributeIncrement": { "attribute": "siniestro", "increment": 1 },
+          "nextSceneId": { "success": "scene3B", "failure": "scene3B", "partial": "scene3B" }
+        },
+        {
+          "id": 2,
+          "text": "Dirígete a la biblioteca abandonada en busca de antiguos archivos.",
+          "lockedAttributeIncrement": { "attribute": "psíquico", "increment": 1 },
+          "nextSceneId": { "success": "scene3B", "failure": "scene3B", "partial": "scene3B" }
+        }
+      ]
+    },
+    {
+      "id": "scene3B",
+      "text": "Branch B - Scene 3B: En la penumbra, encuentras documentos y grabaciones que hablan de experimentos prohibidos y rituales oscuros realizados en la nave.",
+      "isEnding": false,
+      "options": [
+        {
+          "id": 1,
+          "text": "Analiza los documentos para descubrir los secretos de esos rituales.",
+          "lockedAttributeIncrement": { "attribute": "analítico", "increment": 1 },
+          "nextSceneId": { "success": "scene4B", "failure": "scene4B", "partial": "scene4B" }
+        },
+        {
+          "id": 2,
+          "text": "Escucha las grabaciones, descifrando mensajes crípticos que te hielan la sangre.",
+          "lockedAttributeIncrement": { "attribute": "inquisitivo", "increment": 1 },
+          "nextSceneId": { "success": "scene4B", "failure": "scene4B", "partial": "scene4B" }
+        }
+      ]
+    },
+    {
+      "id": "scene4B",
+      "text": "Branch B - Scene 4B: Los documentos sugieren que la nave fue escenario de experimentos oscuros para manipular fuerzas prohibidas. Una energía perturbadora parece haberse liberado.",
+      "isEnding": false,
+      "options": [
+        {
+          "id": 1,
+          "text": "Investiga el laboratorio experimental en busca de pistas sobre estos rituales.",
+          "lockedAttributeIncrement": { "attribute": "curioso", "increment": 1 },
+          "nextSceneId": { "success": "scene5B", "failure": "scene5B", "partial": "scene5B" }
+        },
+        {
+          "id": 2,
+          "text": "Consulta los archivos de seguridad para conocer el alcance de los experimentos.",
+          "lockedAttributeIncrement": { "attribute": "conspirativo", "increment": 1 },
+          "nextSceneId": { "success": "scene5B", "failure": "scene5B", "partial": "scene5B" }
+        }
+      ]
+    },
+    {
+      "id": "scene5B",
+      "text": "Branch B - Scene 5B: En el laboratorio, descubres restos de dispositivos experimentales y símbolos arcanos que revelan rituales prohibidos.",
+      "isEnding": false,
+      "options": [
+        {
+          "id": 1,
+          "text": "Recoge los dispositivos y examina sus inscripciones.",
+          "lockedAttributeIncrement": { "attribute": "misterioso", "increment": 1 },
+          "nextSceneId": { "success": "scene6B", "failure": "scene6B", "partial": "scene6B" }
+        },
+        {
+          "id": 2,
+          "text": "Intenta activar uno de los dispositivos, a pesar de su aura ominosa.",
+          "lockedAttributeIncrement": { "attribute": "siniestro", "increment": 2 },
+          "nextSceneId": { "success": "scene6B", "failure": "scene6B", "partial": "scene6B" }
+        }
+      ]
+    },
+    {
+      "id": "scene6B",
+      "text": "Branch B - Scene 6B: Al activar el dispositivo, una energía oscura recorre tu cuerpo y comienzas a ver sombras que se mueven por doquier.",
+      "isEnding": false,
+      "options": [
+        {
+          "id": 1,
+          "text": "Deja que esa energía te guíe para descubrir la verdad oculta.",
+          "lockedAttributeIncrement": { "attribute": "psíquico", "increment": 1 },
+          "nextSceneId": { "success": "scene7B", "failure": "scene7B", "partial": "scene7B" }
+        },
+        {
+          "id": 2,
+          "text": "Reprímela, intentando mantener el control de tus sentidos.",
+          "lockedAttributeIncrement": { "attribute": "analítico", "increment": 1 },
+          "nextSceneId": { "success": "scene7B", "failure": "scene7B", "partial": "scene7B" }
+        }
+      ]
+    },
+    {
+      "id": "scene7B",
+      "text": "Branch B - Scene 7B: En los oscuros pasillos de la nave, encuentras hologramas crípticos que insinúan la existencia de un culto dedicado a la oscuridad.",
+      "isEnding": false,
+      "options": [
+        {
+          "id": 1,
+          "text": "Investiga al culto y sus rituales prohibidos.",
+          "lockedAttributeIncrement": { "attribute": "conspirativo", "increment": 1 },
+          "nextSceneId": { "success": "scene8B", "failure": "scene8B", "partial": "scene8B" }
+        },
+        {
+          "id": 2,
+          "text": "Ignora el culto y continúa en busca de respuestas concretas.",
+          "nextSceneId": { "success": "scene8B", "failure": "scene8B", "partial": "scene8B" }
+        }
+      ]
+    },
+    {
+      "id": "scene8B",
+      "text": "Branch B - Scene 8B: La oscuridad se vuelve casi tangible; un murmullo lejano parece advertirte de un peligro inminente.",
+      "isEnding": false,
+      "options": [
+        {
+          "id": 1,
+          "text": "Prepara a la tripulación para defenderse y buscar la fuente del mal.",
+          "lockedAttributeIncrement": { "attribute": "valiente", "increment": 1 },
+          "nextSceneId": { "success": "scene9B", "failure": "scene9B", "partial": "scene9B" }
+        },
+        {
+          "id": 2,
+          "text": "Adéntrate en la oscuridad, confiando en que encontrarás la fuente del poder prohibido.",
+          "lockedAttributeIncrement": { "attribute": "siniestro", "increment": 1 },
+          "nextSceneId": { "success": "scene9B", "failure": "scene9B", "partial": "scene9B" }
+        }
+      ]
+    },
+    {
+      "id": "scene9B",
+      "text": "Branch B - Scene 9B: En una cámara oculta, descubres vestigios de rituales y símbolos que invocaban fuerzas de otro mundo. El ambiente está cargado de un terror indescriptible.",
+      "isEnding": false,
+      "options": [
+        {
+          "id": 1,
+          "text": "Recita las palabras inscritas para intentar controlar la fuerza invocada.",
+          "lockedAttributeIncrement": { "attribute": "esotérico", "increment": 1 },
+          "nextSceneId": { "success": "scene10B", "failure": "scene10B", "partial": "scene10B" }
+        },
+        {
+          "id": 2,
+          "text": "Huye de la cámara, temeroso de desatar algo irreparable.",
+          "nextSceneId": { "success": "scene10B", "failure": "scene10B", "partial": "scene10B" }
+        }
+      ]
+    },
+    {
+      "id": "scene10B",
+      "text": "Branch B - Scene 10B: La energía oscura se intensifica y comienzas a tener visiones perturbadoras que presagian un destino terrible para la nave.",
+      "isEnding": false,
+      "options": [
+        {
+          "id": 1,
+          "text": "Acepta ese poder oscuro para obtener respuestas, aun sabiendo el riesgo.",
+          "lockedAttributeIncrement": { "attribute": "psíquico", "increment": 1 },
+          "nextSceneId": { "success": "scene11B", "failure": "scene11B", "partial": "scene11B" }
+        },
+        {
+          "id": 2,
+          "text": "Intenta reprimir el terror y mantener el control racional.",
+          "lockedAttributeIncrement": { "attribute": "analítico", "increment": 1 },
+          "nextSceneId": { "success": "scene11B", "failure": "scene11B", "partial": "scene11B" }
+        }
+      ]
+    },
+    {
+      "id": "scene11B",
+      "text": "Branch B - Scene 11B: Las visiones se vuelven insoportables; sombras se deslizan por la nave mientras un eco siniestro te susurra secretos prohibidos.",
+      "isEnding": false,
+      "options": [
+        {
+          "id": 1,
+          "text": "Interpreta las visiones como advertencias y anota cada detalle.",
+          "lockedAttributeIncrement": { "attribute": "psíquico", "increment": 1 },
+          "nextSceneId": { "success": "scene12B", "failure": "scene12B", "partial": "scene12B" }
+        },
+        {
+          "id": 2,
+          "text": "Desafía las alucinaciones, enfocándote en la misión sin dejarte perturbar.",
+          "nextSceneId": { "success": "scene12B", "failure": "scene12B", "partial": "scene12B" }
+        }
+      ]
+    },
+    {
+      "id": "scene12B",
+      "text": "Branch B - Scene 12B: Sigues el rastro de la oscuridad y descubres un santuario oculto en los niveles inferiores de la nave, decorado con símbolos arcanos y luces parpadeantes.",
+      "isEnding": false,
+      "options": [
+        {
+          "id": 1,
+          "text": "Investiga el santuario para descubrir el origen de la maldición.",
+          "lockedAttributeIncrement": { "attribute": "conspirativo", "increment": 1 },
+          "nextSceneId": { "success": "scene13B", "failure": "scene13B", "partial": "scene13B" }
+        },
+        {
+          "id": 2,
+          "text": "Toma nota de los símbolos para descifrarlos más tarde.",
+          "lockedAttributeIncrement": { "attribute": "esotérico", "increment": 1 },
+          "nextSceneId": { "success": "scene13B", "failure": "scene13B", "partial": "scene13B" }
+        }
+      ]
+    },
+    {
+      "id": "scene13B",
+      "text": "Branch B - Scene 13B: Los símbolos revelan la existencia de un ritual prohibido destinado a liberar la oscuridad contenida en el sello.",
+      "isEnding": false,
+      "options": [
+        {
+          "id": 1,
+          "text": "Decide intentar interrumpir el ritual para evitar la liberación total de la entidad.",
+          "lockedAttributeIncrement": { "attribute": "valiente", "increment": 1 },
+          "nextSceneId": { "success": "scene14B", "failure": "scene14B", "partial": "scene14B" }
+        },
+        {
+          "id": 2,
+          "text": "Observa el ritual en secreto para aprender sus oscuros secretos.",
+          "lockedAttributeIncrement": { "attribute": "siniestro", "increment": 1 },
+          "nextSceneId": { "success": "scene14B", "failure": "scene14B", "partial": "scene14B" }
+        }
+      ]
+    },
+    {
+      "id": "scene14B",
+      "text": "Branch B - Scene 14B: El ritual avanza y las energías oscuras se intensifican. El ambiente se llena de presagios y un frío helado.",
+      "isEnding": false,
+      "options": [
+        {
+          "id": 1,
+          "text": "Intenta sabotear el ritual desde dentro utilizando la tecnología de la nave.",
+          "lockedAttributeIncrement": { "attribute": "analítico", "increment": 1 },
+          "nextSceneId": { "success": "scene15B", "failure": "scene15B", "partial": "scene15B" }
+        },
+        {
+          "id": 2,
+          "text": "Permanece oculto y observa, intentando aprender cómo detener la catástrofe.",
+          "nextSceneId": { "success": "scene15B", "failure": "scene15B", "partial": "scene15B" }
+        }
+      ]
+    },
+    {
+      "id": "scene15B",
+      "text": "Branch B - Scene 15B: Mientras el ritual se sabotea, la energía oscura inunda la sala y sientes que la corrupción se extiende en tu interior.",
+      "isEnding": false,
+      "options": [
+        {
+          "id": 1,
+          "text": "Lucha contra la corrupción usando tu fuerza de voluntad.",
+          "lockedAttributeIncrement": { "attribute": "resiliente", "increment": 1 },
+          "nextSceneId": { "success": "scene16B", "failure": "scene16B", "partial": "scene16B" }
+        },
+        {
+          "id": 2,
+          "text": "Permite que la oscuridad te consuma para obtener un poder prohibido.",
+          "lockedAttributeIncrement": { "attribute": "siniestro", "increment": 2 },
+          "nextSceneId": { "success": "scene16B", "failure": "scene16B", "partial": "scene16B" }
+        }
+      ]
+    },
+    {
+      "id": "scene16B",
+      "text": "Branch B - Scene 16B: La confrontación interna te sumerge en un caos de pensamientos oscuros y terrorífico desconcierto.",
+      "isEnding": false,
+      "options": [
+        {
+          "id": 1,
+          "text": "Intenta descifrar las voces que susurran secretos prohibidos.",
+          "lockedAttributeIncrement": { "attribute": "psíquico", "increment": 1 },
+          "nextSceneId": { "success": "scene17B", "failure": "scene17B", "partial": "scene17B" }
+        },
+        {
+          "id": 2,
+          "text": "Ignora los susurros y enfócate en la misión, a pesar del miedo que te consume.",
+          "nextSceneId": { "success": "scene17B", "failure": "scene17B", "partial": "scene17B" }
+        }
+      ]
+    },
+    {
+      "id": "scene17B",
+      "text": "Branch B - Scene 17B: La oscuridad se intensifica y empiezas a ver figuras espectrales que te persiguen a cada paso.",
+      "isEnding": false,
+      "options": [
+        {
+          "id": 1,
+          "text": "Enfrenta a las figuras, desafiando el terror que te invade.",
+          "lockedAttributeIncrement": { "attribute": "valiente", "increment": 1 },
+          "nextSceneId": { "success": "scene18B", "failure": "scene18B", "partial": "scene18B" }
+        },
+        {
+          "id": 2,
+          "text": "Esconde tu presencia y busca avanzar en silencio.",
+          "nextSceneId": { "success": "scene18B", "failure": "scene18B", "partial": "scene18B" }
+        }
+      ]
+    },
+    {
+      "id": "scene18B",
+      "text": "Branch B - Scene 18B: La nave se vuelve un laberinto de sombras y murmullos. Sientes que la entidad oscura se alimenta de tus miedos más profundos.",
+      "isEnding": false,
+      "options": [
+        {
+          "id": 1,
+          "text": "Utiliza tus conocimientos esotéricos para invocar una barrera contra la oscuridad.",
+          "lockedAttributeIncrement": { "attribute": "esotérico", "increment": 1 },
+          "nextSceneId": { "success": "scene19B", "failure": "scene19B", "partial": "scene19B" }
+        },
+        {
+          "id": 2,
+          "text": "Medita intensamente para encontrar una chispa de luz en medio de la penumbra.",
+          "nextSceneId": { "success": "scene19B", "failure": "scene19B", "partial": "scene19B" }
+        }
+      ]
+    },
+    {
+      "id": "scene19B",
+      "text": "Branch B - Scene 19B: Logras formar una barrera momentánea, pero la entidad se manifiesta en toda su furia, amenazando con destruir la nave.",
+      "isEnding": false,
+      "options": [
+        {
+          "id": 1,
+          "text": "Reúne a la tripulación para un contraataque desesperado.",
+          "lockedAttributeIncrement": { "attribute": "resiliente", "increment": 1 },
+          "nextSceneId": { "success": "scene20B", "failure": "scene20B", "partial": "scene20B" }
+        },
+        {
+          "id": 2,
+          "text": "Intenta negociar un pacto oscuro con la entidad mediante un ritual psíquico.",
+          "lockedAttributeIncrement": { "attribute": "psíquico", "increment": 1 },
+          "nextSceneId": { "success": "scene20B", "failure": "scene20B", "partial": "scene20B" }
+        }
+      ]
+    },
+    {
+      "id": "scene20B",
+      "text": "Branch B - Scene 20B: La confrontación alcanza su clímax. La nave tiembla, y la energía oscura se acumula en un poder casi incontrolable.",
+      "isEnding": false,
+      "options": [
+        {
+          "id": 1,
+          "text": "Lucha con todas tus fuerzas, arriesgándote a ser consumido por la oscuridad.",
+          "lockedAttributeIncrement": { "attribute": "intrépido", "increment": 1 },
+          "nextSceneId": { "success": "scene21B", "failure": "scene21B", "partial": "scene21B" }
+        },
+        {
+          "id": 2,
+          "text": "Ríndete a la oscuridad y permite que te transforme, buscando poder prohibido.",
+          "lockedAttributeIncrement": { "attribute": "siniestro", "increment": 2 },
+          "nextSceneId": { "success": "scene21B", "failure": "scene21B", "partial": "scene21B" }
+        }
+      ]
+    },
+    {
+      "id": "scene21B",
+      "text": "Branch B - Scene 21B: La batalla interna y externa se intensifica. La tripulación se fragmenta entre la desesperación y el pánico.",
+      "isEnding": false,
+      "options": [
+        {
+          "id": 1,
+          "text": "Toma el liderazgo y trata de unificar a la tripulación en un último intento de resistencia.",
+          "lockedAttributeIncrement": { "attribute": "valiente", "increment": 1 },
+          "nextSceneId": { "success": "scene22B", "failure": "scene22B", "partial": "scene22B" }
+        },
+        {
+          "id": 2,
+          "text": "Permite que el caos se imponga, rindiéndote ante la inminente oscuridad.",
+          "lockedAttributeIncrement": { "attribute": "siniestro", "increment": 1 },
+          "nextSceneId": { "success": "scene22B", "failure": "scene22B", "partial": "scene22B" }
+        }
+      ]
+    },
+    {
+      "id": "scene22B",
+      "text": "Branch B - Scene 22B: La nave se sumerge en una pesadilla. Ecos de voces olvidadas y apariciones sombrías invaden cada rincón.",
+      "isEnding": false,
+      "options": [
+        {
+          "id": 1,
+          "text": "Usa tus conocimientos esotéricos para invocar una barrera que contenga la oscuridad.",
+          "lockedAttributeIncrement": { "attribute": "esotérico", "increment": 1 },
+          "nextSceneId": { "success": "scene23B", "failure": "scene23B", "partial": "scene23B" }
+        },
+        {
+          "id": 2,
+          "text": "Medita intensamente para encontrar una chispa de luz en medio de la penumbra.",
+          "nextSceneId": { "success": "scene23B", "failure": "scene23B", "partial": "scene23B" }
+        }
+      ]
+    },
+    {
+      "id": "scene23B",
+      "text": "Branch B - Scene 23B: Logras una barrera momentánea, pero la oscuridad se agudiza. Una figura espectral se te aparece y ofrece un pacto a cambio de poder.",
+      "isEnding": false,
+      "options": [
+        {
+          "id": 1,
+          "text": "Acepta el pacto, entregándote a la figura para obtener control sobre la oscuridad.",
+          "lockedAttributeIncrement": { "attribute": "psíquico", "increment": 2 },
+          "nextSceneId": { "success": "scene24B", "failure": "scene24B", "partial": "scene24B" }
+        },
+        {
+          "id": 2,
+          "text": "Rechaza el pacto y lucha por mantener tu humanidad.",
+          "nextSceneId": { "success": "scene24B", "failure": "scene24B", "partial": "scene24B" }
+        }
+      ]
+    },
+    {
+      "id": "scene24B",
+      "text": "Branch B - Scene 24B: La decisión deja una marca imborrable. La figura desaparece en un aura de presagio y la oscuridad se intensifica.",
+      "isEnding": false,
+      "options": [
+        {
+          "id": 1,
+          "text": "Continúa enfrentándote a la oscuridad, sabiendo que tu destino ya está sellado.",
+          "nextSceneId": { "success": "scene25B", "failure": "scene25B", "partial": "scene25B" }
+        }
+      ]
+    },
+    {
+      "id": "scene25B",
+      "text": "Branch B - Scene 25B: La nave se ve consumida por sombras y el pánico se extiende entre la tripulación. La tensión alcanza niveles insoportables.",
+      "isEnding": false,
+      "options": [
+        {
+          "id": 1,
+          "text": "Intenta un último esfuerzo para recuperar el control de la nave.",
+          "lockedAttributeIncrement": { "attribute": "resiliente", "increment": 1 },
+          "nextSceneId": { "success": "scene26B", "failure": "scene26B", "partial": "scene26B" }
+        }
+      ]
+    },
+    {
+      "id": "scene26B",
+      "text": "Branch B - Scene 26B: En un último y desesperado intento, la nave se fragmenta entre facciones. El caos reina y la oscuridad se cierne con fuerza.",
+      "isEnding": false,
+      "options": [
+        {
+          "id": 1,
+          "text": "Lucha por unificar a la tripulación contra la amenaza oscura.",
+          "lockedAttributeIncrement": { "attribute": "valiente", "increment": 1 },
+          "nextSceneId": { "success": "scene27B", "failure": "scene27B", "partial": "scene27B" }
+        },
+        {
+          "id": 2,
+          "text": "Ríndete a la desesperación y permite que cada quien siga su destino.",
+          "lockedAttributeIncrement": { "attribute": "siniestro", "increment": 1 },
+          "nextSceneId": { "success": "scene27B", "failure": "scene27B", "partial": "scene27B" }
+        }
+      ]
+    },
+    {
+      "id": "scene27B",
+      "text": "Branch B - Scene 27B: La batalla interna y externa llega a un clímax caótico. Las voces de la oscuridad resuenan y la realidad se fragmenta.",
+      "isEnding": false,
+      "options": [
+        {
+          "id": 1,
+          "text": "Intensifica el combate, decidid@ a enfrentar el destino.",
+          "lockedAttributeIncrement": { "attribute": "intrépido", "increment": 1 },
+          "nextSceneId": { "success": "scene28B", "failure": "scene28B", "partial": "scene28B" }
+        },
+        {
+          "id": 2,
+          "text": "Acepta la fusión con la oscuridad y déjate consumir por ella.",
+          "lockedAttributeIncrement": { "attribute": "siniestro", "increment": 2 },
+          "nextSceneId": { "success": "scene28B", "failure": "scene28B", "partial": "scene28B" }
+        }
+      ]
+    },
+    {
+      "id": "scene28B",
+      "text": "Branch B - Scene 28B: La nave y la tripulación se ven sumergidas en un torbellino de sombras. La realidad se desvanece en un abismo de desesperación.",
+      "isEnding": false,
+      "options": [
+        {
+          "id": 1,
+          "text": "Dirígete al puente de mando para intentar un último rescate.",
+          "nextSceneId": { "success": "scene29B", "failure": "scene29B", "partial": "scene29B" }
+        }
+      ]
+    },
+    {
+      "id": "scene29B",
+      "text": "Branch B - Scene 29B: En el puente de mando, la tripulación se muestra dividida entre la esperanza y el terror. Cada decisión pesa como una condena.",
+      "isEnding": false,
+      "options": [
+        {
+          "id": 1,
+          "text": "Inicia un último protocolo oscuro, fusionándote con la entidad para obtener poder.",
+          "lockedAttributeIncrement": { "attribute": "psíquico", "increment": 2 },
+          "nextSceneId": { "success": "scene30B", "failure": "scene30B", "partial": "scene30B" }
+        },
+        {
+          "id": 2,
+          "text": "Ordena evacuar la nave, intentando salvar lo poco que queda.",
+          "nextSceneId": { "success": "scene30B", "failure": "scene30B", "partial": "scene30B" }
+        }
+      ]
+    },
+    {
+      "id": "scene30B",
+      "text": "Branch B - Scene 30B: La decisión final se impone. La nave tiembla y la energía oscura se concentra en un poder casi incontrolable.",
+      "isEnding": false,
+      "options": [
+        {
+          "id": 1,
+          "text": "Activa el protocolo final oscuro, entregándote por completo al poder prohibido.",
+          "nextSceneId": { "success": "scene31B", "failure": "scene31B", "partial": "scene31B" }
+        }
+      ]
+    },
+    {
+      "id": "scene31B",
+      "text": "Final Oscuridad: La nave es engullida por un abismo de sombras. La entidad ancestral se libera en todo su terror, consumiendo la esperanza y dejando a la tripulación sumida en una desesperación infinita.",
+      "isEnding": true,
+      "options": []
+    }    
+  ]
+}

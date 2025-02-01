@@ -1,3 +1,4 @@
+// SceneCardCustom.tsx
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -6,7 +7,18 @@ import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import type { Scene } from '../../../roomsStore';
 
-export function SceneCardCustom({ scene }: { scene: Scene }) {
+interface SceneCardCustomProps {
+  scene: Scene;
+  deleteScene: (sceneId: string) => Promise<void>;
+}
+
+export function SceneCardCustom({ scene, deleteScene }: SceneCardCustomProps) {
+  const handleDelete = async () => {
+    if (confirm(`¿Está seguro de eliminar la escena ${scene.id}? Esta acción actualizará todas las conexiones.`)) {
+      await deleteScene(scene.id);
+    }
+  };
+
   return (
     <Card className="w-[320px] overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300 bg-gray-800 text-gray-200 border border-purple-500">
       <CardHeader className="p-2">
@@ -81,13 +93,15 @@ export function SceneCardCustom({ scene }: { scene: Scene }) {
           )}
         </ScrollArea>
       </CardContent>
-      <div className="p-2">
-        {/* Botón que redirige a la página de edición pasando la escena a editar */}
+      <div className="p-6 flex justify-between gap-2">
         <Link href={{ pathname: '/scene-creation', query: { scene: JSON.stringify(scene) } }}>
-          <Button variant="outline" size="sm" className="w-full ">
+          <Button  size="sm" className="w-full">
             Editar
           </Button>
         </Link>
+        <Button variant="destructive" size="sm" onClick={handleDelete} className="w-full bg-red-500">
+          Eliminar
+        </Button>
       </div>
     </Card>
   );

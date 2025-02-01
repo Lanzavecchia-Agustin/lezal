@@ -1,7 +1,6 @@
-// components/flow/SceneFlowView.tsx
 "use client";
 
-import React, { useMemo } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import ReactFlow, {
   MiniMap,
   Controls,
@@ -9,7 +8,7 @@ import ReactFlow, {
   Node,
   Edge,
   useNodesState,
-  useEdgesState
+  useEdgesState,
 } from "reactflow";
 import "reactflow/dist/style.css";
 
@@ -17,31 +16,89 @@ import { getLayoutedNodesEdges } from "../../../utils/getLayoutedNodesEdges";
 import { buildGraph, getLineColor } from "@/lib/sceneUtils"; 
 import { SceneFlowNode } from "./SceneFlowNode";
 import type { Scene } from "../../../roomsStore";
+import { useRouter } from "next/navigation";
 
-// Definimos un "custom node" para renderizar tu SceneCard
 const nodeTypes = {
   sceneCustom: SceneFlowNode,
 };
-
-interface NodeData {
-  scene: Scene;
-}
 
 interface SceneFlowViewProps {
   scenes: Scene[];
 }
 
-export default function SceneFlowView({ scenes }: SceneFlowViewProps) {
-  // 1. Construir tu grafo (success/failure/partial) a partir de las escenas
+export default function SceneFlowView({ scenes: initialScenes }: SceneFlowViewProps) {
+  const router = useRouter();
+  // Usamos un estado local para gestionar las escenas
+  const [scenes, setScenes] = useState<Scene[]>(initialScenes);
+
+  // Función para eliminar una escena
+  async function deleteScene(sceneId: string) {
+    try {
+      // 1. Obtener todas las escenas
+      const res = await fetch("http://localhost:3001/scenes");
+      if (!res.ok) {
+        throw new Error("Error al obtener las escenas");
+      }
+      const allScenes: Scene[] = await res.json();
+
+      // 2. Actualizar cada escena que tenga referencias a la escena que se eliminará
+      for (const scene of allScenes) {
+        let updated = false;
+        const updatedOptions = scene.options.map((option) => {
+          const newNextSceneId = { ...option.nextSceneId };
+          if (newNextSceneId.success === sceneId) {
+            newNextSceneId.success = "";
+            updated = true;
+          }
+          if (newNextSceneId.failure === sceneId) {
+            newNextSceneId.failure = "";
+            updated = true;
+          }
+          if (newNextSceneId.partial === sceneId) {
+            newNextSceneId.partial = "";
+            updated = true;
+          }
+          return { ...option, nextSceneId: newNextSceneId };
+        });
+        if (updated) {
+          await fetch(`http://localhost:3001/scenes/${scene.id}`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ ...scene, options: updatedOptions }),
+          });
+        }
+      }
+
+      // 3. Eliminar la escena
+      const deleteRes = await fetch(`http://localhost:3001/scenes/${sceneId}`, {
+        method: "DELETE",
+      });
+      if (!deleteRes.ok) {
+        throw new Error("Error al eliminar la escena");
+      }
+
+      alert("Escena eliminada correctamente.");
+
+      // Actualizamos el estado para quitar la escena eliminada
+      setScenes((prevScenes) => prevScenes.filter((s) => s.id !== sceneId));
+
+      // Opcionalmente, puedes refrescar la página:
+      // router.refresh();
+    } catch (error) {
+      console.error("Error en la eliminación de la escena:", error);
+      alert("Ocurrió un error al eliminar la escena.");
+    }
+  }
+
+  // Construir el grafo a partir de las escenas actualizadas
   const graph = useMemo(() => buildGraph(scenes), [scenes]);
 
-  // 2. Generar nodos (sin coords) y edges
   const { nodesBase, edgesBase } = useMemo(() => {
-    const nodes: Node<NodeData>[] = scenes.map((scene) => ({
+    const nodes: Node<{ scene: Scene; deleteScene: (id: string) => Promise<void> }>[] = scenes.map((scene) => ({
       id: scene.id,
-      data: { scene },
+      data: { scene, deleteScene }, // Pasamos la función deleteScene a cada nodo
       type: "sceneCustom",
-      position: { x: 0, y: 0 } // se lo asigna dagre
+      position: { x: 0, y: 0 },
     }));
 
     const edges: Edge[] = [];
@@ -55,7 +112,7 @@ export default function SceneFlowView({ scenes }: SceneFlowViewProps) {
           markerEnd: "arrow",
           style: { stroke: getLineColor(link.type) },
           labelStyle: { fill: getLineColor(link.type) },
-          animated: link.type === "partial"
+          animated: link.type === "partial",
         });
       });
     });
@@ -63,21 +120,18 @@ export default function SceneFlowView({ scenes }: SceneFlowViewProps) {
     return { nodesBase: nodes, edgesBase: edges };
   }, [scenes, graph]);
 
-  // 3. Llamar a getLayoutedNodesEdges -> dagre
-  //    (320x220 tamaño de la tarjeta, layout 'TB' = top-bottom)
   const { layoutedNodes, layoutedEdges } = useMemo(() => {
-    return getLayoutedNodesEdges(
-      nodesBase,
-      edgesBase,
-      320,
-      220,
-      "TB"
-    );
+    return getLayoutedNodesEdges(nodesBase, edgesBase, 320, 220, "TB");
   }, [nodesBase, edgesBase]);
 
-  // 4. Manejamos estado con React Flow
   const [nodes, setNodes, onNodesChange] = useNodesState(layoutedNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(layoutedEdges);
+
+  // Este efecto actualiza los nodos y edges cuando cambian los valores calculados
+  useEffect(() => {
+    setNodes(layoutedNodes);
+    setEdges(layoutedEdges);
+  }, [layoutedNodes, layoutedEdges]);
 
   return (
     <div style={{ width: "100vw", height: "100vh" }}>
@@ -89,7 +143,9 @@ export default function SceneFlowView({ scenes }: SceneFlowViewProps) {
         onEdgesChange={onEdgesChange}
         fitView
       >
-        <Background  gap={12} size={1} />
+        <Background gap={12} size={1} />
+        <Controls />
+        <MiniMap />
       </ReactFlow>
     </div>
   );

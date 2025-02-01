@@ -1,33 +1,30 @@
 // roomsStore.ts
 import db from "./db.json"
 
-/*
-A continuación se establecen las constantes de los atributos. 
-Se recorre la base de datos JSON y se agregan los elementos a las constantes.
-*/
-export const ATRIBUTOS_DISPONIBLES: string[] = db.attributes
-      .filter((attribute) => !attribute.unlockable) 
-      .map((attribute) => attribute.name); 
-
-export const LOCKED_ATTRIBUTES:string[] = db.attributes
-.filter((attribute) => attribute.unlockable) 
-.map((attribute) => attribute.name);
-
-// Definimos los umbrales para desbloquear cada atributo secreto
-export const UNLOCK_THRESHOLDS: Record<string, number> = db.attributes
-.filter((attribute) => attribute.unlockable)
-.reduce((acc, attribute) => {
-  acc[attribute.name] = attribute.unlock_threshold || 0;
-  return acc;
-}, {} as Record<string, number>);
-
-
 export interface Attributes {
-  id: number;
+  id: string;
   name: string;
   unlockable: boolean;
   unlock_threshold?: number;
 }
+
+// Otras constantes y código...
+export const ATRIBUTOS_DISPONIBLES: string[] = db.attributes
+  .filter((attr: any) => attr.unlockable === false)
+  .map((attr: any) => attr.name);
+
+export const LOCKED_ATTRIBUTES: string[] = db.attributes
+  .filter((attr: any) => attr.unlockable === true)
+  .map((attr: any) => attr.name);
+
+export const UNLOCK_THRESHOLDS: Record<string, number> = db.attributes
+  .filter((attr: any) => attr.unlockable === true)
+  .reduce((acc: Record<string, number>, attr: any) => {
+    acc[attr.name] = attr.unlock_threshold || 0;
+    return acc;
+  }, {});
+
+
 
 // Interfaz de Jugador
 export interface Player {

@@ -1,6 +1,5 @@
 import { Fragment } from "react";
 import { ATRIBUTOS_DISPONIBLES, LOCKED_ATTRIBUTES } from "../../../roomsStore";
-import { Dispatch, SetStateAction } from "react";
 import {
   AtributosDisponibles,
   HomeProps,

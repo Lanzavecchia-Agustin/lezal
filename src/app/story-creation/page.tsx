@@ -1,5 +1,5 @@
 "use client";
-import React, { Fragment, useState } from "react";
+import React, { useState } from "react";
 import {
   ATRIBUTOS_DISPONIBLES,
   Attributes,
@@ -43,7 +43,7 @@ const Page: React.FC = () => {
       },
     });
   const [formAttributeData, setFormAttributeData] = useState<Attributes>({
-    id: -1,
+    id: '-1',
     name: "",
     unlockable: false,
     unlock_threshold:1,

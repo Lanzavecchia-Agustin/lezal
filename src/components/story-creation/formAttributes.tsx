@@ -13,7 +13,6 @@ export default function FormAttributes({
 }: FormAttributesProps) {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, type, value, checked } = e.target;
-
     setFormAttributeData((prev) => ({
       ...prev,
       [id]:
@@ -32,7 +31,7 @@ export default function FormAttributes({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(att),
       });
-      console.log("Att agregado con exito");
+      console.log("Atributo agregado con éxito");
     } catch (err) {
       console.error(err);
     }
@@ -41,21 +40,23 @@ export default function FormAttributes({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const ultimoAtt: Attributes | undefined = db.attributes.at(-1);
-    const newId = ultimoAtt ? ultimoAtt.id + 1 : 1;
-    const newAtt = {
+    // Convertir el ID a número, sumarle 1 y luego a string
+    const newId = ultimoAtt ? (parseInt(ultimoAtt.id, 10) + 1).toString() : "1";
+    const newAtt: Attributes = {
       ...formAttributeData,
       id: newId,
       unlock_threshold: !formAttributeData.unlockable
         ? undefined
         : formAttributeData.unlock_threshold,
     };
-    await PostAttribute(newAtt)
+    await PostAttribute(newAtt);
   };
+
   return (
     <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 border border-slate-300 w-full max-w-4xl">
       <div className="flex justify-center">
         <h1 className="text-xl font-bold text-slate-700 mb-4">
-          Creación de Attributos
+          Creación de Atributos
         </h1>
       </div>
       <div className="flex flex-wrap justify-between">

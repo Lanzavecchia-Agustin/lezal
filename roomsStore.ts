@@ -23,9 +23,10 @@ export const UNLOCK_THRESHOLDS: Record<string, number> = db.attributes
 
 
 export interface Attributes {
+  id: number;
   name: string;
-  unlocked: boolean;
-  unlockedCondition?: number;
+  unlockable: boolean;
+  unlock_threshold?: number;
 }
 
 // Interfaz de Jugador

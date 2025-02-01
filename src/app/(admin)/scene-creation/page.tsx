@@ -1,24 +1,13 @@
+// app/scene-creation/page.tsx
 "use client";
-import React, { useEffect, useState } from "react";
-import {  useSearchParams } from "next/navigation";
-import SceneCreationWizard from "@/components/scene-creation/SceneCreationWizard";
-import type { SceneData } from "@/components/scene-creation/SceneCreationTypes";
+
+import React, { Suspense } from "react";
+import SceneCreationContent from "@/components/scene-creation/SceneCreationContent";
 
 export default function SceneCreationPage() {
-  const searchParams = useSearchParams();
-  const [sceneToEdit, setSceneToEdit] = useState<SceneData | undefined>(undefined);
-
-  useEffect(() => {
-    const sceneParam = searchParams.get("scene");
-    if (sceneParam) {
-      try {
-        const parsedScene = JSON.parse(sceneParam);
-        setSceneToEdit(parsedScene);
-      } catch (error) {
-        console.error("Error parsing scene:", error);
-      }
-    }
-  }, [searchParams]);
-
-  return <SceneCreationWizard sceneToEdit={sceneToEdit} />;
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <SceneCreationContent />
+    </Suspense>
+  );
 }

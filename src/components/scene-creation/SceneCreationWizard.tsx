@@ -67,8 +67,8 @@ const SceneCreationWizard: React.FC<SceneCreationWizardProps> = ({ sceneToEdit }
     };
     try {
       if (sceneToEdit) {
-        // Actualización de una escena existente (modo edición)
-        const response = await fetch(`http://localhost:3001/scenes/${sceneToEdit.id}`, {
+        // Usamos el nuevo ID en la URL para actualizar
+        const response = await fetch(`http://localhost:3001/scenes/${sceneId}`, {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(newScene),
@@ -115,6 +115,7 @@ const SceneCreationWizard: React.FC<SceneCreationWizardProps> = ({ sceneToEdit }
       setSubmitting(false);
     }
   };
+  
 
   const steps = ["Datos Básicos", "Opciones de Escena", "Revisión"];
 

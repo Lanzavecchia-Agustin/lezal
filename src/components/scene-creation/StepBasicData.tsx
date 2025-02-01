@@ -28,12 +28,13 @@ const StepBasicData: React.FC<StepBasicDataProps> = ({ basicData, setBasicData }
           ID de la Escena
         </Label>
         <Input
-          id="id"
-          name="id"
-          value={basicData.id}
-          onChange={handleChange}
-          className="mt-1 bg-gray-50 border-gray-300 text-gray-900 focus:ring-blue-500 focus:border-blue-500"
-          placeholder="Ingrese el ID de la escena"
+            id="id"
+            name="id"
+            value={basicData.id}
+            onChange={handleChange}
+            disabled={!!basicData.id} // o alguna condición que verifique que estamos en modo edición
+            className="mt-1 bg-gray-50 border-gray-300 text-gray-900 focus:ring-blue-500 focus:border-blue-500"
+            placeholder="Ingrese el ID de la escena"
         />
       </div>
       <div>

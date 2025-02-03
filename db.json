@@ -54,7 +54,6 @@
             "failure": "",
             "partial": ""
           },
-          "maxVotes": 0,
           "lockedAttributeIncrement": {
             "attribute": "analítico",
             "increment": 1

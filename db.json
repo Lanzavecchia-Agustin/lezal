@@ -54,7 +54,6 @@
             "failure": "",
             "partial": ""
           },
-          "maxVotes": 0,
           "lockedAttributeIncrement": {
             "attribute": "analítico",
             "increment": 1
@@ -64,8 +63,8 @@
     },
     {
       "id": "saludo1",
-      "text": "Branch A - Scene 3A: Los datos revelan la existencia de un sello antiguo, creado para contener a una entidad oscura que amenaza con destruirlo todo.",
-      "isEnding": false,
+      "text": "dis is di end",
+      "isEnding": true,
       "options": [
         {
           "id": 1,

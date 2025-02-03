@@ -290,7 +290,7 @@ export default function FormAttributes({
                 {editingAttribute && (
                   <Button
                     type="button"
-                    variant="outline"
+                    variant="destructive"
                     onClick={handleCancelEdit}
                     className="w-full border-gray-800 text-gray-800 hover:bg-gray-200"
                   >

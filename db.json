@@ -6,55 +6,6 @@
       "unlockable": false
     },
     {
-      "id": "2",
-      "name": "curioso",
-      "unlockable": false
-    },
-    {
-      "id": "3",
-      "name": "analítico",
-      "unlockable": false
-    },
-    {
-      "id": "4",
-      "name": "valiente",
-      "unlockable": false
-    },
-    {
-      "id": "5",
-      "name": "resiliente",
-      "unlockable": false
-    },
-    {
-      "id": "6",
-      "name": "misterioso",
-      "unlockable": true,
-      "unlock_threshold": 4
-    },
-    {
-      "id": "7",
-      "name": "psíquico",
-      "unlockable": true,
-      "unlock_threshold": 5
-    },
-    {
-      "id": "8",
-      "name": "siniestro",
-      "unlockable": true,
-      "unlock_threshold": 6
-    },
-    {
-      "id": "9",
-      "name": "inquisitivo",
-      "unlockable": false
-    },
-    {
-      "id": "10",
-      "name": "esotérico",
-      "unlockable": true,
-      "unlock_threshold": 4
-    },
-    {
       "id": "11",
       "name": "conspirativo",
       "unlockable": true,
@@ -72,5 +23,64 @@
       "unlockable": false
     }
   ],
-  "scenes": []
+  "scenes": [
+    {
+      "id": "scene1",
+      "text": "testing",
+      "isEnding": false,
+      "options": [
+        {
+          "id": 1,
+          "text": "Elige el camino de la Redención: Enfrenta la amenaza y lucha por salvar la nave.",
+          "nextSceneId": {
+            "success": "inicio2",
+            "failure": "",
+            "partial": ""
+          }
+        }
+      ]
+    },
+    {
+      "id": "inicio2",
+      "text": "otro test",
+      "isEnding": false,
+      "options": [
+        {
+          "id": 1,
+          "text": "otro testiaadsasd sadas",
+          "requirement": [],
+          "nextSceneId": {
+            "success": "saludo1",
+            "failure": "",
+            "partial": ""
+          },
+          "maxVotes": 0,
+          "lockedAttributeIncrement": {
+            "attribute": "analítico",
+            "increment": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "saludo1",
+      "text": "Branch A - Scene 3A: Los datos revelan la existencia de un sello antiguo, creado para contener a una entidad oscura que amenaza con destruirlo todo.",
+      "isEnding": false,
+      "options": [
+        {
+          "id": 1,
+          "text": "Dirígete a la sala de análisis para descifrar el mensaje y comprender el sello.",
+          "lockedAttributeIncrement": {
+            "attribute": "analítico",
+            "increment": 1
+          },
+          "nextSceneId": {
+            "success": "scene4A",
+            "failure": "scene4A",
+            "partial": "scene4A"
+          }
+        }
+      ]
+    }
+  ]
 }

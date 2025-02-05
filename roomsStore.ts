@@ -1,53 +1,61 @@
 // roomsStore.ts
-import db from "./db.json"
+import db from "./db.json"; // Se asume que db.json tiene la estructura completa
 
-export interface Attributes {
+// Interfaz para las subhabilidades
+export interface Subskill {
   id: string;
   name: string;
   unlockable: boolean;
   unlock_threshold?: number;
 }
 
-// Otras constantes y código...
-export const ATRIBUTOS_DISPONIBLES: string[] = db.attributes
-  .filter((attr: any) => attr.unlockable === false)
-  .map((attr: any) => attr.name);
-
-export const LOCKED_ATTRIBUTES: string[] = db.attributes
-  .filter((attr: any) => attr.unlockable === true)
-  .map((attr: any) => attr.name);
-
-export const UNLOCK_THRESHOLDS: Record<string, number> = db.attributes
-  .filter((attr: any) => attr.unlockable === true)
-  .reduce((acc: Record<string, number>, attr: any) => {
-    acc[attr.name] = attr.unlock_threshold || 0;
-    return acc;
-  }, {});
-
-
-
-// Interfaz de Jugador
-export interface Player {
+// Interfaz para las habilidades principales
+export interface Skill {
+  id: string;
   name: string;
-  type: "Normal" | "Líder";
-  attributes: string[];  // Estos serán los atributos "elegidos" inicialmente (máx. 2) 
-                           // *Luego* se agregarán los desbloqueados sin límite.
+  subskills: Subskill[];
 }
 
-// Interfaz SceneOption extendida con requirement, maxVotes, etc.
+// Interfaz para los atributos (los "atributos ocultos")
+export interface Attribute {
+  id: string;
+  name: string;
+  unlockable: boolean;
+  unlock_threshold?: number;
+}
+
+// Configuración del juego
+export interface GameConfig {
+  maxStartingPoints: number;
+  skills: Skill[];
+  attributes: Attribute[];
+}
+
+// Interfaz para cada opción de la escena
 export interface SceneOption {
   id: number;
   text: string;
-  requirement?: string[];
-  maxVotes?: number;
-  lockedAttributeIncrement?: { attribute: string; increment: number };
   nextSceneId: {
     success: string;
-    failure?: string;  // ahora es opcional
-    partial?: string;  // ahora es opcional
+    failure?: string;
+    partial?: string;
+  };
+  roll?: {
+    skillUsed: string;
+    difficulty: number;
+  };
+  expOnSuccess?: number;
+  // Incremento de atributo al elegir la opción
+  lockedAttributeIncrement?: {
+    attribute: string;
+    increment: number;
+  };
+  // Requerimientos para mostrar o habilitar la opción
+  requirements?: {
+    attribute: string;
+    actionIfNotMet: "hide" | "disable";
   };
 }
-
 
 // Escena
 export interface Scene {
@@ -55,6 +63,18 @@ export interface Scene {
   text: string;
   options: SceneOption[];
   isEnding?: boolean;
+  maxVote?: number;
+}
+
+// Interfaz Player
+export interface Player {
+  name: string;
+  type: "Normal" | "Líder";
+  assignedPoints: { [subskillId: string]: number };
+  xp: number;
+  skillPoints: number;
+  // Atributos ocultos que se irán incrementando (p.ej., "corrupto")
+  lockedAttributes: { [attribute: string]: number };
 }
 
 // Estado de la Sala
@@ -63,12 +83,19 @@ export interface RoomState {
   votes: Record<number, number>;
   userVoted: Set<string>;
   players: Record<string, Player>;
-  // Agregamos la propiedad `optionVotes`
   optionVotes: Record<number, Set<string>>;
-  voteTimer?: NodeJS.Timeout;
-  // Nuevo: Contador global para cada atributo bloqueado
-  lockedConditions: Record<string, number>;
+  lockedConditions?: Record<string, number>;
 }
+
+// Cargamos la config y escenas desde db.json
+const dbData = db as {
+  gameConfig: GameConfig;
+  scenes: Scene[];
+};
+
+// Exportamos la config y las escenas
+export const gameConfig = dbData.gameConfig;
+export const SCENES = dbData.scenes;
 
 // Almacén global de salas
 const rooms: Record<string, RoomState> = {};

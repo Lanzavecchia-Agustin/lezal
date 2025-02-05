@@ -1,85 +1,521 @@
 {
-  "attributes": [
-    {
-      "id": "1",
-      "name": "intrépido",
-      "unlockable": false
-    },
-    {
-      "id": "11",
-      "name": "conspirativo",
-      "unlockable": true,
-      "unlock_threshold": 5
-    },
-    {
-      "id": "12",
-      "name": "redentor",
-      "unlockable": true,
-      "unlock_threshold": 7
-    },
-    {
-      "id": "13",
-      "name": "tersalo hater",
-      "unlockable": false
-    }
-  ],
+  "gameConfig": {
+    "maxStartingPoints": 10,
+    "skills": [
+      {
+        "id": "intelecto",
+        "name": "Intelecto",
+        "subskills": [
+          { "id": "101", "name": "razonamiento", "unlockable": false },
+          { "id": "102", "name": "enciclopedia", "unlockable": false },
+          { "id": "103", "name": "retórica", "unlockable": false },
+          { "id": "104", "name": "imaginación", "unlockable": true, "unlock_threshold": 5 },
+          { "id": "105", "name": "cálculo visual", "unlockable": true, "unlock_threshold": 6 },
+          { "id": "106", "name": "erudición", "unlockable": false }
+        ]
+      },
+      {
+        "id": "psique",
+        "name": "Psique",
+        "subskills": [
+          { "id": "201", "name": "voluntad", "unlockable": false },
+          { "id": "202", "name": "empatía", "unlockable": false },
+          { "id": "203", "name": "autoridad", "unlockable": false },
+          { "id": "204", "name": "intuición", "unlockable": true, "unlock_threshold": 5 },
+          { "id": "205", "name": "sugestión", "unlockable": true, "unlock_threshold": 6 },
+          { "id": "206", "name": "compasión", "unlockable": false }
+        ]
+      },
+      {
+        "id": "cuerpo",
+        "name": "Cuerpo",
+        "subskills": [
+          { "id": "301", "name": "resistencia", "unlockable": false },
+          { "id": "302", "name": "electroquímica", "unlockable": false },
+          { "id": "303", "name": "fuerza", "unlockable": false },
+          { "id": "304", "name": "flexibilidad", "unlockable": true, "unlock_threshold": 5 },
+          { "id": "305", "name": "golpe certero", "unlockable": true, "unlock_threshold": 6 },
+          { "id": "306", "name": "resiliencia", "unlockable": false }
+        ]
+      },
+      {
+        "id": "motricidad",
+        "name": "Motricidad",
+        "subskills": [
+          { "id": "401", "name": "coordinación", "unlockable": false },
+          { "id": "402", "name": "percepción", "unlockable": false },
+          { "id": "403", "name": "sigilo", "unlockable": false },
+          { "id": "404", "name": "equilibrio", "unlockable": true, "unlock_threshold": 5 },
+          { "id": "405", "name": "reflejos", "unlockable": true, "unlock_threshold": 6 },
+          { "id": "406", "name": "puntería", "unlockable": false }
+        ]
+      }
+    ],
+    "attributes": [
+      { "id": "1", "name": "corrupto", "unlockable": true, "unlock_threshold": 1 },
+      { "id": "6", "name": "misterioso", "unlockable": true, "unlock_threshold": 4 },
+      { "id": "7", "name": "psíquico", "unlockable": true, "unlock_threshold": 5 },
+      { "id": "8", "name": "siniestro", "unlockable": true, "unlock_threshold": 6 },
+      { "id": "10", "name": "esotérico", "unlockable": true, "unlock_threshold": 4 },
+      { "id": "11", "name": "conspirativo", "unlockable": true, "unlock_threshold": 5 },
+      { "id": "12", "name": "redentor", "unlockable": true, "unlock_threshold": 7 }
+    ]
+  },
   "scenes": [
     {
       "id": "scene1",
-      "text": "testing",
+      "text": "Llegas a los portones oxidados de una vieja mansión rodeada de maleza. El viento sopla fuerte y un cuervo grazna en la distancia. Hay un camino principal que conduce a la entrada, pero parece en mal estado.",
       "isEnding": false,
+      "maxVote": 1,
       "options": [
         {
           "id": 1,
-          "text": "Elige el camino de la Redención: Enfrenta la amenaza y lucha por salvar la nave.",
+          "text": "Inspeccionar el camino con cuidado.",
+          "roll": { "skillUsed": "402", "difficulty": 6 },
+          "expOnSuccess": 1,
           "nextSceneId": {
-            "success": "inicio2",
-            "failure": "",
+            "success": "scene2",
+            "failure": "scene1Fail",
+            "partial": "scene1Partial"
+          },
+          "requirements": {
+            "attribute": "corrupto",
+            "actionIfNotMet": "disable"
+          }
+        },
+        {
+          "id": 2,
+          "text": "Forzar los portones con fuerza bruta.",
+          "roll": { "skillUsed": "303", "difficulty": 2 },
+          "expOnSuccess": 2,
+          "lockedAttributeIncrement": {
+            "attribute": "corrupto",
+            "increment": 1
+          },
+          "nextSceneId": {
+            "success": "scene3",
+            "failure": "scene1Fail2",
             "partial": ""
           }
         }
       ]
     },
     {
-      "id": "inicio2",
-      "text": "otro test",
+      "id": "scene1Partial",
+      "text": "Ves algunas secciones rotas en el camino, pero tu atención se desvía un instante y pierdes de vista un detalle crucial. Sabes que hay peligro, aunque no estás seguro de dónde.",
       "isEnding": false,
+      "maxVote": 1,
       "options": [
         {
           "id": 1,
-          "text": "otro testiaadsasd sadas",
-          "requirement": [],
+          "text": "Avanzar de todos modos, consciente de que algo puede salir mal.",
+          "nextSceneId": { "success": "scene2", "failure": "", "partial": "" }
+        }
+      ]
+    },
+    {
+      "id": "scene1Fail",
+      "text": "Un agujero en el camino te toma por sorpresa. Tropiezas y caes, lastimándote ligeramente. Decides retroceder un momento y pensar con más cuidado.",
+      "isEnding": false,
+      "maxVote": 1,
+      "options": [
+        {
+          "id": 1,
+          "text": "Reponerte y volver a intentarlo.",
+          "nextSceneId": { "success": "scene1", "failure": "", "partial": "" }
+        }
+      ]
+    },
+    {
+      "id": "scene1Fail2",
+      "text": "Empujas con todas tus fuerzas, pero los portones rechinan y apenas se mueven. Notas un dolor agudo en el hombro al insistir. Necesitarás otra estrategia o arriesgarte a lesionarte de verdad.",
+      "isEnding": false,
+      "maxVote": 1,
+      "options": [
+        {
+          "id": 1,
+          "text": "Descansar el hombro y buscar otra forma de acceso.",
+          "nextSceneId": { "success": "scene1", "failure": "", "partial": "" }
+        }
+      ]
+    },
+    {
+      "id": "scene2",
+      "text": "Con cautela, logras sortear los tramos peligrosos del camino. Llegas a la puerta principal de la mansión, la cual luce muy antigua. De cerca, ves que el picaporte está decorado con un símbolo en forma de cuervo.",
+      "isEnding": false,
+      "maxVote": 1,
+      "options": [
+        {
+          "id": 1,
+          "text": "Examinar el símbolo a fondo, intentando recordar si tiene un significado histórico.",
+          "roll": { "skillUsed": "106", "difficulty": 7 },
+          "expOnSuccess": 1,
           "nextSceneId": {
-            "success": "saludo1",
-            "failure": "",
+            "success": "scene2Success",
+            "failure": "scene2Fail",
             "partial": ""
           },
-          "lockedAttributeIncrement": {
-            "attribute": "analítico",
-            "increment": 1
+          "requirements": {
+            "attribute": "corrupto",
+            "actionIfNotMet": "disable"
+          }
+        },
+        {
+          "id": 2,
+          "text": "Usar tu intuición para percibir si hay algo siniestro en el símbolo.",
+          "roll": { "skillUsed": "204", "difficulty": 5 },
+          "expOnSuccess": 2,
+          "requirements": {
+            "attribute": "corrupto",
+            "actionIfNotMet": "disable"
+          },
+          "nextSceneId": {
+            "success": "scene2SuccessIntuition",
+            "failure": "scene2Fail",
+            "partial": ""
           }
         }
       ]
     },
     {
-      "id": "saludo1",
-      "text": "Branch A - Scene 3A: Los datos revelan la existencia de un sello antiguo, creado para contener a una entidad oscura que amenaza con destruirlo todo.",
+      "id": "scene2Success",
+      "text": "Recuerdas haber leído sobre un culto olvidado que usaba el cuervo como emblema. Estos fieles tenían obsesión con la vida tras la muerte. Sientes un escalofrío.",
       "isEnding": false,
+      "maxVote": 1,
       "options": [
         {
           "id": 1,
-          "text": "Dirígete a la sala de análisis para descifrar el mensaje y comprender el sello.",
-          "lockedAttributeIncrement": {
-            "attribute": "analítico",
-            "increment": 1
-          },
+          "text": "Intentar abrir la puerta con cuidado.",
+          "nextSceneId": { "success": "scene3", "failure": "", "partial": "" }
+        }
+      ]
+    },
+    {
+      "id": "scene2SuccessIntuition",
+      "text": "Algo en tu interior te advierte peligro. La puerta podría estar maldita o protegida por un antiguo ritual.",
+      "isEnding": false,
+      "maxVote": 1,
+      "options": [
+        {
+          "id": 1,
+          "text": "Buscar otra entrada antes de forzar la puerta.",
+          "nextSceneId": { "success": "scene4", "failure": "", "partial": "" }
+        },
+        {
+          "id": 2,
+          "text": "Ignorar el presentimiento y abrirla de todos modos.",
+          "nextSceneId": { "success": "scene3", "failure": "", "partial": "" }
+        }
+      ]
+    },
+    {
+      "id": "scene2Fail",
+      "text": "No logras extraer nada concreto del símbolo. Solo sientes un leve desasosiego, como si te observaran. Quizá debas seguir con precaución.",
+      "isEnding": false,
+      "maxVote": 1,
+      "options": [
+        {
+          "id": 1,
+          "text": "Proceder a abrir la puerta sin más información.",
+          "nextSceneId": { "success": "scene3", "failure": "", "partial": "" }
+        }
+      ]
+    },
+    {
+      "id": "scene3",
+      "text": "El interior está oscuro. Un recibidor amplio, con candelabros llenos de telarañas. De la escalera principal cuelga un viejo cuadro familiar. Notas que el pasillo de la izquierda conduce a la cocina y el de la derecha a una sala con espejos cubiertos por sábanas.",
+      "isEnding": false,
+      "maxVote": 1,
+      "options": [
+        {
+          "id": 1,
+          "text": "Explorar la cocina en busca de algo útil.",
+          "roll": { "skillUsed": "301", "difficulty": 6 },
+          "expOnSuccess": 1,
           "nextSceneId": {
-            "success": "scene4A",
-            "failure": "scene4A",
-            "partial": "scene4A"
+            "success": "scene5",
+            "failure": "scene3Fail",
+            "partial": ""
+          },
+          "requirements": {
+            "attribute": "corrupto",
+            "actionIfNotMet": "disable"
+          }
+        },
+        {
+          "id": 2,
+          "text": "Subir las escaleras y examinar el cuadro más de cerca.",
+          "roll": { "skillUsed": "102", "difficulty": 7 },
+          "expOnSuccess": 1,
+          "nextSceneId": {
+            "success": "scene6",
+            "failure": "scene3Fail2",
+            "partial": ""
           }
         }
       ]
+    },
+    {
+      "id": "scene3Fail",
+      "text": "Te mueves con torpeza en la penumbra y te golpeas contra una mesa. No hallas nada de valor y pierdes un valioso tiempo.",
+      "isEnding": false,
+      "maxVote": 1,
+      "options": [
+        {
+          "id": 1,
+          "text": "Descansar un momento y reconsiderar dónde buscar.",
+          "nextSceneId": { "success": "scene3", "failure": "", "partial": "" }
+        }
+      ]
+    },
+    {
+      "id": "scene3Fail2",
+      "text": "Intentas subir las escaleras con cautela, pero un escalón podrido cede y casi caes. Retrocedes, aturdido.",
+      "isEnding": false,
+      "maxVote": 1,
+      "options": [
+        {
+          "id": 1,
+          "text": "Tomar aire y volver a intentarlo con más cuidado.",
+          "nextSceneId": { "success": "scene3", "failure": "", "partial": "" }
+        }
+      ]
+    },
+    {
+      "id": "scene4",
+      "text": "Rodeas la mansión y encuentras una ventana rota. Un olor penetrante emerge desde el interior, como a humedad y moho antiguo.",
+      "isEnding": false,
+      "maxVote": 1,
+      "options": [
+        {
+          "id": 1,
+          "text": "Entrar por la ventana con agilidad.",
+          "roll": { "skillUsed": "304", "difficulty": 5 },
+          "expOnSuccess": 1,
+          "nextSceneId": {
+            "success": "scene5",
+            "failure": "scene4Fail",
+            "partial": ""
+          }
+        }
+      ]
+    },
+    {
+      "id": "scene4Fail",
+      "text": "Intentas pasar por la ventana, pero te quedas atascado y casi te cortas con el vidrio. No logras entrar por aquí sin un mejor plan.",
+      "isEnding": false,
+      "maxVote": 1,
+      "options": [
+        {
+          "id": 1,
+          "text": "Buscar otro acceso o incrementar tu flexibilidad antes de volver.",
+          "nextSceneId": { "success": "scene1", "failure": "", "partial": "" }
+        }
+      ]
+    },
+    {
+      "id": "scene5",
+      "text": "Llegas a una sala con muebles cubiertos por sábanas polvorientas. En el centro, una mesita redonda con un mapa antiguo de la región. Algunas marcas en el mapa señalan un símbolo de cuervo.",
+      "isEnding": false,
+      "maxVote": 1,
+      "options": [
+        {
+          "id": 1,
+          "text": "Analizar el mapa con detenimiento para encontrar pistas.",
+          "roll": { "skillUsed": "101", "difficulty": 7 },
+          "expOnSuccess": 2,
+          "lockedAttributeIncrement": {
+            "attribute": "corrupto",
+            "increment": 1
+          },
+          "nextSceneId": {
+            "success": "scene7",
+            "failure": "scene5Fail",
+            "partial": "scene5Partial"
+          }
+        }
+      ]
+    },
+    {
+      "id": "scene5Fail",
+      "text": "No logras descifrar los símbolos del mapa. Parece un sistema de coordenadas y notas confusas.",
+      "isEnding": false,
+      "maxVote": 1,
+      "options": [
+        {
+          "id": 1,
+          "text": "Reintentar con la mente más despejada.",
+          "nextSceneId": { "success": "scene5", "failure": "", "partial": "" }
+        }
+      ]
+    },
+    {
+      "id": "scene5Partial",
+      "text": "Entiendes parte del mapa: indica la existencia de un sótano oculto en la mansión. Sin embargo, algunos símbolos siguen siendo un misterio.",
+      "isEnding": false,
+      "maxVote": 1,
+      "options": [
+        {
+          "id": 1,
+          "text": "Dirigirte al lugar donde crees que está el sótano.",
+          "nextSceneId": { "success": "scene7", "failure": "", "partial": "" }
+        }
+      ]
+    },
+    {
+      "id": "scene6",
+      "text": "Te acercas al gran cuadro en la pared. Retrata a una familia de semblante serio y, en la parte inferior, aparecen nombres medio borrados. Uno destaca: 'Marcellus Crow'.",
+      "isEnding": false,
+      "maxVote": 1,
+      "options": [
+        {
+          "id": 1,
+          "text": "Intentar recordar datos históricos sobre la familia Crow.",
+          "roll": { "skillUsed": "102", "difficulty": 8 },
+          "expOnSuccess": 2,
+          "nextSceneId": { "success": "scene7", "failure": "scene6Fail", "partial": "" }
+        },
+        {
+          "id": 2,
+          "text": "Usar tu imaginación para inferir la historia detrás de los rostros.",
+          "roll": { "skillUsed": "104", "difficulty": 9 },
+          "expOnSuccess": 3,
+          "lockedAttributeIncrement": {
+            "attribute": "corrupto",
+            "increment": 1
+          },
+          "nextSceneId": { "success": "scene7", "failure": "scene6Fail", "partial": "" }
+        }
+      ]
+    },
+    {
+      "id": "scene6Fail",
+      "text": "No logras extraer información clara. El paso del tiempo ha dejado muchos huecos y tu mente no conecta los detalles.",
+      "isEnding": false,
+      "maxVote": 1,
+      "options": [
+        {
+          "id": 1,
+          "text": "Intentar desde otro ángulo o investigar en otro sitio de la mansión.",
+          "nextSceneId": { "success": "scene3", "failure": "", "partial": "" }
+        }
+      ]
+    },
+    {
+      "id": "scene7",
+      "text": "Encuentras una puerta semiescondida detrás de un tapiz ajado. Desciendes por unas escaleras estrechas hasta un sótano con una gruesa puerta de madera reforzada con hierro.",
+      "isEnding": false,
+      "maxVote": 1,
+      "options": [
+        {
+          "id": 1,
+          "text": "Empujar la puerta con fuerza.",
+          "roll": { "skillUsed": "303", "difficulty": 7 },
+          "expOnSuccess": 1,
+          "nextSceneId": { "success": "scene8", "failure": "scene7Fail", "partial": "" }
+        },
+        {
+          "id": 2,
+          "text": "Buscar un mecanismo oculto alrededor de la puerta.",
+          "roll": { "skillUsed": "401", "difficulty": 6 },
+          "expOnSuccess": 1,
+          "nextSceneId": { "success": "scene8", "failure": "scene7Fail2", "partial": "" }
+        }
+      ]
+    },
+    {
+      "id": "scene7Fail",
+      "text": "Aun con tu fuerza, la puerta no cede. Podrías hacer más daño que bien si sigues empujando.",
+      "isEnding": false,
+      "maxVote": 1,
+      "options": [
+        {
+          "id": 1,
+          "text": "Reconsiderar tu estrategia antes de lastimarte.",
+          "nextSceneId": { "success": "scene7", "failure": "", "partial": "" }
+        }
+      ]
+    },
+    {
+      "id": "scene7Fail2",
+      "text": "Pasas la mano por las grietas de la pared, pero no encuentras nada que parezca un mecanismo. Quizá no estás buscando en el lugar correcto.",
+      "isEnding": false,
+      "maxVote": 1,
+      "options": [
+        {
+          "id": 1,
+          "text": "Examinar con más paciencia o intentar otra acción.",
+          "nextSceneId": { "success": "scene7", "failure": "", "partial": "" }
+        }
+      ]
+    },
+    {
+      "id": "scene8",
+      "text": "La puerta finalmente cede. El sótano revela un altar rodeado de velas consumidas. Hay un libro antiguo sobre un pedestal, con el mismo símbolo de cuervo grabado en la tapa.",
+      "isEnding": false,
+      "maxVote": 1,
+      "options": [
+        {
+          "id": 1,
+          "text": "Leer el libro con detenimiento (requiere valentía).",
+          "roll": { "skillUsed": "201", "difficulty": 6 },
+          "expOnSuccess": 2,
+          "nextSceneId": { "success": "scene9", "failure": "scene8Fail", "partial": "" }
+        },
+        {
+          "id": 2,
+          "text": "Intentar un antiguo ritual para deshacer la maldición.",
+          "roll": { "skillUsed": "104", "difficulty": 10 },
+          "expOnSuccess": 3,
+          "lockedAttributeIncrement": {
+            "attribute": "corrupto",
+            "increment": 1
+          },
+          "requirements": {
+            "attribute": "corrupto",
+            "actionIfNotMet": "hide"
+          },
+          "nextSceneId": { "success": "scene10", "failure": "scene8Fail", "partial": "scene8Partial" }
+        }
+      ]
+    },
+    {
+      "id": "scene8Fail",
+      "text": "La atmósfera se vuelve densa; tus manos tiemblan y no puedes continuar. Sientes que algo te observa en la penumbra.",
+      "isEnding": false,
+      "maxVote": 1,
+      "options": [
+        {
+          "id": 1,
+          "text": "Respirar hondo y hacer acopio de valor para reintentar.",
+          "nextSceneId": { "success": "scene8", "failure": "", "partial": "" }
+        }
+      ]
+    },
+    {
+      "id": "scene8Partial",
+      "text": "Inicias el ritual, pero la fuerza de la maldición se resiste. El ambiente cruje y algo parece agitarse en la oscuridad. Has roto parte del influjo, pero no lo suficiente.",
+      "isEnding": false,
+      "maxVote": 1,
+      "options": [
+        {
+          "id": 1,
+          "text": "Persistir a pesar del peligro.",
+          "nextSceneId": { "success": "scene10", "failure": "", "partial": "" }
+        }
+      ]
+    },
+    {
+      "id": "scene9",
+      "text": "Las páginas describen sacrificios y promesas rotas. Entiendes que la familia Crow selló algo siniestro en este sótano. Sientes escalofríos: está a punto de liberarse.",
+      "isEnding": true,
+      "options": []
+    },
+    {
+      "id": "scene10",
+      "text": "Con un último esfuerzo, anulas la maldición que plagaba la mansión. Una ráfaga helada recorre el lugar, seguida de un silencio sobrecogedor. Has roto las cadenas de la oscuridad, al menos por ahora.",
+      "isEnding": true,
+      "options": []
     }
   ]
 }

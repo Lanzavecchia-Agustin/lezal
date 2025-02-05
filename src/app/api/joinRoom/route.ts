@@ -1,7 +1,7 @@
 // app/api/join/route.ts
 import { NextResponse } from "next/server";
 import Pusher from "pusher";
-import rooms, { Player, ATRIBUTOS_DISPONIBLES, LOCKED_ATTRIBUTES } from "../../../../roomsStore";
+import rooms, { Player } from "../../../../roomsStore";
 import { storyData } from "../../../../storyData";
 
 const pusher = new Pusher({
@@ -22,69 +22,46 @@ export async function GET(req: Request) {
   console.log("[JOIN] Incoming params =>", { roomId, userName, typeParam, attributesParam });
 
   if (!roomId || !userName) {
-    console.log("[JOIN] Error: roomId y userName son requeridos");
     return NextResponse.json({ error: "roomId y userName son requeridos" }, { status: 400 });
   }
 
-  // Crear sala si no existe
   if (!rooms[roomId]) {
-    console.log(`[JOIN] Room ${roomId} no existe, creándola...`);
     rooms[roomId] = {
       scene: storyData.scene1,
       votes: {},
       userVoted: new Set(),
       players: {},
       optionVotes: {},
-      // Inicializamos los contadores de condiciones para cada atributo bloqueado
-      lockedConditions: LOCKED_ATTRIBUTES.reduce((acc, attr) => {
-        acc[attr] = 0;
-        return acc;
-      }, {} as Record<string, number>),
+      lockedConditions: {},
     };
   }
-
   const room = rooms[roomId];
 
-  // Parsear atributos
-  const attributeArray = attributesParam
-    .split(",")
-    .map((a) => a.trim())
-    .filter(Boolean);
+  let parsedPoints: Record<string, number> = {};
+  try {
+    parsedPoints = JSON.parse(attributesParam);
+  } catch (error) {
+    console.log("[JOIN] Error al parsear assignedPoints =>", error);
+    return NextResponse.json({ error: "Invalid assignedPoints JSON." }, { status: 400 });
+  }
 
-  console.log("[JOIN] attributeArray parsed =>", attributeArray);
-
-  // Ver si ya existe un Líder
   const existingLeader = Object.values(room.players).find((p) => p.type === "Líder");
-
   let finalType: "Normal" | "Líder" = "Normal";
   if (typeParam === "Líder" && !existingLeader) {
     finalType = "Líder";
   }
 
-  // Validar atributos
-  if (attributeArray.length > 2) {
-    console.log("[JOIN] Error: Más de 2 atributos");
-    return NextResponse.json({ error: "Máximo 2 atributos." }, { status: 400 });
-  }
-  for (const attr of attributeArray) {
-    if (!ATRIBUTOS_DISPONIBLES.includes(attr)) {
-      console.log("[JOIN] Error: Atributo inválido =>", attr);
-      return NextResponse.json({ error: `Atributo '${attr}' no es válido.` }, { status: 400 });
-    }
-  }
-
-  // Crear Player
   const newPlayer: Player = {
     name: userName,
     type: finalType,
-    attributes: attributeArray,
+    assignedPoints: parsedPoints,
+    xp: 0,
+    skillPoints: 0,
+    lockedAttributes: {} // Inicializamos lockedAttributes como objeto vacío
   };
-
-  console.log("[JOIN] Creating new player =>", newPlayer);
 
   room.players[userName] = newPlayer;
 
-  // Notificar a los demás (opcional)
   await pusher.trigger(`room-${roomId}`, "sceneUpdate", {
     scene: room.scene,
     votes: room.votes,
@@ -92,6 +69,6 @@ export async function GET(req: Request) {
     userVoted: Array.from(room.userVoted),
   });
 
-  console.log("[JOIN] Player joined room =>", userName, "| Final type:", finalType);
+  console.log("[JOIN] Player joined =>", userName, "| assignedPoints =>", parsedPoints);
   return NextResponse.json({ message: "Room joined", room });
 }

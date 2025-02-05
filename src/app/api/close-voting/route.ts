@@ -1,9 +1,8 @@
-// app/api/closeVoting/route.ts
+// app/api/vote/route.ts
 import { NextResponse } from "next/server";
 import Pusher from "pusher";
-import rooms from "../../../../roomsStore";
-import { storyData } from "../../../../storyData";
-import { SceneOption } from "../../../../roomsStore";
+import rooms, { Player } from "../../../../roomsStore"; 
+import { SCENES } from "../../../../roomsStore";
 
 const pusher = new Pusher({
   appId: process.env.PUSHER_APP_ID!,
@@ -13,141 +12,198 @@ const pusher = new Pusher({
   useTLS: true,
 });
 
+// Definimos un umbral para subir de nivel (ej. 5 XP)
+const XP_THRESHOLD = 5;
+
 export async function GET(req: Request) {
+  console.log("[VOTE] GET called");
   const { searchParams } = new URL(req.url);
   const roomId = searchParams.get("roomId");
+  const userName = searchParams.get("userName");
+  const optionId = searchParams.get("optionId");
 
-  console.log("[closeVoting] GET called with roomId:", roomId);
-
-  if (!roomId) {
-    console.log("[closeVoting] Error: roomId is required");
-    return NextResponse.json({ error: "roomId is required" }, { status: 400 });
+  if (!roomId || !userName || !optionId) {
+    return NextResponse.json({ error: "Faltan parámetros" }, { status: 400 });
   }
 
   const room = rooms[roomId];
   if (!room) {
-    console.log("[closeVoting] Error: Room not found for roomId:", roomId);
-    return NextResponse.json({ error: "Room not found" }, { status: 404 });
+    return NextResponse.json({ error: "Sala no existe" }, { status: 404 });
   }
 
-  console.log("[closeVoting] Current votes:", room.votes);
+  const optIdNum = parseInt(optionId, 10);
+  const sceneOption = room.scene.options.find((o) => o.id === optIdNum);
+  if (!sceneOption) {
+    return NextResponse.json({ error: "Opción no válida" }, { status: 400 });
+  }
 
+  // --------------------------------------------------------------------
+  // 1) Determinamos cuántos votos son necesarios para cerrar esta escena.
+  //    - Si la escena no tiene 'maxVote', usamos el número total de jugadores.
+  //    - Sino, usamos la lógica: "effectiveMaxVotes = min(sceneMaxVote, totalJugadores)".
+  // --------------------------------------------------------------------
+  const playerCount = Object.keys(room.players).length;
+  // Usa playerCount por defecto si no hay maxVote en la escena
+  const sceneMaxVote = room.scene.maxVote ?? playerCount;
+  // Prevenimos un bloqueo si maxVote > número de jugadores, tomando el mínimo
+  const effectiveMaxVotes = Math.min(sceneMaxVote, playerCount);
+
+  // --------------------------------------------------------------------
+  // 2) Registrar el voto si el usuario no había votado antes.
+  // --------------------------------------------------------------------
+  if (!room.userVoted.has(userName)) {
+    room.votes[optIdNum] = (room.votes[optIdNum] || 0) + 1;
+    room.userVoted.add(userName);
+    console.log(`[VOTE] ${userName} votó por la opción ID=${optIdNum}`);
+  } else {
+    console.log(`[VOTE] Ignorado voto repetido de ${userName}`);
+  }
+
+  // --------------------------------------------------------------------
+  // 3) Notificar a todos el nuevo estado de votos
+  // --------------------------------------------------------------------
+  await pusher.trigger(`room-${roomId}`, "voteUpdate", {
+    votes: room.votes,
+    userVoted: Array.from(room.userVoted),
+  });
+
+  // --------------------------------------------------------------------
+  // 4) Verificamos si ya se alcanzó el número de votos necesarios
+  //    (effectiveMaxVotes). En ese caso, cerramos la votación y
+  //    resolvemos la acción de la escena.
+  // --------------------------------------------------------------------
+  if (room.userVoted.size === effectiveMaxVotes) {
+    console.log(
+      `[VOTE] Se alcanzó el límite de votos (${effectiveMaxVotes}). Resolvemos la escena.`
+    );
+
+    // Determinamos la opción ganadora (la más votada)
+    const winningOptionId = findWinningOption(room.votes);
+    console.log("[VOTE] Opción ganadora:", winningOptionId);
+
+    // Avanzamos la escena según la lógica Disco Elysium
+    await resolveCheckAndAdvance(roomId, winningOptionId);
+  }
+
+  return NextResponse.json({ success: true, votes: room.votes });
+}
+
+// --------------------------------------------------------------------
+//  Función que determina la opción más votada.
+// --------------------------------------------------------------------
+function findWinningOption(votes: Record<number, number>): number {
   let maxVotes = -1;
-  let winningOptionId: number | null = null;
-
-  for (const [optId, v] of Object.entries(room.votes)) {
-    const vc = Number(v);
-    console.log(`    Option ${optId} has ${vc} votes`);
-    if (vc > maxVotes) {
-      maxVotes = vc;
+  let winningOptionId = -1;
+  for (const [optId, count] of Object.entries(votes)) {
+    const voteCount = Number(count);
+    if (voteCount > maxVotes) {
+      maxVotes = voteCount;
       winningOptionId = parseInt(optId, 10);
     }
   }
+  return winningOptionId;
+}
 
-  if (winningOptionId === null) {
-    console.log("[closeVoting] Error: No votes recorded");
-    return NextResponse.json({ error: "No votes recorded" }, { status: 400 });
+// --------------------------------------------------------------------
+//  Función que hace la lógica "Disco Elysium style" (roll cooperativo)
+// --------------------------------------------------------------------
+async function resolveCheckAndAdvance(roomId: string, winningOptionId: number) {
+  const room = rooms[roomId];
+  if (!room) return;
+
+  const option = room.scene.options.find((o) => o.id === winningOptionId);
+  if (!option) return;
+
+  // 1) Determinamos si hay un roll
+  if (!option.roll) {
+    // Sin tirada => asumimos éxito automático
+    goToScene(room, option.nextSceneId.success ?? "");
+    return broadcastSceneUpdate(roomId);
   }
 
-  console.log("[closeVoting] Winning option ID:", winningOptionId);
+  // 2) Tirada "cooperativa": basta con que al menos 1 jugador pase la dificultad
+  let success = false;
 
-  const winningOption = room.scene.options.find(
-    (o: SceneOption) => o.id === winningOptionId
+  for (const playerName of room.userVoted) {
+    const player = room.players[playerName];
+    if (!player) continue;
+
+    const skillVal = getSkillValue(player, option.roll.skillUsed);
+    const diceRoll = roll2d6();
+    const total = diceRoll + skillVal;
+    console.log(
+      `[resolveCheck] Player ${playerName} => dice=${diceRoll}, skillVal=${skillVal}, total=${total}, diff=${option.roll.difficulty}`
+    );
+
+    // Si alguno pasa la dificultad => éxito para todos
+    if (total >= option.roll.difficulty) {
+      console.log(`[resolveCheck] ÉXITO para ${playerName}`);
+      success = true;
+
+      // Otorgamos XP
+      if (option.expOnSuccess) {
+        player.xp += option.expOnSuccess;
+        // Chequeamos si sube de nivel
+        while (player.xp >= XP_THRESHOLD) {
+          player.skillPoints++;
+          player.xp -= XP_THRESHOLD;
+        }
+      }
+      // Rompemos el loop si basta con un solo éxito
+      break;
+    }
+  }
+
+  // 3) Decidir la escena siguiente (success/failure)
+  const nextKey = success
+    ? option.nextSceneId.success
+    : option.nextSceneId.failure || "";
+
+  goToScene(room, nextKey);
+  await broadcastSceneUpdate(roomId);
+}
+
+// --------------------------------------------------------------------
+//  Funciones utilitarias
+// --------------------------------------------------------------------
+function roll2d6(): number {
+  return (
+    Math.floor(Math.random() * 6 + 1) + Math.floor(Math.random() * 6 + 1)
   );
-  if (!winningOption) {
-    console.log("[closeVoting] Error: Invalid option ID, no matching option found");
-    return NextResponse.json({ error: "Invalid option ID" }, { status: 400 });
-  }
+}
 
-  // Aquí llamamos a evaluateRequirement
-  const nextKey = evaluateRequirement(room, winningOption);
-  console.log("[closeVoting] Next key after requirement evaluation:", nextKey);
+function getSkillValue(player: Player, skillId: string): number {
+  return player.assignedPoints[skillId] || 0;
+}
 
-  const nextScene = storyData[nextKey];
-  if (!nextScene) {
-    console.log("[closeVoting] Error: Next scene not found for key:", nextKey);
-    return NextResponse.json({ error: "Next scene not found" }, { status: 404 });
-  }
-
-  // Actualizar la escena en la sala
+function goToScene(room: any, sceneId: string) {
+  if (!sceneId) return;
+  const nextScene = SCENES.find((s) => s.id === sceneId);
+  if (!nextScene) return;
   room.scene = nextScene;
+
   // Si no es final, reseteamos las votaciones
   if (!room.scene.isEnding) {
-    console.log("[closeVoting] Resetting votes & userVoted since scene is not ending");
     room.votes = {};
     room.userVoted.clear();
-    room.optionVotes = {}; // Reiniciar tracking
+    room.optionVotes = {};
   }
+}
 
-  // Trigger de Pusher
+async function broadcastSceneUpdate(roomId: string) {
+  const room = rooms[roomId];
+  if (!room) return;
   await pusher.trigger(`room-${roomId}`, "sceneUpdate", {
     scene: room.scene,
     votes: room.votes,
     users: Object.values(room.players).map((p) => p.name),
     userVoted: Array.from(room.userVoted),
+    // Podrías incluir los stats de cada jugador
+    players: Object.values(room.players).map((p) => ({
+      name: p.name,
+      xp: p.xp,
+      skillPoints: p.skillPoints,
+      // assignedPoints: p.assignedPoints // si lo quieres en el front
+    })),
   });
-
-  console.log("[closeVoting] Voting closed and scene updated for roomId:", roomId);
-
-  return NextResponse.json({
-    message: "Voting closed and scene updated",
-    room,
-  });
-}
-
-/**
- * Evalúa SOLO los votantes de la opción ganadora
- */
-function evaluateRequirement(room: any, option: SceneOption): string {
-  console.log("[evaluateRequirement] Checking requirements for option:", option.id);
-  console.log("[evaluateRequirement] Option requirement:", option.requirement);
-
-  // 1) Si no hay requisitos, retorna el valor de success (o fallback a cadena vacía)
-  if (!option.requirement || option.requirement.length === 0) {
-    console.log("    - No requirement, returning SUCCESS");
-    return option.nextSceneId.success ?? "";
-  }
-
-  // 2) Si no hay votantes para esta opción, retorna failure (o success si failure no está definido)
-  const votersSet: Set<string> = room.optionVotes[option.id] || new Set();
-  console.log("    - Voters for this option:", Array.from(votersSet));
-  if (votersSet.size === 0) {
-    console.log("    - No voters, returning FAILURE");
-    return option.nextSceneId.failure ?? option.nextSceneId.success ?? "";
-  }
-
-  // 3) Revisar los requisitos
-  const requirements = option.requirement;
-  console.log("    - Requirements array:", requirements);
-
-  let atLeastOneHasAll = false;
-  let atLeastOneHasSome = false;
-
-  for (const voter of Array.from(votersSet)) {
-    const player = room.players[voter];
-    if (!player) continue;
-    console.log(`    - Checking voter: ${voter}, attributes: ${player.attributes}`);
-    const matchCount = requirements.filter((req) =>
-      player.attributes.includes(req)
-    ).length;
-    console.log(`      -> Voter ${voter} matches ${matchCount} of ${requirements.length}`);
-    if (matchCount === requirements.length) {
-      atLeastOneHasAll = true;
-    }
-    if (matchCount > 0) {
-      atLeastOneHasSome = true;
-    }
-  }
-
-  if (atLeastOneHasAll) {
-    console.log("    - At least one has all requirements, returning SUCCESS");
-    return option.nextSceneId.success ?? "";
-  }
-  if (atLeastOneHasSome) {
-    console.log("    - At least one has partial requirements, returning PARTIAL");
-    return option.nextSceneId.partial ?? option.nextSceneId.failure ?? option.nextSceneId.success ?? "";
-  }
-
-  console.log("    - Nobody satisfies any requirement or no partial route, returning FAILURE");
-  return option.nextSceneId.failure ?? option.nextSceneId.success ?? "";
 }

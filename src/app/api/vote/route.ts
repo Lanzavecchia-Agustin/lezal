@@ -39,8 +39,9 @@ export async function GET(req: Request) {
     room.votes[optIdNum] = (room.votes[optIdNum] || 0) + 1;
     room.userVoted.add(userName);
 
-    // Si la opción incrementa algún atributo bloqueado, se aplica a TODOS los jugadores (como antes)
-    if (sceneOption.lockedAttributeIncrement) {
+    // Si la opción incrementa algún atributo bloqueado, se aplica a TODOS los jugadores
+    // Solo se aplica una vez por escena usando la bandera room.lockedAttributeIncrementApplied
+    if (sceneOption.lockedAttributeIncrement && !room.lockedAttributeIncrementApplied) {
       const attr = sceneOption.lockedAttributeIncrement.attribute;
       const increment = sceneOption.lockedAttributeIncrement.increment;
       for (const pName in room.players) {
@@ -53,6 +54,8 @@ export async function GET(req: Request) {
           `[VOTE] Se incrementó el atributo ${attr} de ${pName} en ${increment}. Valor actual: ${player.lockedAttributes[attr]}`
         );
       }
+      // Marcar que ya se aplicó el incremento para esta escena
+      room.lockedAttributeIncrementApplied = true;
     }
   }
 
@@ -127,7 +130,7 @@ async function resolveCheckAndAdvance(roomId: string, winningOptionId: number) {
     }
   }
 
-  // Aplicar efectos a los jugadores que votaron
+  // Aplicar efectos (vida y estrés) a los jugadores que votaron
   applyEffectsToVoters(room, option, success);
 
   const nextKey = success ? option.nextSceneId.success : option.nextSceneId.failure ?? "";
@@ -136,8 +139,8 @@ async function resolveCheckAndAdvance(roomId: string, winningOptionId: number) {
 }
 
 /**
- * Aplica los efectos (de vida y estrés) solamente a los jugadores que hayan votado.
- * Si solo un jugador votó, solo se le aplican a él; si varios votaron, se aplican a cada uno de ellos.
+ * Aplica los efectos (vida y estrés) a los jugadores que hayan votado.
+ * Se respeta que la vida máxima es 100 y el estrés mínimo es 0.
  */
 function applyEffectsToVoters(room: any, option: any, success: boolean) {
   const effects = success ? option.successEffects : option.failureEffects;
@@ -146,49 +149,35 @@ function applyEffectsToVoters(room: any, option: any, success: boolean) {
     const player = room.players[pName];
 
     if (effects.life !== undefined) {
-      // Si se trata de un efecto positivo (sumar vida)
       if (effects.life > 0) {
         if (player.life < 100) {
           const nuevaVida = player.life + effects.life;
           player.life = Math.min(nuevaVida, 100);
-          console.log(
-            `[EFFECT] ${pName} aumenta la vida en ${effects.life} (ahora ${player.life})`
-          );
+          console.log(`[EFFECT] ${pName} aumenta la vida en ${effects.life} (ahora ${player.life})`);
         } else {
-          console.log(
-            `[EFFECT] ${pName} tiene la vida completa (100) y no se aplica el efecto de sanación.`
-          );
+          console.log(`[EFFECT] ${pName} tiene la vida completa (100) y no se aplica el efecto de sanación.`);
         }
       } else {
-        // Efecto negativo: se resta la vida, sin forzar un mínimo (o si deseas, clámplelo a 0)
+        // Efecto negativo: se resta la vida y se asegura que no baje de 0
         player.life += effects.life;
         player.life = Math.max(player.life, 0);
-        console.log(
-          `[EFFECT] ${pName} pierde ${-effects.life} de vida (ahora ${player.life})`
-        );
+        console.log(`[EFFECT] ${pName} pierde ${-effects.life} de vida (ahora ${player.life})`);
       }
     }
 
     if (effects.stress !== undefined) {
-      // Si se trata de quitar estrés (efecto negativo)
       if (effects.stress < 0) {
         if (player.stress > 0) {
           const nuevoStress = player.stress + effects.stress;
           player.stress = Math.max(nuevoStress, 0);
-          console.log(
-            `[EFFECT] ${pName} reduce el estrés en ${-effects.stress} (ahora ${player.stress})`
-          );
+          console.log(`[EFFECT] ${pName} reduce el estrés en ${-effects.stress} (ahora ${player.stress})`);
         } else {
-          console.log(
-            `[EFFECT] ${pName} ya tiene el estrés en 0 y no se aplica la reducción.`
-          );
+          console.log(`[EFFECT] ${pName} ya tiene el estrés en 0 y no se aplica la reducción.`);
         }
       } else {
         // Efecto positivo: se aumenta el estrés
         player.stress += effects.stress;
-        console.log(
-          `[EFFECT] ${pName} aumenta el estrés en ${effects.stress} (ahora ${player.stress})`
-        );
+        console.log(`[EFFECT] ${pName} aumenta el estrés en ${effects.stress} (ahora ${player.stress})`);
       }
     }
   }
@@ -211,6 +200,8 @@ function goToScene(room: any, sceneId: string) {
     room.votes = {};
     room.userVoted.clear();
     room.optionVotes = {};
+    // Reiniciamos la bandera para que en la nueva escena se pueda aplicar otro incremento si corresponde
+    room.lockedAttributeIncrementApplied = false;
   }
 }
 

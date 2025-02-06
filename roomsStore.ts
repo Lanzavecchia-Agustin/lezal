@@ -98,6 +98,7 @@ export interface RoomState {
   players: Record<string, Player>;
   optionVotes: Record<number, Set<string>>;
   lockedConditions?: Record<string, number>;
+  lockedAttributeIncrementApplied?: boolean;
 }
 
 // Cargamos la configuración y las escenas desde db.json

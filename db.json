@@ -68,7 +68,6 @@
       "id": "scene1",
       "text": "Ante ti se alza el Portal del Olvido: una imponente estructura de piedra cubierta de enigmáticos grabados, enclavada en el corazón de un bosque ancestral. Se dice que este portal conecta con secretos olvidados y tiempos distorsionados.",
       "isEnding": false,
-      "maxVote": 1,
       "options": [
         {
           "id": 1,
@@ -106,7 +105,6 @@
       "id": "scene1Fail",
       "text": "Al concentrarte en los grabados, un repentino temblor hace que pierdas el equilibrio. El conocimiento se te escapa entre los dedos y sientes un aumento de inquietud.",
       "isEnding": false,
-      "maxVote": 1,
       "options": [
         {
           "id": 1,
@@ -121,7 +119,6 @@
       "id": "scene1Fail2",
       "text": "El portal se resiste a tus embestidas y, tras un esfuerzo desmedido, sientes una punzada que te recuerda tus límites físicos.",
       "isEnding": false,
-      "maxVote": 1,
       "options": [
         {
           "id": 1,
@@ -136,7 +133,6 @@
       "id": "scene2",
       "text": "Logras discernir antiguos símbolos y metáforas ocultas en la piedra. Una tenue luz parece emanar de ellos, invitándote a descubrir sus secretos en el interior del portal.",
       "isEnding": false,
-      "maxVote": 1,
       "options": [
         {
           "id": 1,
@@ -170,7 +166,6 @@
       "id": "scene2Fail",
       "text": "La sala parece impenetrable para tus métodos actuales; las inscripciones se mezclan en un caos de símbolos sin sentido, incrementando tu desasosiego.",
       "isEnding": false,
-      "maxVote": 1,
       "options": [
         {
           "id": 1,
@@ -185,7 +180,6 @@
       "id": "scene3",
       "text": "Rechazado el misterio del portal, te adentras en un sendero oscuro entre árboles retorcidos, donde sombras y susurros parecen acechar en cada rincón.",
       "isEnding": false,
-      "maxVote": 1,
       "options": [
         {
           "id": 1,
@@ -223,7 +217,6 @@
       "id": "scene3Fail",
       "text": "Tropezando en la penumbra, sientes el peso del entorno y un leve golpe te hace dudar de tus habilidades.",
       "isEnding": false,
-      "maxVote": 1,
       "options": [
         {
           "id": 1,
@@ -238,7 +231,6 @@
       "id": "scene3Fail2",
       "text": "La escalada no sale como esperabas y pierdes el equilibrio; la caída te deja con un malestar creciente.",
       "isEnding": false,
-      "maxVote": 1,
       "options": [
         {
           "id": 1,
@@ -253,7 +245,6 @@
       "id": "scene4",
       "text": "El sendero te conduce hasta la entrada de una antigua ruina, cuyos muros desgastados esconden un laberinto de recuerdos y secretos. En el umbral, dos rutas se abren: una iluminada por tenues velas y otra que se pierde en una penumbra abismal.",
       "isEnding": false,
-      "maxVote": 1,
       "options": [
         {
           "id": 1,
@@ -287,7 +278,6 @@
       "id": "scene4Fail",
       "text": "Al intentar descifrar los oscuros símbolos del altar, un escalofrío recorre tu cuerpo: la respuesta parece estar fuera de tu alcance, y la incertidumbre aumenta.",
       "isEnding": false,
-      "maxVote": 1,
       "options": [
         {
           "id": 1,
@@ -302,7 +292,6 @@
       "id": "scene5",
       "text": "Adentrándote en el corazón del laberinto, descubres una sala oculta: una antigua biblioteca cuyos muros rezuman historia. Sobre un atril, un manuscrito gastado aguarda ser leído.",
       "isEnding": false,
-      "maxVote": 1,
       "options": [
         {
           "id": 1,
@@ -340,7 +329,6 @@
       "id": "scene5Fail",
       "text": "El manuscrito resulta ser un enigma indescifrable; las palabras se entrelazan sin sentido y sientes que la oportunidad se desvanece.",
       "isEnding": false,
-      "maxVote": 1,
       "options": [
         {
           "id": 1,

@@ -30,6 +30,7 @@ export interface GameConfig {
   stressThreshold: number;  // Umbral de estrés (máximo antes de que ocurran efectos negativos)
   skills: Skill[];
   attributes: Attribute[];
+  xpThreshold: number;      // Puntos de XP necesarios para subir de nivel
 }
 
 // Interfaz para cada opción de la escena

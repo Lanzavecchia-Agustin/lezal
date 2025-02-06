@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import Pusher from "pusher";
-import rooms, { Player, SCENES } from "../../../../roomsStore";
+import rooms, { Player, SCENES, gameConfig } from "../../../../roomsStore";
 
 const pusher = new Pusher({
   appId: process.env.PUSHER_APP_ID!,
@@ -11,7 +11,29 @@ const pusher = new Pusher({
 });
 
 // Umbral para subir de nivel (XP)
-const XP_THRESHOLD = 5;
+const XP_THRESHOLD = gameConfig.xpThreshold;
+
+/**
+ * Revisa si algún jugador ha alcanzado 0 de vida o 100 de estrés.
+ * Si es así, retorna el ID de la escena de Game Over correspondiente.
+ * Si no, retorna null.
+ */
+function checkGameOver(room: any): string | null {
+  for (const pName in room.players) {
+    const player = room.players[pName];
+    if (player.life <= 0) {
+      console.log(`[GAME OVER] ${pName} alcanzó 0 de vida.`);
+      return "gameOverLife"; // ID de la escena para Game Over por falta de vida.
+    }
+    if (player.stress >= gameConfig.stressThreshold) {
+      console.log(
+        `[GAME OVER] ${pName} alcanzó ${gameConfig.stressThreshold} de estrés.`
+      );
+      return "gameOverStress"; // ID de la escena para Game Over por exceso de estrés.
+    }
+  }
+  return null;
+}
 
 export async function GET(req: Request) {
   console.log("[VOTE] GET called");
@@ -39,8 +61,7 @@ export async function GET(req: Request) {
     room.votes[optIdNum] = (room.votes[optIdNum] || 0) + 1;
     room.userVoted.add(userName);
 
-    // Si la opción incrementa algún atributo bloqueado, se aplica a TODOS los jugadores
-    // Solo se aplica una vez por escena usando la bandera room.lockedAttributeIncrementApplied
+    // Incremento único de atributo bloqueado: se aplica a TODOS los jugadores solo una vez por escena.
     if (sceneOption.lockedAttributeIncrement && !room.lockedAttributeIncrementApplied) {
       const attr = sceneOption.lockedAttributeIncrement.attribute;
       const increment = sceneOption.lockedAttributeIncrement.increment;
@@ -54,7 +75,6 @@ export async function GET(req: Request) {
           `[VOTE] Se incrementó el atributo ${attr} de ${pName} en ${increment}. Valor actual: ${player.lockedAttributes[attr]}`
         );
       }
-      // Marcar que ya se aplicó el incremento para esta escena
       room.lockedAttributeIncrementApplied = true;
     }
   }
@@ -99,6 +119,14 @@ async function resolveCheckAndAdvance(roomId: string, winningOptionId: number) {
   if (!option.roll) {
     // Si no hay tirada, se considera éxito automáticamente
     applyEffectsToVoters(room, option, true);
+
+    // Verificar si se cumplió la condición de Game Over
+    const gameOverSceneId = checkGameOver(room);
+    if (gameOverSceneId) {
+      room.scene = { id: gameOverSceneId, text: "¡Game Over! Un jugador alcanzó 0 de vida o 100 de estrés. Todos pierden.", options: [] };
+      return broadcastSceneUpdate(roomId);
+    }
+
     goToScene(room, option.nextSceneId.success ?? "");
     return broadcastSceneUpdate(roomId);
   }
@@ -132,6 +160,13 @@ async function resolveCheckAndAdvance(roomId: string, winningOptionId: number) {
 
   // Aplicar efectos (vida y estrés) a los jugadores que votaron
   applyEffectsToVoters(room, option, success);
+
+  // Verificar si se cumple la condición de Game Over después de aplicar los efectos
+  const gameOverSceneId = checkGameOver(room);
+  if (gameOverSceneId) {
+    room.scene = { id: gameOverSceneId, text: "¡Game Over! Un jugador alcanzó 0 de vida o 100 de estrés. Todos pierden.", options: [] };
+    return broadcastSceneUpdate(roomId);
+  }
 
   const nextKey = success ? option.nextSceneId.success : option.nextSceneId.failure ?? "";
   goToScene(room, nextKey);

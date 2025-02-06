@@ -3,6 +3,7 @@
     "maxStartingPoints": 10,
     "initialLife": 100,
     "stressThreshold": 100,
+    "xpThreshold":1,
     "skills": [
       {
         "id": "intelecto",
@@ -562,6 +563,18 @@
     {
       "id": "scene10",
       "text": "El Legado de la Sombra se consuma: al desafiar las fuerzas oscuras, reconfiguras el destino del lugar. Una calma inquieta se asienta, dejando abierta la posibilidad de redención o condena.",
+      "isEnding": true,
+      "options": []
+    },
+    {
+      "id": "gameOverLife",
+      "text": "Has perdido toda tu vida. El destino de todos queda sellado en la oscuridad.",
+      "isEnding": true,
+      "options": []
+    },
+    {
+      "id": "gameOverStress",
+      "text": "El estrés ha consumido tu mente. No hay escape para este destino.",
       "isEnding": true,
       "options": []
     }

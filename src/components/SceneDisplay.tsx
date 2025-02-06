@@ -1,45 +1,64 @@
 "use client";
 
 import React, { useState } from "react";
-import { gameConfig } from "../../roomsStore"; // Para mapear IDs de skills
+import { gameConfig, Scene, SceneOption } from "../../roomsStore"; // Asegúrate de que gameConfig incluya initialLife y stressThreshold
 
+// Interfaz para la información del jugador, ahora con vida y estrés
 interface MyPlayerData {
   name: string;
   assignedPoints: { [subskillId: string]: number };
   xp?: number;
   skillPoints?: number;
   lockedAttributes?: { [attribute: string]: number };
+  life?: number;
+  stress?: number;
 }
 
-interface Scene {
-  id: string;
-  text: string;
-  options: {
-    id: number;
-    text: string;
-    nextSceneId: {
-      success: string;
-      failure?: string;
-      partial?: string;
-    };
-    roll?: {
-      skillUsed: string;
-      difficulty: number;
-    };
-    expOnSuccess?: number;
-    lockedAttributeIncrement?: {
-      attribute: string;
-      increment: number;
-    };
-    requirements?: {
-      attribute: string;
-      actionIfNotMet: "hide" | "disable";
-    };
-  }[];
-  isEnding?: boolean;
-  maxVote?: number;
-}
+// Interfaz para cada opción de la escena, ahora con efectos diferenciados
+// interface SceneOption {
+//   id: number;
+//   text: string;
+//   nextSceneId: {
+//     success: string;
+//     failure?: string;
+//     partial?: string;
+//   };
+//   roll?: {
+//     skillUsed: string;
+//     difficulty: number;
+//   };
+//   expOnSuccess?: number;
+//   lockedAttributeIncrement?: {
+//     attribute: string;
+//     increment: number;
+//   };
+//   requirements?: {
+//     attribute: string;
+//     actionIfNotMet: "hide" | "disable";
+//   };
+//   // Nuevos efectos diferenciados para éxito y fallo:
+//   effects?: {
+//     success?: {
+//       life?: number;    // Efecto en vida en caso de éxito (positivo para curar)
+//       stress?: number;  // Efecto en estrés en caso de éxito (negativo para aliviar)
+//     };
+//     failure?: {
+//       life?: number;    // Efecto en vida en caso de fallo (negativo para dañar)
+//       stress?: number;  // Efecto en estrés en caso de fallo (positivo para aumentar)
+//     };
+//   };
+// }
 
+// // Interfaz para la escena
+// interface Scene {
+//   id: string;
+//   text: string;
+//   options: SceneOption[];
+//   isEnding?: boolean;
+//   maxVote?: number;
+// }
+
+// Props que recibe SceneDisplay
 interface SceneDisplayProps {
   roomId: string | null;
   scene: Scene;
@@ -51,6 +70,9 @@ interface SceneDisplayProps {
   myPlayer?: MyPlayerData;
 }
 
+/**
+ * Devuelve el nombre de la subhabilidad a partir de su ID usando gameConfig.skills
+ */
 function getSubskillName(subskillId: string): string {
   for (const skill of gameConfig.skills) {
     const found = skill.subskills.find((s) => s.id === subskillId);
@@ -59,10 +81,22 @@ function getSubskillName(subskillId: string): string {
   return subskillId;
 }
 
+/**
+ * Calcula la probabilidad aproximada de que (2d6 + skillVal) >= difficulty
+ */
 function computeSuccessProbability(skillVal: number, difficulty: number): number {
   const ways: Record<number, number> = {
-    2: 1, 3: 2, 4: 3, 5: 4, 6: 5, 7: 6,
-    8: 5, 9: 4, 10: 3, 11: 2, 12: 1,
+    2: 1,
+    3: 2,
+    4: 3,
+    5: 4,
+    6: 5,
+    7: 6,
+    8: 5,
+    9: 4,
+    10: 3,
+    11: 2,
+    12: 1,
   };
   const needed = difficulty - skillVal;
   let totalSuccesses = 0;
@@ -74,8 +108,11 @@ function computeSuccessProbability(skillVal: number, difficulty: number): number
   return totalSuccesses / 36;
 }
 
+/**
+ * Evalúa si una opción es accesible para el jugador, según los requerimientos
+ */
 function evaluateOptionAccessibility(
-  option: Scene["options"][number],
+  option: SceneOption,
   myPlayer?: MyPlayerData
 ): { accessible: boolean; hide: boolean } {
   if (!option.requirements) return { accessible: true, hide: false };
@@ -84,14 +121,14 @@ function evaluateOptionAccessibility(
   }
   const attr = option.requirements.attribute;
   const value = myPlayer.lockedAttributes[attr] || 0;
-  if (value > 0) {
-    return { accessible: true, hide: false };
-  } else {
-    return { accessible: false, hide: option.requirements.actionIfNotMet === "hide" };
-  }
+  return value > 0
+    ? { accessible: true, hide: false }
+    : { accessible: false, hide: option.requirements.actionIfNotMet === "hide" };
 }
 
-// Extraemos los umbrales de atributos desde gameConfig.attributes usando el nombre en minúsculas
+/**
+ * Extrae los umbrales de atributos desde gameConfig.attributes usando el nombre en minúsculas
+ */
 const attributeThresholds = gameConfig.attributes.reduce((acc, attr) => {
   if (attr.unlockable && attr.unlock_threshold) {
     acc[attr.name.toLowerCase()] = attr.unlock_threshold;
@@ -115,10 +152,12 @@ const SceneDisplay: React.FC<SceneDisplayProps> = ({
 
   const xp = myPlayer?.xp ?? 0;
   const skillPoints = myPlayer?.skillPoints ?? 0;
+  const life = myPlayer?.life ?? gameConfig.initialLife;
+  const stress = myPlayer?.stress ?? 0;
   const xpPercentage = Math.min(100, (xp / 100) * 100);
   const level = Math.floor(xp / 100);
 
-  console.log(scene);
+  console.log("SceneDisplay - scene:", scene);
 
   return (
     <div className="min-h-screen flex flex-col items-center p-4 space-y-6 bg-gradient-to-b text-white">
@@ -149,10 +188,12 @@ const SceneDisplay: React.FC<SceneDisplayProps> = ({
           <p className="text-white"><strong>Scene maxVote:</strong> {scene.maxVote ?? "N/A"}</p>
           <p className="text-white"><strong>hasVoted:</strong> {hasVoted ? "Sí" : "No"}</p>
           <p className="text-white">
-            <strong>Votes:</strong> <pre className="whitespace-pre-wrap">{JSON.stringify(votes, null, 2)}</pre>
+            <strong>Votes:</strong>{" "}
+            <pre className="whitespace-pre-wrap">{JSON.stringify(votes, null, 2)}</pre>
           </p>
           <p className="text-white">
-            <strong>Users:</strong> <pre className="whitespace-pre-wrap">{JSON.stringify(users, null, 2)}</pre>
+            <strong>Users:</strong>{" "}
+            <pre className="whitespace-pre-wrap">{JSON.stringify(users, null, 2)}</pre>
           </p>
           {myPlayer?.lockedAttributes && (
             <div>
@@ -182,12 +223,14 @@ const SceneDisplay: React.FC<SceneDisplayProps> = ({
         </div>
       )}
 
-      {/* Recursos del jugador */}
+      {/* Información del jugador */}
       {myPlayer && (
         <div className="bg-blue-800 rounded-lg p-4 text-white w-full max-w-2xl flex flex-col md:flex-row justify-between items-center space-y-2 md:space-y-0">
           <div>
             <p className="text-white"><strong>XP:</strong> {xp}</p>
             <p className="text-white"><strong>Skill Points:</strong> {skillPoints}</p>
+            <p className="text-white"><strong>Vida:</strong> {life}</p>
+            <p className="text-white"><strong>Estrés:</strong> {stress}</p>
           </div>
           <div className="space-x-2">
             {skillPoints > 0 && (
@@ -283,13 +326,32 @@ const SceneDisplay: React.FC<SceneDisplayProps> = ({
                 </div>
                 <p className="text-sm mt-1">XP actual: {xp} / 100</p>
               </div>
-              {/* Progreso de Atributos Ocultos usando umbrales de gameConfig.attributes */}
+              {/* Mostrar Vida */}
+              <div className="mb-4">
+                <p className="mb-2"><strong>Vida:</strong> {myPlayer.life ?? gameConfig.initialLife}</p>
+                <div className="w-full bg-gray-300 rounded-full h-4">
+                  {/* Puedes calcular un porcentaje si lo deseas */}
+                  <div className="bg-red-600 h-4 rounded-full transition-all duration-500 ease-out"
+                    style={{ width: "100%" }} />
+                </div>
+                <p className="text-sm mt-1">Puntos de vida</p>
+              </div>
+              {/* Mostrar Estrés */}
+              <div className="mb-4">
+                <p className="mb-2"><strong>Estrés:</strong> {myPlayer.stress ?? 0}</p>
+                <div className="w-full bg-gray-300 rounded-full h-4">
+                  {/* Puedes calcular un porcentaje si tienes un umbral */}
+                  <div className="bg-yellow-600 h-4 rounded-full transition-all duration-500 ease-out"
+                    style={{ width: "100%" }} />
+                </div>
+                <p className="text-sm mt-1">Nivel de estrés</p>
+              </div>
+              {/* Progreso de Atributos Ocultos */}
               {myPlayer.lockedAttributes && (
                 <div className="mb-4">
                   <h3 className="font-semibold">Progreso de Atributos Ocultos:</h3>
                   <ul className="ml-4 space-y-2">
                     {Object.entries(myPlayer.lockedAttributes).map(([attr, value]) => {
-                      // Buscar el atributo en gameConfig.attributes usando el nombre en minúsculas
                       const configAttr = gameConfig.attributes.find(
                         (a) => a.name.toLowerCase() === attr.toLowerCase()
                       );
@@ -349,7 +411,6 @@ const SceneDisplay: React.FC<SceneDisplayProps> = ({
         {scene.options.map((opt) => {
           const { accessible, hide } = evaluateOptionAccessibility(opt, myPlayer);
           if (hide) {
-            // Si se debe ocultar y estamos en debug, mostramos un aviso
             if (debugMode) {
               return (
                 <div key={opt.id} className="border border-red-500 p-2 rounded-lg bg-red-500 text-white">
@@ -366,6 +427,7 @@ const SceneDisplay: React.FC<SceneDisplayProps> = ({
             skillVal = myPlayer.assignedPoints[subId] || 0;
             probability = computeSuccessProbability(skillVal, opt.roll.difficulty);
           }
+
           return (
             <div key={opt.id} className="border border-blue-300 p-4 rounded-lg bg-blue-600 shadow-lg">
               <p className="font-semibold">{opt.text}</p>
@@ -396,10 +458,33 @@ const SceneDisplay: React.FC<SceneDisplayProps> = ({
                     )}
                   </div>
                 )}
+                {/* Mostrar efectos en caso de éxito */}
+                {opt.successEffects && (
+                  <div className="mt-1 text-xs text-green-300">
+                    <p>En Éxito:</p>
+                    {opt.successEffects.life !== undefined && (
+                      <p>Efecto en Vida: {opt.successEffects.life >= 0 ? "+" : ""}{opt.successEffects.life}</p>
+                    )}
+                    {opt.successEffects.stress !== undefined && (
+                      <p>Efecto en Estrés: {opt.successEffects.stress >= 0 ? "+" : ""}{opt.successEffects.stress}</p>
+                    )}
+                  </div>
+                )}
+                {/* Mostrar efectos en caso de fallo */}
+                {opt.failureEffects && (
+                  <div className="mt-1 text-xs text-red-300">
+                    <p>En Fracaso:</p>
+                    {opt.failureEffects.life !== undefined && (
+                      <p>Efecto en Vida: {opt.failureEffects.life >= 0 ? "+" : ""}{opt.failureEffects.life}</p>
+                    )}
+                    {opt.failureEffects.stress !== undefined && (
+                      <p>Efecto en Estrés: {opt.failureEffects.stress >= 0 ? "+" : ""}{opt.failureEffects.stress}</p>
+                    )}
+                  </div>
+                )}
                 {opt.requirements && (
                   <p className="mt-1 text-xs text-yellow-300">
-                    Requiere atributo: <strong>{opt.requirements.attribute}</strong> (Acción:{" "}
-                    {opt.requirements.actionIfNotMet})
+                    Requiere atributo: <strong>{opt.requirements.attribute}</strong> (Acción: {opt.requirements.actionIfNotMet})
                   </p>
                 )}
                 {opt.lockedAttributeIncrement && (

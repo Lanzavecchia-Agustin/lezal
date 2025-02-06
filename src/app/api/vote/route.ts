@@ -12,6 +12,7 @@ const pusher = new Pusher({
   useTLS: true,
 });
 
+// Umbral para subir de nivel (XP)
 const XP_THRESHOLD = 5;
 
 export async function GET(req: Request) {
@@ -40,11 +41,10 @@ export async function GET(req: Request) {
     room.votes[optIdNum] = (room.votes[optIdNum] || 0) + 1;
     room.userVoted.add(userName);
 
-    // **Actualización: Incrementamos el atributo oculto en TODOS los jugadores**
+    // Actualización: Si la opción tiene lockedAttributeIncrement, se actualiza en TODOS los jugadores
     if (sceneOption.lockedAttributeIncrement) {
       const attr = sceneOption.lockedAttributeIncrement.attribute;
       const increment = sceneOption.lockedAttributeIncrement.increment;
-      // Iteramos sobre todos los jugadores en la sala
       for (const pName in room.players) {
         const player = room.players[pName];
         if (!player.lockedAttributes) {
@@ -68,9 +68,7 @@ export async function GET(req: Request) {
   const effectiveMaxVotes = Math.min(sceneMaxVote, playerCount);
 
   if (room.userVoted.size === effectiveMaxVotes) {
-    console.log(
-      `[VOTE] Se alcanzaron los ${effectiveMaxVotes} votos necesarios. Resolviendo escena...`
-    );
+    console.log(`[VOTE] Se alcanzaron los ${effectiveMaxVotes} votos necesarios. Resolviendo escena...`);
     const winningOptionId = findWinningOption(room.votes);
     await resolveCheckAndAdvance(roomId, winningOptionId);
   }
@@ -96,10 +94,14 @@ async function resolveCheckAndAdvance(roomId: string, winningOptionId: number) {
   if (!room) return;
   const option = room.scene.options.find((o) => o.id === winningOptionId);
   if (!option) return;
+
+  // Si la opción no requiere tirada, se considera éxito automáticamente.
   if (!option.roll) {
+    applyEffectsToAll(room, option, true);
     goToScene(room, option.nextSceneId.success ?? "");
     return broadcastSceneUpdate(roomId);
   }
+
   let success = false;
   for (const playerName of room.userVoted) {
     const player = room.players[playerName];
@@ -115,8 +117,9 @@ async function resolveCheckAndAdvance(roomId: string, winningOptionId: number) {
       break;
     }
   }
+
   if (success && option.expOnSuccess) {
-    for (const pName of Object.keys(room.players)) {
+    for (const pName in room.players) {
       const p = room.players[pName];
       p.xp += option.expOnSuccess;
       while (p.xp >= XP_THRESHOLD) {
@@ -125,9 +128,48 @@ async function resolveCheckAndAdvance(roomId: string, winningOptionId: number) {
       }
     }
   }
+
+  // Aplicar efectos en vida y estrés según el resultado:
+  applyEffectsToAll(room, option, success);
+
   const nextKey = success ? option.nextSceneId.success : option.nextSceneId.failure ?? "";
   goToScene(room, nextKey);
   await broadcastSceneUpdate(roomId);
+}
+
+function applyEffectsToAll(room: any, option: any, success: boolean) {
+  // Se buscan efectos separados para éxito o fallo.
+  // Si se definieron, se aplican a TODOS los jugadores de la sala.
+  const effects = success ? option.successEffects : option.failureEffects;
+  if (effects) {
+    for (const pName in room.players) {
+      const player = room.players[pName];
+      if (effects.lifeEffect !== undefined) {
+        player.life += effects.lifeEffect;
+        console.log(`[EFFECT] ${pName} vida modificada en ${effects.lifeEffect} (ahora ${player.life})`);
+      }
+      if (effects.stressEffect !== undefined) {
+        player.stress += effects.stressEffect;
+        console.log(`[EFFECT] ${pName} estrés modificado en ${effects.stressEffect} (ahora ${player.stress})`);
+      }
+    }
+  } else {
+    // Si no hay efectos separados, se revisan los efectos top-level (opcional)
+    if (option.lifeEffect !== undefined) {
+      for (const pName in room.players) {
+        const player = room.players[pName];
+        player.life += option.lifeEffect;
+        console.log(`[EFFECT] ${pName} vida modificada en ${option.lifeEffect} (ahora ${player.life})`);
+      }
+    }
+    if (option.stressEffect !== undefined) {
+      for (const pName in room.players) {
+        const player = room.players[pName];
+        player.stress += option.stressEffect;
+        console.log(`[EFFECT] ${pName} estrés modificado en ${option.stressEffect} (ahora ${player.stress})`);
+      }
+    }
+  }
 }
 
 function roll2d6(): number {
@@ -163,6 +205,8 @@ async function broadcastSceneUpdate(roomId: string) {
       xp: p.xp,
       skillPoints: p.skillPoints,
       lockedAttributes: p.lockedAttributes,
+      life: p.life,
+      stress: p.stress,
     })),
   });
 }

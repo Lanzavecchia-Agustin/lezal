@@ -27,6 +27,8 @@ export interface Attribute {
 // Configuración del juego
 export interface GameConfig {
   maxStartingPoints: number;
+  initialLife: number;      // Puntos de vida iniciales para cada jugador
+  stressThreshold: number;  // Umbral de estrés (máximo antes de que ocurran efectos negativos)
   skills: Skill[];
   attributes: Attribute[];
 }
@@ -41,7 +43,7 @@ export interface SceneOption {
     partial?: string;
   };
   roll?: {
-    skillUsed: string;
+    skillUsed: string; // ID de la subskill (p. ej., "101")
     difficulty: number;
   };
   expOnSuccess?: number;
@@ -55,8 +57,19 @@ export interface SceneOption {
     attribute: string;
     actionIfNotMet: "hide" | "disable";
   };
+  // Nuevos efectos que pueden afectar la vida y el estrés:
+  lifeEffect?: number;    // Efecto en la vida (positivo para curar, negativo para dañar)
+  stressEffect?: number;  // Efecto en el estrés (positivo para aumentar, negativo para aliviar)
+  // Efectos diferenciados para éxito y fallo:
+  successEffects?: {
+    life?: number;    // Efecto en vida en caso de éxito (positivo para curar)
+    stress?: number;  // Efecto en estrés en caso de éxito (negativo para aliviar)
+  };
+  failureEffects?: {
+    life?: number;    // Efecto en vida en caso de fallo (negativo para dañar)
+    stress?: number;  // Efecto en estrés en caso de fallo (positivo para aumentar)
+  };
 }
-
 // Escena
 export interface Scene {
   id: string;
@@ -73,8 +86,11 @@ export interface Player {
   assignedPoints: { [subskillId: string]: number };
   xp: number;
   skillPoints: number;
-  // Atributos ocultos que se irán incrementando (p.ej., "corrupto")
+  // Atributos ocultos que se irán incrementando (por ejemplo, "corrupto")
   lockedAttributes: { [attribute: string]: number };
+  // NUEVAS PROPIEDADES:
+  life: number;    // Puntos de vida actuales
+  stress: number;  // Nivel de estrés actual
 }
 
 // Estado de la Sala
@@ -87,13 +103,15 @@ export interface RoomState {
   lockedConditions?: Record<string, number>;
 }
 
-// Cargamos la config y escenas desde db.json
+// Cargamos la configuración y las escenas desde db.json
+// Se asume que en db.json tienes { gameConfig: {...}, scenes: [...] }
+// Asegúrate de que tu db.json incluya "initialLife" y "stressThreshold" dentro de gameConfig.
 const dbData = db as {
   gameConfig: GameConfig;
   scenes: Scene[];
 };
 
-// Exportamos la config y las escenas
+// Exportamos la configuración y las escenas
 export const gameConfig = dbData.gameConfig;
 export const SCENES = dbData.scenes;
 

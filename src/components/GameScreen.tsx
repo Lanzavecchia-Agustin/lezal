@@ -5,26 +5,18 @@ import Pusher from "pusher-js";
 import { API_ROUTES } from "../../utils/apiConfig";
 import JoinForm from "./JoinForm";
 import SceneDisplay from "./SceneDisplay";
+import { gameConfig, Scene } from "../../roomsStore"; // Asegúrate de que gameConfig incluya initialLife y stressThreshold
 
 /** Representación mínima de la escena */
-interface Scene {
-  id: string;
-  text: string;
-  options: {
-    id: number;
-    text: string;
-    nextSceneId: any;
-  }[];
-  isEnding?: boolean;
-  maxVote?: number;
-}
 
-// Estructura opcional para almacenar la info de cada player
+
+// Estructura para almacenar la información de cada jugador (ahora incluyendo vida y estrés)
 interface PlayerData {
   xp: number;
   skillPoints: number;
-  // Es importante que también se incluya lockedAttributes para ver el progreso
   lockedAttributes?: { [attribute: string]: number };
+  life: number;
+  stress: number;
 }
 
 // Payloads de eventos
@@ -37,7 +29,9 @@ interface SceneUpdatePayload {
     name: string; 
     xp: number; 
     skillPoints: number; 
-    lockedAttributes?: { [attribute: string]: number } 
+    lockedAttributes?: { [attribute: string]: number };
+    life?: number;
+    stress?: number;
   }[];
 }
 
@@ -60,7 +54,7 @@ export default function GameScreen() {
   const [users, setUsers] = useState<string[]>([]);
   const [hasVoted, setHasVoted] = useState(false);
 
-  // playersData: guardamos XP, skillPoints y lockedAttributes de cada jugador
+  // playersData: guardamos XP, skillPoints, lockedAttributes, vida y estrés de cada jugador
   const [playersData, setPlayersData] = useState<Record<string, PlayerData>>({});
 
   // Pusher
@@ -88,7 +82,9 @@ export default function GameScreen() {
             pd[pl.name] = {
               xp: pl.xp,
               skillPoints: pl.skillPoints,
-              lockedAttributes: pl.lockedAttributes || {}
+              lockedAttributes: pl.lockedAttributes || {},
+              life: pl.life !== undefined ? pl.life : gameConfig.initialLife,
+              stress: pl.stress !== undefined ? pl.stress : 0,
             };
           });
           setPlayersData(pd);
@@ -188,14 +184,16 @@ export default function GameScreen() {
     }
   };
 
-  // Construimos la info de mi propio jugador a partir de playersData y assignedPoints
-  const myPlayerData = playersData[userName] || { xp: 0, skillPoints: 0, lockedAttributes: {} };
+  // Construimos la información de "mi jugador" combinando los datos del join (assignedPoints) con los recibidos por Pusher
+  const myPlayerData = playersData[userName] || { xp: 0, skillPoints: 0, lockedAttributes: {}, life: gameConfig.initialLife, stress: 0 };
   const myPlayer = {
     name: userName,
     assignedPoints,
     xp: myPlayerData.xp,
     skillPoints: myPlayerData.skillPoints,
-    lockedAttributes: myPlayerData.lockedAttributes || {}
+    lockedAttributes: myPlayerData.lockedAttributes || {},
+    life: myPlayerData.life,
+    stress: myPlayerData.stress
   };
 
   // Render

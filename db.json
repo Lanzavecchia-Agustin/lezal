@@ -1,6 +1,8 @@
 {
   "gameConfig": {
     "maxStartingPoints": 10,
+    "initialLife": 100,
+    "stressThreshold": 100,
     "skills": [
       {
         "id": "intelecto",
@@ -52,7 +54,7 @@
       }
     ],
     "attributes": [
-      { "id": "1", "name": "corrupto", "unlockable": true, "unlock_threshold": 1 },
+      { "id": "1", "name": "corrupto", "unlockable": true, "unlock_threshold": 9 },
       { "id": "6", "name": "misterioso", "unlockable": true, "unlock_threshold": 4 },
       { "id": "7", "name": "psíquico", "unlockable": true, "unlock_threshold": 5 },
       { "id": "8", "name": "siniestro", "unlockable": true, "unlock_threshold": 6 },
@@ -71,17 +73,15 @@
         {
           "id": 1,
           "text": "Inspeccionar el camino con cuidado.",
-          "roll": { "skillUsed": "402", "difficulty": 6 },
+          "roll": { "skillUsed": "402", "difficulty": 16 },
           "expOnSuccess": 1,
           "nextSceneId": {
             "success": "scene2",
             "failure": "scene1Fail",
             "partial": "scene1Partial"
           },
-          "requirements": {
-            "attribute": "corrupto",
-            "actionIfNotMet": "disable"
-          }
+            "successEffects": { "life": 5, "stress": -5 },
+            "failureEffects": { "life": -5, "stress": 5 }
         },
         {
           "id": 2,
@@ -96,6 +96,18 @@
             "success": "scene3",
             "failure": "scene1Fail2",
             "partial": ""
+          },
+        "successEffects": {
+            "life": 10,
+            "stress": -5
+          },
+          "failureEffects": {
+            "life": -10,
+            "stress": 5
+          },
+          "requirements": {
+            "attribute": "corrupto",
+            "actionIfNotMet": "hide"
           }
         }
       ]
@@ -109,7 +121,9 @@
         {
           "id": 1,
           "text": "Avanzar de todos modos, consciente de que algo puede salir mal.",
-          "nextSceneId": { "success": "scene2", "failure": "", "partial": "" }
+          "nextSceneId": { "success": "scene2", "failure": "", "partial": "" },
+            "successEffects": { "life": 0, "stress": 0 },
+            "failureEffects": { "life": -2, "stress": 5 }
         }
       ]
     },
@@ -122,7 +136,9 @@
         {
           "id": 1,
           "text": "Reponerte y volver a intentarlo.",
-          "nextSceneId": { "success": "scene1", "failure": "", "partial": "" }
+          "nextSceneId": { "success": "scene1", "failure": "", "partial": "" },
+            "successEffects": { "life": 5, "stress": 0 },
+            "failureEffects": { "life": 0, "stress": 0 }
         }
       ]
     },
@@ -135,7 +151,9 @@
         {
           "id": 1,
           "text": "Descansar el hombro y buscar otra forma de acceso.",
-          "nextSceneId": { "success": "scene1", "failure": "", "partial": "" }
+          "nextSceneId": { "success": "scene1", "failure": "", "partial": "" },
+            "successEffects": { "life": 3, "stress": 0 },
+            "failureEffects": { "life": 0, "stress": 5 }
         }
       ]
     },
@@ -158,7 +176,9 @@
           "requirements": {
             "attribute": "corrupto",
             "actionIfNotMet": "disable"
-          }
+          },
+            "successEffects": { "life": 0, "stress": -5 },
+            "failureEffects": { "life": -5, "stress": 5 }
         },
         {
           "id": 2,
@@ -173,7 +193,9 @@
             "success": "scene2SuccessIntuition",
             "failure": "scene2Fail",
             "partial": ""
-          }
+          },
+            "successEffects": { "life": 0, "stress": -3 },
+            "failureEffects": { "life": 0, "stress": 5 }
         }
       ]
     },
@@ -186,7 +208,9 @@
         {
           "id": 1,
           "text": "Intentar abrir la puerta con cuidado.",
-          "nextSceneId": { "success": "scene3", "failure": "", "partial": "" }
+          "nextSceneId": { "success": "scene3", "failure": "", "partial": "" },
+            "successEffects": { "life": 5, "stress": -5 },
+            "failureEffects": { "life": 0, "stress": 0 }
         }
       ]
     },
@@ -199,12 +223,16 @@
         {
           "id": 1,
           "text": "Buscar otra entrada antes de forzar la puerta.",
-          "nextSceneId": { "success": "scene4", "failure": "", "partial": "" }
+          "nextSceneId": { "success": "scene4", "failure": "", "partial": "" },
+            "successEffects": { "life": 2, "stress": 5 },
+            "failureEffects": { "life": 0, "stress": 0 }
         },
         {
           "id": 2,
           "text": "Ignorar el presentimiento y abrirla de todos modos.",
-          "nextSceneId": { "success": "scene3", "failure": "", "partial": "" }
+          "nextSceneId": { "success": "scene3", "failure": "", "partial": "" },
+            "successEffects": { "life": -2, "stress": 10 },
+            "failureEffects": { "life": 0, "stress": 0 }
         }
       ]
     },
@@ -217,7 +245,9 @@
         {
           "id": 1,
           "text": "Proceder a abrir la puerta sin más información.",
-          "nextSceneId": { "success": "scene3", "failure": "", "partial": "" }
+          "nextSceneId": { "success": "scene3", "failure": "", "partial": "" },
+            "successEffects": { "life": -3, "stress": 5 },
+            "failureEffects": { "life": 0, "stress": 0 }
         }
       ]
     },
@@ -240,7 +270,9 @@
           "requirements": {
             "attribute": "corrupto",
             "actionIfNotMet": "disable"
-          }
+          },
+            "successEffects": { "life": 0, "stress": -2 },
+            "failureEffects": { "life": 0, "stress": 2 }
         },
         {
           "id": 2,
@@ -251,7 +283,9 @@
             "success": "scene6",
             "failure": "scene3Fail2",
             "partial": ""
-          }
+          },
+            "successEffects": { "life": 0, "stress": 0 },
+            "failureEffects": { "life": -5, "stress": 5 }
         }
       ]
     },
@@ -264,7 +298,9 @@
         {
           "id": 1,
           "text": "Descansar un momento y reconsiderar dónde buscar.",
-          "nextSceneId": { "success": "scene3", "failure": "", "partial": "" }
+          "nextSceneId": { "success": "scene3", "failure": "", "partial": "" },
+            "successEffects": { "life": 5, "stress": -3 },
+            "failureEffects": { "life": 0, "stress": 0 }
         }
       ]
     },
@@ -277,7 +313,9 @@
         {
           "id": 1,
           "text": "Tomar aire y volver a intentarlo con más cuidado.",
-          "nextSceneId": { "success": "scene3", "failure": "", "partial": "" }
+          "nextSceneId": { "success": "scene3", "failure": "", "partial": "" },
+            "successEffects": { "life": 3, "stress": 2 },
+            "failureEffects": { "life": 0, "stress": 0 }
         }
       ]
     },
@@ -296,7 +334,9 @@
             "success": "scene5",
             "failure": "scene4Fail",
             "partial": ""
-          }
+          },
+            "successEffects": { "life": 5, "stress": -5 },
+            "failureEffects": { "life": 0, "stress": 0 }
         }
       ]
     },
@@ -309,7 +349,9 @@
         {
           "id": 1,
           "text": "Buscar otro acceso o incrementar tu flexibilidad antes de volver.",
-          "nextSceneId": { "success": "scene1", "failure": "", "partial": "" }
+          "nextSceneId": { "success": "scene1", "failure": "", "partial": "" },
+            "successEffects": { "life": 3, "stress": 3 },
+            "failureEffects": { "life": 0, "stress": 0 }
         }
       ]
     },
@@ -332,7 +374,9 @@
             "success": "scene7",
             "failure": "scene5Fail",
             "partial": "scene5Partial"
-          }
+          },
+            "successEffects": { "life": 0, "stress": -5 },
+            "failureEffects": { "life": 0, "stress": 5 }
         }
       ]
     },
@@ -345,7 +389,9 @@
         {
           "id": 1,
           "text": "Reintentar con la mente más despejada.",
-          "nextSceneId": { "success": "scene5", "failure": "", "partial": "" }
+          "nextSceneId": { "success": "scene5", "failure": "", "partial": "" },
+            "successEffects": { "life": -2, "stress": 5 },
+            "failureEffects": { "life": 0, "stress": 0 }
         }
       ]
     },
@@ -358,7 +404,9 @@
         {
           "id": 1,
           "text": "Dirigirte al lugar donde crees que está el sótano.",
-          "nextSceneId": { "success": "scene7", "failure": "", "partial": "" }
+          "nextSceneId": { "success": "scene7", "failure": "", "partial": "" },
+            "successEffects": { "life": 0, "stress": 0 },
+            "failureEffects": { "life": 0, "stress": 0 }
         }
       ]
     },
@@ -373,7 +421,9 @@
           "text": "Intentar recordar datos históricos sobre la familia Crow.",
           "roll": { "skillUsed": "102", "difficulty": 8 },
           "expOnSuccess": 2,
-          "nextSceneId": { "success": "scene7", "failure": "scene6Fail", "partial": "" }
+          "nextSceneId": { "success": "scene7", "failure": "scene6Fail", "partial": "" },
+            "successEffects": { "life": 5, "stress": -3 },
+            "failureEffects": { "life": 0, "stress": 0 }
         },
         {
           "id": 2,
@@ -384,7 +434,9 @@
             "attribute": "corrupto",
             "increment": 1
           },
-          "nextSceneId": { "success": "scene7", "failure": "scene6Fail", "partial": "" }
+          "nextSceneId": { "success": "scene7", "failure": "scene6Fail", "partial": "" },
+            "successEffects": { "life": -3, "stress": 5 },
+            "failureEffects": { "life": 0, "stress": 0 }
         }
       ]
     },
@@ -397,7 +449,9 @@
         {
           "id": 1,
           "text": "Intentar desde otro ángulo o investigar en otro sitio de la mansión.",
-          "nextSceneId": { "success": "scene3", "failure": "", "partial": "" }
+          "nextSceneId": { "success": "scene3", "failure": "", "partial": "" },
+            "successEffects": { "life": 0, "stress": 5 },
+            "failureEffects": { "life": 0, "stress": 0 }
         }
       ]
     },
@@ -412,14 +466,18 @@
           "text": "Empujar la puerta con fuerza.",
           "roll": { "skillUsed": "303", "difficulty": 7 },
           "expOnSuccess": 1,
-          "nextSceneId": { "success": "scene8", "failure": "scene7Fail", "partial": "" }
+          "nextSceneId": { "success": "scene8", "failure": "scene7Fail", "partial": "" },
+            "successEffects": { "life": -10, "stress": 10 },
+            "failureEffects": { "life": 0, "stress": 0 }
         },
         {
           "id": 2,
           "text": "Buscar un mecanismo oculto alrededor de la puerta.",
           "roll": { "skillUsed": "401", "difficulty": 6 },
           "expOnSuccess": 1,
-          "nextSceneId": { "success": "scene8", "failure": "scene7Fail2", "partial": "" }
+          "nextSceneId": { "success": "scene8", "failure": "scene7Fail2", "partial": "" },
+            "successEffects": { "life": 0, "stress": 0 },
+            "failureEffects": { "life": 0, "stress": 0 }
         }
       ]
     },
@@ -432,7 +490,9 @@
         {
           "id": 1,
           "text": "Reconsiderar tu estrategia antes de lastimarte.",
-          "nextSceneId": { "success": "scene7", "failure": "", "partial": "" }
+          "nextSceneId": { "success": "scene7", "failure": "", "partial": "" },
+            "successEffects": { "life": 3, "stress": -3 },
+            "failureEffects": { "life": 0, "stress": 0 }
         }
       ]
     },
@@ -445,7 +505,9 @@
         {
           "id": 1,
           "text": "Examinar con más paciencia o intentar otra acción.",
-          "nextSceneId": { "success": "scene7", "failure": "", "partial": "" }
+          "nextSceneId": { "success": "scene7", "failure": "", "partial": "" },
+            "successEffects": { "life": 0, "stress": 5 },
+            "failureEffects": { "life": 0, "stress": 0 }
         }
       ]
     },
@@ -460,7 +522,9 @@
           "text": "Leer el libro con detenimiento (requiere valentía).",
           "roll": { "skillUsed": "201", "difficulty": 6 },
           "expOnSuccess": 2,
-          "nextSceneId": { "success": "scene9", "failure": "scene8Fail", "partial": "" }
+          "nextSceneId": { "success": "scene9", "failure": "scene8Fail", "partial": "" },
+            "successEffects": { "life": 0, "stress": -10 },
+            "failureEffects": { "life": 0, "stress": 0 }
         },
         {
           "id": 2,
@@ -475,7 +539,9 @@
             "attribute": "corrupto",
             "actionIfNotMet": "hide"
           },
-          "nextSceneId": { "success": "scene10", "failure": "scene8Fail", "partial": "scene8Partial" }
+          "nextSceneId": { "success": "scene10", "failure": "scene8Fail", "partial": "scene8Partial" },
+            "successEffects": { "life": -5, "stress": -5 },
+            "failureEffects": { "life": -5, "stress": 15 }
         }
       ]
     },
@@ -488,7 +554,9 @@
         {
           "id": 1,
           "text": "Respirar hondo y hacer acopio de valor para reintentar.",
-          "nextSceneId": { "success": "scene8", "failure": "", "partial": "" }
+          "nextSceneId": { "success": "scene8", "failure": "", "partial": "" },
+            "successEffects": { "life": 0, "stress": 5 },
+            "failureEffects": { "life": 0, "stress": 0 }
         }
       ]
     },
@@ -501,7 +569,9 @@
         {
           "id": 1,
           "text": "Persistir a pesar del peligro.",
-          "nextSceneId": { "success": "scene10", "failure": "", "partial": "" }
+          "nextSceneId": { "success": "scene10", "failure": "", "partial": "" },
+            "successEffects": { "life": -3, "stress": 5 },
+            "failureEffects": { "life": 0, "stress": 0 }
         }
       ]
     },

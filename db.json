@@ -73,7 +73,7 @@
         {
           "id": 1,
           "text": "Examinar detenidamente los grabados del portal.",
-          "roll": { "skillUsed": "106", "difficulty": 6 },
+          "roll": { "skillUsed": "106", "difficulty": 26 },
           "expOnSuccess": 1,
           "nextSceneId": {
             "success": "scene2",

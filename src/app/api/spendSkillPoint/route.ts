@@ -1,5 +1,14 @@
 import { NextResponse } from "next/server";
+import Pusher from "pusher";
 import rooms from "../../../../roomsStore";
+
+const pusher = new Pusher({
+  appId: process.env.PUSHER_APP_ID!,
+  key: process.env.PUSHER_APP_KEY!,
+  secret: process.env.PUSHER_APP_SECRET!,
+  cluster: process.env.PUSHER_APP_CLUSTER!,
+  useTLS: true,
+});
 
 export async function POST(req: Request) {
   const { searchParams } = new URL(req.url);
@@ -22,11 +31,22 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "No tienes Skill Points" }, { status: 400 });
   }
 
+  // Consumir el Skill Point y asignarlo a la subhabilidad
   player.skillPoints--;
   player.assignedPoints[subskillId] = (player.assignedPoints[subskillId] || 0) + 1;
 
-  // Idealmente hacer un trigger a sceneUpdate o playerUpdate:
-  // await pusher.trigger(`room-${roomId}`, "playerUpdate", { ... });
+  // Notificar a todos los clientes del room con un trigger de "playerUpdate"
+  await pusher.trigger(`room-${roomId}`, "playerUpdate", {
+    player: {
+      name: player.name,
+      xp: player.xp,
+      skillPoints: player.skillPoints,
+      assignedPoints: player.assignedPoints,
+      lockedAttributes: player.lockedAttributes,
+      life: player.life,
+      stress: player.stress,
+    },
+  });
 
   return NextResponse.json({ success: true, player });
 }

@@ -5,15 +5,13 @@ import Pusher from "pusher-js";
 import { API_ROUTES } from "../../utils/apiConfig";
 import JoinForm from "./JoinForm";
 import SceneDisplay from "./SceneDisplay";
-import { gameConfig, Scene } from "../../roomsStore"; // Asegúrate de que gameConfig incluya initialLife y stressThreshold
+import { gameConfig, Scene } from "../../roomsStore"; // gameConfig debe incluir initialLife y stressThreshold
 
-/** Representación mínima de la escena */
-
-
-// Estructura para almacenar la información de cada jugador (ahora incluyendo vida y estrés)
-interface PlayerData {
+// Estructura para almacenar la información de cada jugador (incluyendo vida y estrés)
+export interface PlayerData {
   xp: number;
   skillPoints: number;
+  assignedPoints: { [subskillId: string]: number };
   lockedAttributes?: { [attribute: string]: number };
   life: number;
   stress: number;
@@ -25,10 +23,11 @@ interface SceneUpdatePayload {
   votes: { [optionId: number]: number };
   users: string[];
   userVoted: string[];
-  players?: { 
-    name: string; 
-    xp: number; 
-    skillPoints: number; 
+  players?: {
+    name: string;
+    xp: number;
+    skillPoints: number;
+    assignedPoints: { [subskillId: string]: number };
     lockedAttributes?: { [attribute: string]: number };
     life?: number;
     stress?: number;
@@ -45,7 +44,7 @@ export default function GameScreen() {
   const [userName, setUserName] = useState<string>("");
   const [userType, setUserType] = useState<"Normal" | "Líder">("Normal");
 
-  // assignedPoints: subhabilidades elegidas al inicio
+  // Para el join usamos assignedPoints locales (solo para el join inicial)
   const [assignedPoints, setAssignedPoints] = useState<{ [subskillId: string]: number }>({});
 
   const [joined, setJoined] = useState(false);
@@ -54,13 +53,14 @@ export default function GameScreen() {
   const [users, setUsers] = useState<string[]>([]);
   const [hasVoted, setHasVoted] = useState(false);
 
-  // playersData: guardamos XP, skillPoints, lockedAttributes, vida y estrés de cada jugador
+  // playersData: guardamos los datos actualizados de cada jugador
   const [playersData, setPlayersData] = useState<Record<string, PlayerData>>({});
 
   // Pusher
   const pusherRef = useRef<Pusher | null>(null);
   const debugMode = true;
 
+  // Configuramos Pusher y escuchamos los eventos "sceneUpdate", "voteUpdate" y "playerUpdate"
   useEffect(() => {
     if (roomId) {
       if (!pusherRef.current) {
@@ -75,13 +75,13 @@ export default function GameScreen() {
         setVotes(payload.votes);
         setUsers(payload.users);
         setHasVoted(payload.userVoted?.includes(userName) || false);
-
         if (payload.players) {
           const pd: Record<string, PlayerData> = {};
           payload.players.forEach((pl) => {
             pd[pl.name] = {
               xp: pl.xp,
               skillPoints: pl.skillPoints,
+              assignedPoints: pl.assignedPoints, // se espera que venga asignado
               lockedAttributes: pl.lockedAttributes || {},
               life: pl.life !== undefined ? pl.life : gameConfig.initialLife,
               stress: pl.stress !== undefined ? pl.stress : 0,
@@ -89,7 +89,6 @@ export default function GameScreen() {
           });
           setPlayersData(pd);
         }
-
         if (debugMode) {
           console.log("[sceneUpdate] Payload:", payload);
         }
@@ -98,10 +97,14 @@ export default function GameScreen() {
       channel.bind("voteUpdate", (payload: VoteUpdatePayload) => {
         setVotes(payload.votes);
         setHasVoted(payload.userVoted?.includes(userName) || false);
-
         if (debugMode) {
           console.log("[voteUpdate] Payload:", payload);
         }
+      });
+
+      channel.bind("playerUpdate", (payload: { player: PlayerData & { name: string } }) => {
+        console.log("[playerUpdate] Payload:", payload.player);
+        setPlayersData((prev) => ({ ...prev, [payload.player.name]: payload.player }));
       });
 
       channel.bind("error", (error: string) => {
@@ -115,9 +118,7 @@ export default function GameScreen() {
     }
   }, [roomId, userName, debugMode]);
 
-  /**
-   * Crear Sala
-   */
+  /** Crear Sala */
   const handleCreateRoom = async () => {
     if (!userName.trim()) {
       alert("Por favor, ingresa tu nombre para continuar.");
@@ -126,7 +127,6 @@ export default function GameScreen() {
     const generatedRoomId = `room-${Math.random().toString(36).substring(2, 10)}`;
     setRoomId(generatedRoomId);
 
-    // Enviamos assignedPoints como JSON
     const assignedPointsString = JSON.stringify(assignedPoints);
     const joinUrl = API_ROUTES.joinRoom(generatedRoomId, userName, userType, assignedPointsString);
     console.log("[handleCreateRoom] =>", joinUrl);
@@ -140,9 +140,7 @@ export default function GameScreen() {
     }
   };
 
-  /**
-   * Unirse a Sala
-   */
+  /** Unirse a Sala */
   const handleJoinRoom = async () => {
     if (!userName.trim() || !roomId) {
       alert("Por favor, ingresa tu nombre y el ID de la sala.");
@@ -161,9 +159,7 @@ export default function GameScreen() {
     }
   };
 
-  /**
-   * Manejo de voto por una opción
-   */
+  /** Manejo de voto por una opción */
   const handleVote = async (optionId: number) => {
     if (!scene || scene.isEnding || hasVoted) return;
     if (!roomId) {
@@ -184,19 +180,35 @@ export default function GameScreen() {
     }
   };
 
-  // Construimos la información de "mi jugador" combinando los datos del join (assignedPoints) con los recibidos por Pusher
-  const myPlayerData = playersData[userName] || { xp: 0, skillPoints: 0, lockedAttributes: {}, life: gameConfig.initialLife, stress: 0 };
-  const myPlayer = {
-    name: userName,
-    assignedPoints,
-    xp: myPlayerData.xp,
-    skillPoints: myPlayerData.skillPoints,
-    lockedAttributes: myPlayerData.lockedAttributes || {},
-    life: myPlayerData.life,
-    stress: myPlayerData.stress
-  };
+  // Construimos la información de "mi jugador" usando los datos actualizados de playersData.
+  // Se garantiza que assignedPoints tenga un fallback a {}.
+  // Construimos la información de "mi jugador" usando los datos actualizados de playersData.
+// Si no hay datos, usamos valores por defecto.
+const myPlayerData = playersData[userName] || {
+  xp: 0,
+  skillPoints: 0,
+  assignedPoints: {},
+  lockedAttributes: {},
+  life: gameConfig.initialLife,
+  stress: 0,
+};
 
-  // Render
+// Si myPlayerData.assignedPoints está vacío, usamos los assignedPoints locales (que se usaron en el join).
+const effectiveAssignedPoints =
+  Object.keys(myPlayerData.assignedPoints || {}).length > 0
+    ? myPlayerData.assignedPoints
+    : assignedPoints;
+
+const myPlayer = {
+  name: userName,
+  assignedPoints: effectiveAssignedPoints,
+  xp: myPlayerData.xp,
+  skillPoints: myPlayerData.skillPoints,
+  lockedAttributes: myPlayerData.lockedAttributes || {},
+  life: myPlayerData.life,
+  stress: myPlayerData.stress,
+};
+
   if (!joined) {
     return (
       <JoinForm

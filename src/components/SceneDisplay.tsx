@@ -1,10 +1,11 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import Pusher from "pusher-js";
 import { gameConfig, Scene, SceneOption } from "../../roomsStore";
 
 // Interfaz para la información del jugador, ahora con vida y estrés
-interface MyPlayerData {
+export interface MyPlayerData {
   name: string;
   assignedPoints: { [subskillId: string]: number };
   xp?: number;
@@ -24,6 +25,8 @@ interface SceneDisplayProps {
   handleVote: (optionId: number) => void;
   debugMode: boolean;
   myPlayer?: MyPlayerData;
+  // setMyPlayer puede agregarse si se desea actualizar desde este componente
+  setMyPlayer?: (player: MyPlayerData) => void;
 }
 
 /**
@@ -101,6 +104,7 @@ const SceneDisplay: React.FC<SceneDisplayProps> = ({
   handleVote,
   debugMode,
   myPlayer,
+  setMyPlayer,
 }) => {
   const [showModal, setShowModal] = useState(false);
   const [showStatusModal, setShowStatusModal] = useState(false);
@@ -113,15 +117,37 @@ const SceneDisplay: React.FC<SceneDisplayProps> = ({
   const xpPercentage = Math.min(100, (xp / 100) * 100);
   const level = Math.floor(xp / 100);
 
+  useEffect(() => {
+    console.log("myPlayer actualizado en SceneDisplay:", myPlayer);
+  }, [myPlayer]);
+
+  // Configurar Pusher para actualizar el estado del jugador cuando se dispare "playerUpdate"
+  useEffect(() => {
+    if (!roomId) return;
+    const pusherClient = new Pusher(process.env.NEXT_PUBLIC_PUSHER_KEY!, {
+      cluster: process.env.NEXT_PUBLIC_PUSHER_CLUSTER!,
+    });
+    const channel = pusherClient.subscribe(`room-${roomId}`);
+    channel.bind("playerUpdate", (data: { player: MyPlayerData }) => {
+      console.log("Evento playerUpdate recibido en SceneDisplay:", data.player);
+      if (setMyPlayer) {
+        setMyPlayer(data.player);
+      }
+    });
+    return () => {
+      channel.unbind_all();
+      channel.unsubscribe();
+    };
+  }, [roomId, setMyPlayer]);
+
   function doLocalRoll(optionId: number, skillVal: number, difficulty: number) {
     const dice1 = Math.floor(Math.random() * 6) + 1;
     const dice2 = Math.floor(Math.random() * 6) + 1;
     const total = dice1 + dice2 + skillVal;
+    console.log(`Local roll for option ${optionId}: dice1=${dice1}, dice2=${dice2}, total=${total}`);
     setLocalRollResult((prev) => ({ ...prev, [optionId]: total }));
   }
   
-  console.log(scene)
-
   async function handleSpendPoint(subskillId: string) {
     if (!myPlayer) return;
     if (myPlayer.skillPoints! <= 0) {
@@ -132,12 +158,18 @@ const SceneDisplay: React.FC<SceneDisplayProps> = ({
       alert("No se conoce roomId");
       return;
     }
+    console.log(`Antes de gastar Skill Point, skillPoints: ${myPlayer.skillPoints}`);
     const res = await fetch(
       `/api/spendSkillPoint?roomId=${roomId}&userName=${myPlayer.name}&subskillId=${subskillId}`,
       { method: "POST" }
     );
     if (res.ok) {
+      const data = await res.json();
+      console.log("Respuesta de spendSkillPoint:", data.player);
       alert(`Skill Point asignado a ${getSubskillName(subskillId)}`);
+      if (setMyPlayer) {
+        setMyPlayer(data.player);
+      }
       setShowModal(false);
     } else {
       const err = await res.json();
@@ -266,7 +298,7 @@ const SceneDisplay: React.FC<SceneDisplayProps> = ({
                         .map((sub) => (
                           <li key={sub.id} className="flex items-center justify-between">
                             <span>
-                              {sub.name} (Actual: {myPlayer.assignedPoints[sub.id] || 0})
+                              {sub.name} (Actual: {(myPlayer.assignedPoints && myPlayer.assignedPoints[sub.id]) || 0})
                             </span>
                             <button
                               onClick={() => handleSpendPoint(sub.id)}
@@ -369,7 +401,8 @@ const SceneDisplay: React.FC<SceneDisplayProps> = ({
                     <h3 className="font-semibold text-lg mb-2">{skill.name}</h3>
                     <ul className="ml-4 space-y-1">
                       {skill.subskills.map((sub) => {
-                        const assigned = myPlayer.assignedPoints[sub.id] || 0;
+                        // Usamos fallback para assignedPoints en caso de que sea undefined
+                        const assigned = myPlayer.assignedPoints?.[sub.id] || 0;
                         return (
                           <li key={sub.id} className="flex justify-between">
                             <span>{sub.name}:</span>
@@ -403,7 +436,8 @@ const SceneDisplay: React.FC<SceneDisplayProps> = ({
           let skillVal = 0;
           if (opt.roll && myPlayer) {
             const subId = opt.roll.skillUsed;
-            skillVal = myPlayer.assignedPoints[subId] || 0;
+            // Usamos el fallback para assignedPoints
+            skillVal = myPlayer.assignedPoints?.[subId] || 0;
             probability = computeSuccessProbability(skillVal, opt.roll.difficulty);
           }
 
@@ -493,7 +527,6 @@ const SceneDisplay: React.FC<SceneDisplayProps> = ({
       )}
     </div>
   );
-
 };
 
 export default SceneDisplay;

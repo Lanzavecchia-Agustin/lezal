@@ -1,8 +1,6 @@
-// app/api/vote/route.ts
 import { NextResponse } from "next/server";
 import Pusher from "pusher";
-import rooms, { Player } from "../../../../roomsStore";
-import { SCENES } from "../../../../roomsStore";
+import rooms, { Player, SCENES } from "../../../../roomsStore";
 
 const pusher = new Pusher({
   appId: process.env.PUSHER_APP_ID!,
@@ -41,7 +39,7 @@ export async function GET(req: Request) {
     room.votes[optIdNum] = (room.votes[optIdNum] || 0) + 1;
     room.userVoted.add(userName);
 
-    // Actualización: Si la opción tiene lockedAttributeIncrement, se actualiza en TODOS los jugadores
+    // Si la opción incrementa algún atributo bloqueado, se aplica a TODOS los jugadores (como antes)
     if (sceneOption.lockedAttributeIncrement) {
       const attr = sceneOption.lockedAttributeIncrement.attribute;
       const increment = sceneOption.lockedAttributeIncrement.increment;
@@ -95,9 +93,9 @@ async function resolveCheckAndAdvance(roomId: string, winningOptionId: number) {
   const option = room.scene.options.find((o) => o.id === winningOptionId);
   if (!option) return;
 
-  // Si la opción no requiere tirada, se considera éxito automáticamente.
   if (!option.roll) {
-    applyEffectsToAll(room, option, true);
+    // Si no hay tirada, se considera éxito automáticamente
+    applyEffectsToVoters(room, option, true);
     goToScene(room, option.nextSceneId.success ?? "");
     return broadcastSceneUpdate(roomId);
   }
@@ -129,44 +127,68 @@ async function resolveCheckAndAdvance(roomId: string, winningOptionId: number) {
     }
   }
 
-  // Aplicar efectos en vida y estrés según el resultado:
-  applyEffectsToAll(room, option, success);
+  // Aplicar efectos a los jugadores que votaron
+  applyEffectsToVoters(room, option, success);
 
   const nextKey = success ? option.nextSceneId.success : option.nextSceneId.failure ?? "";
   goToScene(room, nextKey);
   await broadcastSceneUpdate(roomId);
 }
 
-function applyEffectsToAll(room: any, option: any, success: boolean) {
-  // Se buscan efectos separados para éxito o fallo.
-  // Si se definieron, se aplican a TODOS los jugadores de la sala.
+/**
+ * Aplica los efectos (de vida y estrés) solamente a los jugadores que hayan votado.
+ * Si solo un jugador votó, solo se le aplican a él; si varios votaron, se aplican a cada uno de ellos.
+ */
+function applyEffectsToVoters(room: any, option: any, success: boolean) {
   const effects = success ? option.successEffects : option.failureEffects;
-  if (effects) {
-    for (const pName in room.players) {
-      const player = room.players[pName];
-      if (effects.lifeEffect !== undefined) {
-        player.life += effects.lifeEffect;
-        console.log(`[EFFECT] ${pName} vida modificada en ${effects.lifeEffect} (ahora ${player.life})`);
-      }
-      if (effects.stressEffect !== undefined) {
-        player.stress += effects.stressEffect;
-        console.log(`[EFFECT] ${pName} estrés modificado en ${effects.stressEffect} (ahora ${player.stress})`);
+  if (!effects) return;
+  for (const pName of room.userVoted) {
+    const player = room.players[pName];
+
+    if (effects.life !== undefined) {
+      // Si se trata de un efecto positivo (sumar vida)
+      if (effects.life > 0) {
+        if (player.life < 100) {
+          const nuevaVida = player.life + effects.life;
+          player.life = Math.min(nuevaVida, 100);
+          console.log(
+            `[EFFECT] ${pName} aumenta la vida en ${effects.life} (ahora ${player.life})`
+          );
+        } else {
+          console.log(
+            `[EFFECT] ${pName} tiene la vida completa (100) y no se aplica el efecto de sanación.`
+          );
+        }
+      } else {
+        // Efecto negativo: se resta la vida, sin forzar un mínimo (o si deseas, clámplelo a 0)
+        player.life += effects.life;
+        player.life = Math.max(player.life, 0);
+        console.log(
+          `[EFFECT] ${pName} pierde ${-effects.life} de vida (ahora ${player.life})`
+        );
       }
     }
-  } else {
-    // Si no hay efectos separados, se revisan los efectos top-level (opcional)
-    if (option.lifeEffect !== undefined) {
-      for (const pName in room.players) {
-        const player = room.players[pName];
-        player.life += option.lifeEffect;
-        console.log(`[EFFECT] ${pName} vida modificada en ${option.lifeEffect} (ahora ${player.life})`);
-      }
-    }
-    if (option.stressEffect !== undefined) {
-      for (const pName in room.players) {
-        const player = room.players[pName];
-        player.stress += option.stressEffect;
-        console.log(`[EFFECT] ${pName} estrés modificado en ${option.stressEffect} (ahora ${player.stress})`);
+
+    if (effects.stress !== undefined) {
+      // Si se trata de quitar estrés (efecto negativo)
+      if (effects.stress < 0) {
+        if (player.stress > 0) {
+          const nuevoStress = player.stress + effects.stress;
+          player.stress = Math.max(nuevoStress, 0);
+          console.log(
+            `[EFFECT] ${pName} reduce el estrés en ${-effects.stress} (ahora ${player.stress})`
+          );
+        } else {
+          console.log(
+            `[EFFECT] ${pName} ya tiene el estrés en 0 y no se aplica la reducción.`
+          );
+        }
+      } else {
+        // Efecto positivo: se aumenta el estrés
+        player.stress += effects.stress;
+        console.log(
+          `[EFFECT] ${pName} aumenta el estrés en ${effects.stress} (ahora ${player.stress})`
+        );
       }
     }
   }

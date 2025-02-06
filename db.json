@@ -66,27 +66,27 @@
   "scenes": [
     {
       "id": "scene1",
-      "text": "Llegas a los portones oxidados de una vieja mansión rodeada de maleza. El viento sopla fuerte y un cuervo grazna en la distancia. Hay un camino principal que conduce a la entrada, pero parece en mal estado.",
+      "text": "Ante ti se alza el Portal del Olvido: una imponente estructura de piedra cubierta de enigmáticos grabados, enclavada en el corazón de un bosque ancestral. Se dice que este portal conecta con secretos olvidados y tiempos distorsionados.",
       "isEnding": false,
       "maxVote": 1,
       "options": [
         {
           "id": 1,
-          "text": "Inspeccionar el camino con cuidado.",
-          "roll": { "skillUsed": "402", "difficulty": 16 },
+          "text": "Examinar detenidamente los grabados del portal.",
+          "roll": { "skillUsed": "106", "difficulty": 6 },
           "expOnSuccess": 1,
           "nextSceneId": {
             "success": "scene2",
             "failure": "scene1Fail",
-            "partial": "scene1Partial"
+            "partial": ""
           },
-            "successEffects": { "life": 5, "stress": -5 },
-            "failureEffects": { "life": -5, "stress": 5 }
+          "successEffects": { "life": 0, "stress": -5 },
+          "failureEffects": { "life": 0, "stress": 5 }
         },
         {
           "id": 2,
-          "text": "Forzar los portones con fuerza bruta.",
-          "roll": { "skillUsed": "303", "difficulty": 2 },
+          "text": "Intentar forzar la apertura del portal con pura fuerza bruta.",
+          "roll": { "skillUsed": "303", "difficulty": 4 },
           "expOnSuccess": 2,
           "lockedAttributeIncrement": {
             "attribute": "corrupto",
@@ -97,273 +97,216 @@
             "failure": "scene1Fail2",
             "partial": ""
           },
-        "successEffects": {
-            "life": 10,
-            "stress": -5
-          },
-          "failureEffects": {
-            "life": -10,
-            "stress": 5
-          },
-          "requirements": {
-            "attribute": "corrupto",
-            "actionIfNotMet": "hide"
-          }
-        }
-      ]
-    },
-    {
-      "id": "scene1Partial",
-      "text": "Ves algunas secciones rotas en el camino, pero tu atención se desvía un instante y pierdes de vista un detalle crucial. Sabes que hay peligro, aunque no estás seguro de dónde.",
-      "isEnding": false,
-      "maxVote": 1,
-      "options": [
-        {
-          "id": 1,
-          "text": "Avanzar de todos modos, consciente de que algo puede salir mal.",
-          "nextSceneId": { "success": "scene2", "failure": "", "partial": "" },
-            "successEffects": { "life": 0, "stress": 0 },
-            "failureEffects": { "life": -2, "stress": 5 }
+          "successEffects": { "life": 5, "stress": -5 },
+          "failureEffects": { "life": -5, "stress": 5 }
         }
       ]
     },
     {
       "id": "scene1Fail",
-      "text": "Un agujero en el camino te toma por sorpresa. Tropiezas y caes, lastimándote ligeramente. Decides retroceder un momento y pensar con más cuidado.",
+      "text": "Al concentrarte en los grabados, un repentino temblor hace que pierdas el equilibrio. El conocimiento se te escapa entre los dedos y sientes un aumento de inquietud.",
       "isEnding": false,
       "maxVote": 1,
       "options": [
         {
           "id": 1,
-          "text": "Reponerte y volver a intentarlo.",
+          "text": "Recobrar la compostura e intentarlo de nuevo.",
           "nextSceneId": { "success": "scene1", "failure": "", "partial": "" },
-            "successEffects": { "life": 5, "stress": 0 },
-            "failureEffects": { "life": 0, "stress": 0 }
+          "successEffects": { "life": 5, "stress": -2 },
+          "failureEffects": { "life": 0, "stress": 0 }
         }
       ]
     },
     {
       "id": "scene1Fail2",
-      "text": "Empujas con todas tus fuerzas, pero los portones rechinan y apenas se mueven. Notas un dolor agudo en el hombro al insistir. Necesitarás otra estrategia o arriesgarte a lesionarte de verdad.",
+      "text": "El portal se resiste a tus embestidas y, tras un esfuerzo desmedido, sientes una punzada que te recuerda tus límites físicos.",
       "isEnding": false,
       "maxVote": 1,
       "options": [
         {
           "id": 1,
-          "text": "Descansar el hombro y buscar otra forma de acceso.",
+          "text": "Alejarte momentáneamente para evitar lesiones mayores.",
           "nextSceneId": { "success": "scene1", "failure": "", "partial": "" },
-            "successEffects": { "life": 3, "stress": 0 },
-            "failureEffects": { "life": 0, "stress": 5 }
+          "successEffects": { "life": 3, "stress": 0 },
+          "failureEffects": { "life": 0, "stress": 3 }
         }
       ]
     },
     {
       "id": "scene2",
-      "text": "Con cautela, logras sortear los tramos peligrosos del camino. Llegas a la puerta principal de la mansión, la cual luce muy antigua. De cerca, ves que el picaporte está decorado con un símbolo en forma de cuervo.",
+      "text": "Logras discernir antiguos símbolos y metáforas ocultas en la piedra. Una tenue luz parece emanar de ellos, invitándote a descubrir sus secretos en el interior del portal.",
       "isEnding": false,
       "maxVote": 1,
       "options": [
         {
           "id": 1,
-          "text": "Examinar el símbolo a fondo, intentando recordar si tiene un significado histórico.",
-          "roll": { "skillUsed": "106", "difficulty": 7 },
+          "text": "Adentrarte en el interior para investigar una sala de inscripciones místicas.",
+          "roll": { "skillUsed": "102", "difficulty": 7 },
           "expOnSuccess": 1,
           "nextSceneId": {
-            "success": "scene2Success",
+            "success": "scene4",
             "failure": "scene2Fail",
             "partial": ""
           },
-          "requirements": {
-            "attribute": "corrupto",
-            "actionIfNotMet": "disable"
-          },
-            "successEffects": { "life": 0, "stress": -5 },
-            "failureEffects": { "life": -5, "stress": 5 }
+          "successEffects": { "life": 5, "stress": -5 },
+          "failureEffects": { "life": -5, "stress": 5 }
         },
         {
           "id": 2,
-          "text": "Usar tu intuición para percibir si hay algo siniestro en el símbolo.",
+          "text": "Dejarte llevar por tu presentimiento y descifrar los símbolos mediante la intuición.",
           "roll": { "skillUsed": "204", "difficulty": 5 },
           "expOnSuccess": 2,
-          "requirements": {
-            "attribute": "corrupto",
-            "actionIfNotMet": "disable"
-          },
           "nextSceneId": {
-            "success": "scene2SuccessIntuition",
+            "success": "scene4",
             "failure": "scene2Fail",
             "partial": ""
           },
-            "successEffects": { "life": 0, "stress": -3 },
-            "failureEffects": { "life": 0, "stress": 5 }
-        }
-      ]
-    },
-    {
-      "id": "scene2Success",
-      "text": "Recuerdas haber leído sobre un culto olvidado que usaba el cuervo como emblema. Estos fieles tenían obsesión con la vida tras la muerte. Sientes un escalofrío.",
-      "isEnding": false,
-      "maxVote": 1,
-      "options": [
-        {
-          "id": 1,
-          "text": "Intentar abrir la puerta con cuidado.",
-          "nextSceneId": { "success": "scene3", "failure": "", "partial": "" },
-            "successEffects": { "life": 5, "stress": -5 },
-            "failureEffects": { "life": 0, "stress": 0 }
-        }
-      ]
-    },
-    {
-      "id": "scene2SuccessIntuition",
-      "text": "Algo en tu interior te advierte peligro. La puerta podría estar maldita o protegida por un antiguo ritual.",
-      "isEnding": false,
-      "maxVote": 1,
-      "options": [
-        {
-          "id": 1,
-          "text": "Buscar otra entrada antes de forzar la puerta.",
-          "nextSceneId": { "success": "scene4", "failure": "", "partial": "" },
-            "successEffects": { "life": 2, "stress": 5 },
-            "failureEffects": { "life": 0, "stress": 0 }
-        },
-        {
-          "id": 2,
-          "text": "Ignorar el presentimiento y abrirla de todos modos.",
-          "nextSceneId": { "success": "scene3", "failure": "", "partial": "" },
-            "successEffects": { "life": -2, "stress": 10 },
-            "failureEffects": { "life": 0, "stress": 0 }
+          "successEffects": { "life": 0, "stress": -3 },
+          "failureEffects": { "life": 0, "stress": 5 }
         }
       ]
     },
     {
       "id": "scene2Fail",
-      "text": "No logras extraer nada concreto del símbolo. Solo sientes un leve desasosiego, como si te observaran. Quizá debas seguir con precaución.",
+      "text": "La sala parece impenetrable para tus métodos actuales; las inscripciones se mezclan en un caos de símbolos sin sentido, incrementando tu desasosiego.",
       "isEnding": false,
       "maxVote": 1,
       "options": [
         {
           "id": 1,
-          "text": "Proceder a abrir la puerta sin más información.",
-          "nextSceneId": { "success": "scene3", "failure": "", "partial": "" },
-            "successEffects": { "life": -3, "stress": 5 },
-            "failureEffects": { "life": 0, "stress": 0 }
+          "text": "Decidir retroceder y evaluar otras alternativas.",
+          "nextSceneId": { "success": "scene1", "failure": "", "partial": "" },
+          "successEffects": { "life": 0, "stress": 5 },
+          "failureEffects": { "life": 0, "stress": 0 }
         }
       ]
     },
     {
       "id": "scene3",
-      "text": "El interior está oscuro. Un recibidor amplio, con candelabros llenos de telarañas. De la escalera principal cuelga un viejo cuadro familiar. Notas que el pasillo de la izquierda conduce a la cocina y el de la derecha a una sala con espejos cubiertos por sábanas.",
+      "text": "Rechazado el misterio del portal, te adentras en un sendero oscuro entre árboles retorcidos, donde sombras y susurros parecen acechar en cada rincón.",
       "isEnding": false,
       "maxVote": 1,
       "options": [
         {
           "id": 1,
-          "text": "Explorar la cocina en busca de algo útil.",
-          "roll": { "skillUsed": "301", "difficulty": 6 },
+          "text": "Correr a toda velocidad, confiando en tus reflejos para evadir lo que te persigue.",
+          "roll": { "skillUsed": "405", "difficulty": 6 },
           "expOnSuccess": 1,
           "nextSceneId": {
-            "success": "scene5",
+            "success": "scene4",
             "failure": "scene3Fail",
             "partial": ""
           },
-          "requirements": {
-            "attribute": "corrupto",
-            "actionIfNotMet": "disable"
-          },
-            "successEffects": { "life": 0, "stress": -2 },
-            "failureEffects": { "life": 0, "stress": 2 }
+          "successEffects": { "life": 10, "stress": -5 },
+          "failureEffects": { "life": -5, "stress": 5 }
         },
         {
           "id": 2,
-          "text": "Subir las escaleras y examinar el cuadro más de cerca.",
-          "roll": { "skillUsed": "102", "difficulty": 7 },
+          "text": "Escalar una estructura abandonada para obtener una mejor perspectiva del entorno.",
+          "roll": { "skillUsed": "105", "difficulty": 7 },
           "expOnSuccess": 1,
+          "lockedAttributeIncrement": {
+            "attribute": "conspirativo",
+            "increment": 1
+          },
           "nextSceneId": {
-            "success": "scene6",
+            "success": "scene4",
             "failure": "scene3Fail2",
             "partial": ""
           },
-            "successEffects": { "life": 0, "stress": 0 },
-            "failureEffects": { "life": -5, "stress": 5 }
+          "successEffects": { "life": 5, "stress": -2 },
+          "failureEffects": { "life": -3, "stress": 3 }
         }
       ]
     },
     {
       "id": "scene3Fail",
-      "text": "Te mueves con torpeza en la penumbra y te golpeas contra una mesa. No hallas nada de valor y pierdes un valioso tiempo.",
+      "text": "Tropezando en la penumbra, sientes el peso del entorno y un leve golpe te hace dudar de tus habilidades.",
       "isEnding": false,
       "maxVote": 1,
       "options": [
         {
           "id": 1,
-          "text": "Descansar un momento y reconsiderar dónde buscar.",
+          "text": "Recuperarte y volver a intentarlo con más cautela.",
           "nextSceneId": { "success": "scene3", "failure": "", "partial": "" },
-            "successEffects": { "life": 5, "stress": -3 },
-            "failureEffects": { "life": 0, "stress": 0 }
+          "successEffects": { "life": 4, "stress": -2 },
+          "failureEffects": { "life": 0, "stress": 0 }
         }
       ]
     },
     {
       "id": "scene3Fail2",
-      "text": "Intentas subir las escaleras con cautela, pero un escalón podrido cede y casi caes. Retrocedes, aturdido.",
+      "text": "La escalada no sale como esperabas y pierdes el equilibrio; la caída te deja con un malestar creciente.",
       "isEnding": false,
       "maxVote": 1,
       "options": [
         {
           "id": 1,
-          "text": "Tomar aire y volver a intentarlo con más cuidado.",
+          "text": "Aguantar el dolor y reincorporarte para volver a intentarlo.",
           "nextSceneId": { "success": "scene3", "failure": "", "partial": "" },
-            "successEffects": { "life": 3, "stress": 2 },
-            "failureEffects": { "life": 0, "stress": 0 }
+          "successEffects": { "life": 3, "stress": 2 },
+          "failureEffects": { "life": 0, "stress": 0 }
         }
       ]
     },
     {
       "id": "scene4",
-      "text": "Rodeas la mansión y encuentras una ventana rota. Un olor penetrante emerge desde el interior, como a humedad y moho antiguo.",
+      "text": "El sendero te conduce hasta la entrada de una antigua ruina, cuyos muros desgastados esconden un laberinto de recuerdos y secretos. En el umbral, dos rutas se abren: una iluminada por tenues velas y otra que se pierde en una penumbra abismal.",
       "isEnding": false,
       "maxVote": 1,
       "options": [
         {
           "id": 1,
-          "text": "Entrar por la ventana con agilidad.",
-          "roll": { "skillUsed": "304", "difficulty": 5 },
+          "text": "Tomar el corredor adornado con velas y dejarte guiar por su luz temblorosa.",
+          "roll": { "skillUsed": "401", "difficulty": 5 },
           "expOnSuccess": 1,
+          "nextSceneId": { "success": "scene5", "failure": "", "partial": "" },
+          "successEffects": { "life": 5, "stress": -5 },
+          "failureEffects": { "life": 0, "stress": 0 }
+        },
+        {
+          "id": 2,
+          "text": "Acercarte al altar tallado en la piedra, repleto de símbolos oscuros y enigmáticos.",
+          "roll": { "skillUsed": "104", "difficulty": 8 },
+          "expOnSuccess": 2,
+          "lockedAttributeIncrement": {
+            "attribute": "corrupto",
+            "increment": 1
+          },
           "nextSceneId": {
-            "success": "scene5",
+            "success": "scene6",
             "failure": "scene4Fail",
             "partial": ""
           },
-            "successEffects": { "life": 5, "stress": -5 },
-            "failureEffects": { "life": 0, "stress": 0 }
+          "successEffects": { "life": -2, "stress": 5 },
+          "failureEffects": { "life": 0, "stress": 5 }
         }
       ]
     },
     {
       "id": "scene4Fail",
-      "text": "Intentas pasar por la ventana, pero te quedas atascado y casi te cortas con el vidrio. No logras entrar por aquí sin un mejor plan.",
+      "text": "Al intentar descifrar los oscuros símbolos del altar, un escalofrío recorre tu cuerpo: la respuesta parece estar fuera de tu alcance, y la incertidumbre aumenta.",
       "isEnding": false,
       "maxVote": 1,
       "options": [
         {
           "id": 1,
-          "text": "Buscar otro acceso o incrementar tu flexibilidad antes de volver.",
+          "text": "Retroceder y explorar la otra ruta en busca de respuestas.",
           "nextSceneId": { "success": "scene1", "failure": "", "partial": "" },
-            "successEffects": { "life": 3, "stress": 3 },
-            "failureEffects": { "life": 0, "stress": 0 }
+          "successEffects": { "life": 3, "stress": 3 },
+          "failureEffects": { "life": 0, "stress": 0 }
         }
       ]
     },
     {
       "id": "scene5",
-      "text": "Llegas a una sala con muebles cubiertos por sábanas polvorientas. En el centro, una mesita redonda con un mapa antiguo de la región. Algunas marcas en el mapa señalan un símbolo de cuervo.",
+      "text": "Adentrándote en el corazón del laberinto, descubres una sala oculta: una antigua biblioteca cuyos muros rezuman historia. Sobre un atril, un manuscrito gastado aguarda ser leído.",
       "isEnding": false,
       "maxVote": 1,
       "options": [
         {
           "id": 1,
-          "text": "Analizar el mapa con detenimiento para encontrar pistas.",
+          "text": "Analizar el manuscrito para desvelar los secretos del lugar.",
           "roll": { "skillUsed": "101", "difficulty": 7 },
           "expOnSuccess": 2,
           "lockedAttributeIncrement": {
@@ -375,215 +318,262 @@
             "failure": "scene5Fail",
             "partial": "scene5Partial"
           },
-            "successEffects": { "life": 0, "stress": -5 },
-            "failureEffects": { "life": 0, "stress": 5 }
+          "successEffects": { "life": 0, "stress": -5 },
+          "failureEffects": { "life": -2, "stress": 5 }
+        },
+        {
+          "id": 2,
+          "text": "Cerrarte en una breve meditación para conectar con la esencia del conocimiento ancestral.",
+          "roll": { "skillUsed": "203", "difficulty": 6 },
+          "expOnSuccess": 1,
+          "nextSceneId": {
+            "success": "scene7",
+            "failure": "scene5Fail",
+            "partial": ""
+          },
+          "successEffects": { "life": 0, "stress": -3 },
+          "failureEffects": { "life": 0, "stress": 3 }
         }
       ]
     },
     {
       "id": "scene5Fail",
-      "text": "No logras descifrar los símbolos del mapa. Parece un sistema de coordenadas y notas confusas.",
+      "text": "El manuscrito resulta ser un enigma indescifrable; las palabras se entrelazan sin sentido y sientes que la oportunidad se desvanece.",
       "isEnding": false,
       "maxVote": 1,
       "options": [
         {
           "id": 1,
-          "text": "Reintentar con la mente más despejada.",
+          "text": "Intentar una vez más, aferrándote a una mínima esperanza de comprensión.",
           "nextSceneId": { "success": "scene5", "failure": "", "partial": "" },
-            "successEffects": { "life": -2, "stress": 5 },
-            "failureEffects": { "life": 0, "stress": 0 }
+          "successEffects": { "life": -2, "stress": 5 },
+          "failureEffects": { "life": 0, "stress": 0 }
         }
       ]
     },
     {
       "id": "scene5Partial",
-      "text": "Entiendes parte del mapa: indica la existencia de un sótano oculto en la mansión. Sin embargo, algunos símbolos siguen siendo un misterio.",
+      "text": "Entre líneas y símbolos, logras vislumbrar la existencia de un pasaje secreto que conduce a cámaras aún más recónditas del laberinto.",
       "isEnding": false,
       "maxVote": 1,
       "options": [
         {
           "id": 1,
-          "text": "Dirigirte al lugar donde crees que está el sótano.",
+          "text": "Decidir seguir el indicio y buscar el acceso al pasaje oculto.",
           "nextSceneId": { "success": "scene7", "failure": "", "partial": "" },
-            "successEffects": { "life": 0, "stress": 0 },
-            "failureEffects": { "life": 0, "stress": 0 }
+          "successEffects": { "life": 0, "stress": 0 },
+          "failureEffects": { "life": 0, "stress": 0 }
         }
       ]
     },
     {
       "id": "scene6",
-      "text": "Te acercas al gran cuadro en la pared. Retrata a una familia de semblante serio y, en la parte inferior, aparecen nombres medio borrados. Uno destaca: 'Marcellus Crow'.",
+      "text": "Frente a ti se abre El Santuario de los Ecos: un recinto marcado por símbolos arcanos y una energía que parece desafiar la realidad. En el centro, un altar invita a la realización de un ritual ancestral.",
       "isEnding": false,
       "maxVote": 1,
       "options": [
         {
           "id": 1,
-          "text": "Intentar recordar datos históricos sobre la familia Crow.",
-          "roll": { "skillUsed": "102", "difficulty": 8 },
-          "expOnSuccess": 2,
-          "nextSceneId": { "success": "scene7", "failure": "scene6Fail", "partial": "" },
-            "successEffects": { "life": 5, "stress": -3 },
-            "failureEffects": { "life": 0, "stress": 0 }
-        },
-        {
-          "id": 2,
-          "text": "Usar tu imaginación para inferir la historia detrás de los rostros.",
+          "text": "Emprender un ritual ancestral que intente alterar el curso del destino.",
           "roll": { "skillUsed": "104", "difficulty": 9 },
           "expOnSuccess": 3,
           "lockedAttributeIncrement": {
             "attribute": "corrupto",
             "increment": 1
           },
-          "nextSceneId": { "success": "scene7", "failure": "scene6Fail", "partial": "" },
-            "successEffects": { "life": -3, "stress": 5 },
-            "failureEffects": { "life": 0, "stress": 0 }
+          "nextSceneId": {
+            "success": "scene8",
+            "failure": "scene6Fail",
+            "partial": ""
+          },
+          "successEffects": { "life": -5, "stress": -5 },
+          "failureEffects": { "life": -5, "stress": 15 }
+        },
+        {
+          "id": 2,
+          "text": "Concentrarte y convocar tus fuerzas interiores para protegerte de las energías caóticas.",
+          "roll": { "skillUsed": "201", "difficulty": 7 },
+          "expOnSuccess": 2,
+          "nextSceneId": {
+            "success": "scene8",
+            "failure": "scene6Fail",
+            "partial": ""
+          },
+          "successEffects": { "life": 0, "stress": -5 },
+          "failureEffects": { "life": 0, "stress": 5 }
         }
       ]
     },
     {
       "id": "scene6Fail",
-      "text": "No logras extraer información clara. El paso del tiempo ha dejado muchos huecos y tu mente no conecta los detalles.",
+      "text": "El ritual fracasa y la energía incontrolable del santuario te abruma. Un halo de desesperación se cierne sobre ti, dejando claras las consecuencias de lo desconocido.",
       "isEnding": false,
       "maxVote": 1,
       "options": [
         {
           "id": 1,
-          "text": "Intentar desde otro ángulo o investigar en otro sitio de la mansión.",
-          "nextSceneId": { "success": "scene3", "failure": "", "partial": "" },
-            "successEffects": { "life": 0, "stress": 5 },
-            "failureEffects": { "life": 0, "stress": 0 }
+          "text": "Replantear tu estrategia y buscar otro camino en el laberinto.",
+          "nextSceneId": { "success": "scene5", "failure": "", "partial": "" },
+          "successEffects": { "life": 0, "stress": 5 },
+          "failureEffects": { "life": 0, "stress": 0 }
         }
       ]
     },
     {
       "id": "scene7",
-      "text": "Encuentras una puerta semiescondida detrás de un tapiz ajado. Desciendes por unas escaleras estrechas hasta un sótano con una gruesa puerta de madera reforzada con hierro.",
+      "text": "Avanzas hacia El Corazón del Secreto: una cámara oculta tras estanterías polvorientas y pasajes olvidados. Ante ti se dividen dos rutas misteriosas.",
       "isEnding": false,
       "maxVote": 1,
       "options": [
         {
           "id": 1,
-          "text": "Empujar la puerta con fuerza.",
-          "roll": { "skillUsed": "303", "difficulty": 7 },
-          "expOnSuccess": 1,
-          "nextSceneId": { "success": "scene8", "failure": "scene7Fail", "partial": "" },
-            "successEffects": { "life": -10, "stress": 10 },
-            "failureEffects": { "life": 0, "stress": 0 }
+          "text": "Entrar en una cámara iluminada por símbolos ancestrales y vestigios de sabiduría.",
+          "roll": { "skillUsed": "102", "difficulty": 8 },
+          "expOnSuccess": 2,
+          "nextSceneId": { "success": "scene9", "failure": "scene7Fail", "partial": "" },
+          "successEffects": { "life": 5, "stress": -3 },
+          "failureEffects": { "life": 0, "stress": 5 }
         },
         {
           "id": 2,
-          "text": "Buscar un mecanismo oculto alrededor de la puerta.",
-          "roll": { "skillUsed": "401", "difficulty": 6 },
+          "text": "Adentrarte en una cripta oscura donde cada sombra oculta un secreto.",
+          "roll": { "skillUsed": "402", "difficulty": 7 },
           "expOnSuccess": 1,
-          "nextSceneId": { "success": "scene8", "failure": "scene7Fail2", "partial": "" },
-            "successEffects": { "life": 0, "stress": 0 },
-            "failureEffects": { "life": 0, "stress": 0 }
+          "nextSceneId": { "success": "scene10", "failure": "scene7Fail2", "partial": "scene7Partial" },
+          "successEffects": { "life": 0, "stress": -2 },
+          "failureEffects": { "life": 0, "stress": 5 }
         }
       ]
     },
     {
       "id": "scene7Fail",
-      "text": "Aun con tu fuerza, la puerta no cede. Podrías hacer más daño que bien si sigues empujando.",
+      "text": "La luz se desvanece en la cámara y tus esfuerzos por entender los símbolos se tornan infructuosos. El desconcierto y la fatiga te hacen tambalear.",
       "isEnding": false,
       "maxVote": 1,
       "options": [
         {
           "id": 1,
-          "text": "Reconsiderar tu estrategia antes de lastimarte.",
+          "text": "Reconsiderar tus pasos y volver a la encrucijada.",
           "nextSceneId": { "success": "scene7", "failure": "", "partial": "" },
-            "successEffects": { "life": 3, "stress": -3 },
-            "failureEffects": { "life": 0, "stress": 0 }
+          "successEffects": { "life": 3, "stress": -3 },
+          "failureEffects": { "life": 0, "stress": 0 }
         }
       ]
     },
     {
       "id": "scene7Fail2",
-      "text": "Pasas la mano por las grietas de la pared, pero no encuentras nada que parezca un mecanismo. Quizá no estás buscando en el lugar correcto.",
+      "text": "La oscuridad en la cripta te envuelve por completo y cada paso se vuelve un riesgo. La incertidumbre te hace dudar de la salida.",
       "isEnding": false,
       "maxVote": 1,
       "options": [
         {
           "id": 1,
-          "text": "Examinar con más paciencia o intentar otra acción.",
+          "text": "Retroceder y probar otra ruta en la encrucijada.",
           "nextSceneId": { "success": "scene7", "failure": "", "partial": "" },
-            "successEffects": { "life": 0, "stress": 5 },
-            "failureEffects": { "life": 0, "stress": 0 }
+          "successEffects": { "life": 0, "stress": 5 },
+          "failureEffects": { "life": 0, "stress": 0 }
+        }
+      ]
+    },
+    {
+      "id": "scene7Partial",
+      "text": "Entre la penumbra de la cripta, logras distinguir unos ecos de palabras pronunciadas. Tal vez un discurso persuasivo logre canalizar la energía del lugar.",
+      "isEnding": false,
+      "maxVote": 1,
+      "options": [
+        {
+          "id": 1,
+          "text": "Utilizar tu retórica para invocar respuestas del pasado.",
+          "roll": { "skillUsed": "103", "difficulty": 7 },
+          "expOnSuccess": 1,
+          "nextSceneId": { "success": "scene9", "failure": "scene7Fail", "partial": "" },
+          "successEffects": { "life": 5, "stress": -2 },
+          "failureEffects": { "life": 0, "stress": 5 }
         }
       ]
     },
     {
       "id": "scene8",
-      "text": "La puerta finalmente cede. El sótano revela un altar rodeado de velas consumidas. Hay un libro antiguo sobre un pedestal, con el mismo símbolo de cuervo grabado en la tapa.",
+      "text": "Llegas a El Umbral del Destino: una sala amplia donde una entidad etérea parece flotar entre sombras y luces. Ante un altar en el centro, se vislumbran dos posibles caminos para alterar tu futuro.",
       "isEnding": false,
       "maxVote": 1,
       "options": [
         {
           "id": 1,
-          "text": "Leer el libro con detenimiento (requiere valentía).",
+          "text": "Leer un antiguo grimorio dispuesto sobre el altar, en busca de respuestas.",
           "roll": { "skillUsed": "201", "difficulty": 6 },
           "expOnSuccess": 2,
           "nextSceneId": { "success": "scene9", "failure": "scene8Fail", "partial": "" },
-            "successEffects": { "life": 0, "stress": -10 },
-            "failureEffects": { "life": 0, "stress": 0 }
+          "successEffects": { "life": 0, "stress": -10 },
+          "failureEffects": { "life": 0, "stress": 0 }
         },
         {
           "id": 2,
-          "text": "Intentar un antiguo ritual para deshacer la maldición.",
+          "text": "Realizar un ritual para intentar disolver la presencia maligna que habita en la sala.",
           "roll": { "skillUsed": "104", "difficulty": 10 },
           "expOnSuccess": 3,
           "lockedAttributeIncrement": {
             "attribute": "corrupto",
             "increment": 1
           },
-          "requirements": {
-            "attribute": "corrupto",
-            "actionIfNotMet": "hide"
-          },
           "nextSceneId": { "success": "scene10", "failure": "scene8Fail", "partial": "scene8Partial" },
-            "successEffects": { "life": -5, "stress": -5 },
-            "failureEffects": { "life": -5, "stress": 15 }
+          "successEffects": { "life": -5, "stress": -5 },
+          "failureEffects": { "life": -5, "stress": 15 }
+        },
+        {
+          "id": 3,
+          "text": "Ofrecer redención a la entidad a través de un acto compasivo.",
+          "roll": { "skillUsed": "206", "difficulty": 8 },
+          "expOnSuccess": 2,
+          "requirements": {
+            "attribute": "redentor",
+            "actionIfNotMet": "disable"
+          },
+          "nextSceneId": { "success": "scene9", "failure": "scene8Fail2", "partial": "" },
+          "successEffects": { "life": 5, "stress": -5 },
+          "failureEffects": { "life": 0, "stress": 5 }
         }
       ]
     },
     {
       "id": "scene8Fail",
-      "text": "La atmósfera se vuelve densa; tus manos tiemblan y no puedes continuar. Sientes que algo te observa en la penumbra.",
+      "text": "Las energías en la sala se rebelan y sientes cómo una fuerza incontrolable te impide avanzar. El grimorio se cierra ante ti, dejando un rastro de incertidumbre.",
       "isEnding": false,
       "maxVote": 1,
       "options": [
         {
           "id": 1,
-          "text": "Respirar hondo y hacer acopio de valor para reintentar.",
+          "text": "Respirar hondo y reunir coraje para volver a intentarlo.",
           "nextSceneId": { "success": "scene8", "failure": "", "partial": "" },
-            "successEffects": { "life": 0, "stress": 5 },
-            "failureEffects": { "life": 0, "stress": 0 }
+          "successEffects": { "life": 0, "stress": 5 },
+          "failureEffects": { "life": 0, "stress": 0 }
         }
       ]
     },
     {
-      "id": "scene8Partial",
-      "text": "Inicias el ritual, pero la fuerza de la maldición se resiste. El ambiente cruje y algo parece agitarse en la oscuridad. Has roto parte del influjo, pero no lo suficiente.",
+      "id": "scene8Fail2",
+      "text": "El acto compasivo fracasa; la entidad se retuerce en una agonía silenciosa, y la sensación de redención se desvanece, dejando tras de sí un eco de dolor.",
       "isEnding": false,
       "maxVote": 1,
       "options": [
         {
           "id": 1,
-          "text": "Persistir a pesar del peligro.",
-          "nextSceneId": { "success": "scene10", "failure": "", "partial": "" },
-            "successEffects": { "life": -3, "stress": 5 },
-            "failureEffects": { "life": 0, "stress": 0 }
+          "text": "Reunir fuerzas y probar una última vez para alcanzar la iluminación.",
+          "nextSceneId": { "success": "scene8", "failure": "", "partial": "" },
+          "successEffects": { "life": 0, "stress": 5 },
+          "failureEffects": { "life": 0, "stress": 0 }
         }
       ]
     },
     {
       "id": "scene9",
-      "text": "Las páginas describen sacrificios y promesas rotas. Entiendes que la familia Crow selló algo siniestro en este sótano. Sientes escalofríos: está a punto de liberarse.",
+      "text": "La Revelación del Pasado se desata: los secretos del portal, la ruina y tus propias decisiones confluyen en un momento de epifanía. Las voces de antiguos guardianes te guían hacia una comprensión ineludible.",
       "isEnding": true,
       "options": []
     },
     {
       "id": "scene10",
-      "text": "Con un último esfuerzo, anulas la maldición que plagaba la mansión. Una ráfaga helada recorre el lugar, seguida de un silencio sobrecogedor. Has roto las cadenas de la oscuridad, al menos por ahora.",
+      "text": "El Legado de la Sombra se consuma: al desafiar las fuerzas oscuras, reconfiguras el destino del lugar. Una calma inquieta se asienta, dejando abierta la posibilidad de redención o condena.",
       "isEnding": true,
       "options": []
     }

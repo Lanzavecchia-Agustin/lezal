@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { gameConfig, Scene, SceneOption } from "../../roomsStore"; // Asegúrate de que gameConfig incluya initialLife y stressThreshold
+import { gameConfig, Scene, SceneOption } from "../../roomsStore";
 
 // Interfaz para la información del jugador, ahora con vida y estrés
 interface MyPlayerData {
@@ -13,50 +13,6 @@ interface MyPlayerData {
   life?: number;
   stress?: number;
 }
-
-// Interfaz para cada opción de la escena, ahora con efectos diferenciados
-// interface SceneOption {
-//   id: number;
-//   text: string;
-//   nextSceneId: {
-//     success: string;
-//     failure?: string;
-//     partial?: string;
-//   };
-//   roll?: {
-//     skillUsed: string;
-//     difficulty: number;
-//   };
-//   expOnSuccess?: number;
-//   lockedAttributeIncrement?: {
-//     attribute: string;
-//     increment: number;
-//   };
-//   requirements?: {
-//     attribute: string;
-//     actionIfNotMet: "hide" | "disable";
-//   };
-//   // Nuevos efectos diferenciados para éxito y fallo:
-//   effects?: {
-//     success?: {
-//       life?: number;    // Efecto en vida en caso de éxito (positivo para curar)
-//       stress?: number;  // Efecto en estrés en caso de éxito (negativo para aliviar)
-//     };
-//     failure?: {
-//       life?: number;    // Efecto en vida en caso de fallo (negativo para dañar)
-//       stress?: number;  // Efecto en estrés en caso de fallo (positivo para aumentar)
-//     };
-//   };
-// }
-
-// // Interfaz para la escena
-// interface Scene {
-//   id: string;
-//   text: string;
-//   options: SceneOption[];
-//   isEnding?: boolean;
-//   maxVote?: number;
-// }
 
 // Props que recibe SceneDisplay
 interface SceneDisplayProps {
@@ -157,7 +113,37 @@ const SceneDisplay: React.FC<SceneDisplayProps> = ({
   const xpPercentage = Math.min(100, (xp / 100) * 100);
   const level = Math.floor(xp / 100);
 
-  console.log("SceneDisplay - scene:", scene);
+  function doLocalRoll(optionId: number, skillVal: number, difficulty: number) {
+    const dice1 = Math.floor(Math.random() * 6) + 1;
+    const dice2 = Math.floor(Math.random() * 6) + 1;
+    const total = dice1 + dice2 + skillVal;
+    setLocalRollResult((prev) => ({ ...prev, [optionId]: total }));
+  }
+  
+  console.log(scene)
+
+  async function handleSpendPoint(subskillId: string) {
+    if (!myPlayer) return;
+    if (myPlayer.skillPoints! <= 0) {
+      alert("No tienes Skill Points disponibles");
+      return;
+    }
+    if (!roomId) {
+      alert("No se conoce roomId");
+      return;
+    }
+    const res = await fetch(
+      `/api/spendSkillPoint?roomId=${roomId}&userName=${myPlayer.name}&subskillId=${subskillId}`,
+      { method: "POST" }
+    );
+    if (res.ok) {
+      alert(`Skill Point asignado a ${getSubskillName(subskillId)}`);
+      setShowModal(false);
+    } else {
+      const err = await res.json();
+      alert(`Error al asignar Skill Point: ${err.message}`);
+    }
+  }
 
   return (
     <div className="min-h-screen flex flex-col items-center p-4 space-y-6 bg-gradient-to-b text-white">
@@ -326,27 +312,22 @@ const SceneDisplay: React.FC<SceneDisplayProps> = ({
                 </div>
                 <p className="text-sm mt-1">XP actual: {xp} / 100</p>
               </div>
-              {/* Mostrar Vida */}
               <div className="mb-4">
                 <p className="mb-2"><strong>Vida:</strong> {myPlayer.life ?? gameConfig.initialLife}</p>
                 <div className="w-full bg-gray-300 rounded-full h-4">
-                  {/* Puedes calcular un porcentaje si lo deseas */}
                   <div className="bg-red-600 h-4 rounded-full transition-all duration-500 ease-out"
                     style={{ width: "100%" }} />
                 </div>
                 <p className="text-sm mt-1">Puntos de vida</p>
               </div>
-              {/* Mostrar Estrés */}
               <div className="mb-4">
                 <p className="mb-2"><strong>Estrés:</strong> {myPlayer.stress ?? 0}</p>
                 <div className="w-full bg-gray-300 rounded-full h-4">
-                  {/* Puedes calcular un porcentaje si tienes un umbral */}
                   <div className="bg-yellow-600 h-4 rounded-full transition-all duration-500 ease-out"
                     style={{ width: "100%" }} />
                 </div>
                 <p className="text-sm mt-1">Nivel de estrés</p>
               </div>
-              {/* Progreso de Atributos Ocultos */}
               {myPlayer.lockedAttributes && (
                 <div className="mb-4">
                   <h3 className="font-semibold">Progreso de Atributos Ocultos:</h3>
@@ -382,7 +363,6 @@ const SceneDisplay: React.FC<SceneDisplayProps> = ({
                   </ul>
                 </div>
               )}
-              {/* Listado de Subhabilidades */}
               <div className="space-y-4">
                 {gameConfig.skills.map((skill) => (
                   <div key={skill.id}>
@@ -406,7 +386,6 @@ const SceneDisplay: React.FC<SceneDisplayProps> = ({
         </div>
       )}
 
-      {/* Opciones de la escena */}
       <div className="w-full max-w-2xl space-y-4">
         {scene.options.map((opt) => {
           const { accessible, hide } = evaluateOptionAccessibility(opt, myPlayer);
@@ -458,7 +437,6 @@ const SceneDisplay: React.FC<SceneDisplayProps> = ({
                     )}
                   </div>
                 )}
-                {/* Mostrar efectos en caso de éxito */}
                 {opt.successEffects && (
                   <div className="mt-1 text-xs text-green-300">
                     <p>En Éxito:</p>
@@ -470,7 +448,6 @@ const SceneDisplay: React.FC<SceneDisplayProps> = ({
                     )}
                   </div>
                 )}
-                {/* Mostrar efectos en caso de fallo */}
                 {opt.failureEffects && (
                   <div className="mt-1 text-xs text-red-300">
                     <p>En Fracaso:</p>
@@ -517,35 +494,6 @@ const SceneDisplay: React.FC<SceneDisplayProps> = ({
     </div>
   );
 
-  async function handleSpendPoint(subskillId: string) {
-    if (!myPlayer) return;
-    if (myPlayer.skillPoints! <= 0) {
-      alert("No tienes Skill Points disponibles");
-      return;
-    }
-    if (!roomId) {
-      alert("No se conoce roomId");
-      return;
-    }
-    const res = await fetch(
-      `/api/spendSkillPoint?roomId=${roomId}&userName=${myPlayer.name}&subskillId=${subskillId}`,
-      { method: "POST" }
-    );
-    if (res.ok) {
-      alert(`Skill Point asignado a ${getSubskillName(subskillId)}`);
-      setShowModal(false);
-    } else {
-      const err = await res.json();
-      alert(`Error al asignar Skill Point: ${err.message}`);
-    }
-  }
-
-  function doLocalRoll(optionId: number, skillVal: number, difficulty: number) {
-    const dice1 = Math.floor(Math.random() * 6) + 1;
-    const dice2 = Math.floor(Math.random() * 6) + 1;
-    const total = dice1 + dice2 + skillVal;
-    setLocalRollResult((prev) => ({ ...prev, [optionId]: total }));
-  }
 };
 
 export default SceneDisplay;

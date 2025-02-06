@@ -1,4 +1,3 @@
-// app/api/join/route.ts
 import { NextResponse } from "next/server";
 import Pusher from "pusher";
 import rooms, { Player, gameConfig } from "../../../../roomsStore";
@@ -25,7 +24,6 @@ export async function GET(req: Request) {
     return NextResponse.json({ error: "roomId y userName son requeridos" }, { status: 400 });
   }
 
-  // Si la sala no existe, la creamos
   if (!rooms[roomId]) {
     rooms[roomId] = {
       scene: storyData.scene1,
@@ -52,16 +50,15 @@ export async function GET(req: Request) {
     finalType = "Líder";
   }
 
-  // Creamos el jugador usando la configuración global para la vida inicial y con estrés en 0
   const newPlayer: Player = {
     name: userName,
     type: finalType,
     assignedPoints: parsedPoints,
     xp: 0,
     skillPoints: 0,
-    lockedAttributes: {}, // Inicializamos lockedAttributes como objeto vacío
-    life: gameConfig.initialLife, // Por ejemplo, 100 (según lo definido en db.json)
-    stress: 0 // Estrés inicial en 0
+    lockedAttributes: {},
+    life: gameConfig.initialLife,
+    stress: 0,
   };
 
   room.players[userName] = newPlayer;

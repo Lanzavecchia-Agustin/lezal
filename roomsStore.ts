@@ -1,4 +1,3 @@
-// roomsStore.ts
 import db from "./db.json"; // Se asume que db.json tiene la estructura completa
 
 // Interfaz para las subhabilidades
@@ -57,10 +56,7 @@ export interface SceneOption {
     attribute: string;
     actionIfNotMet: "hide" | "disable";
   };
-  // Nuevos efectos que pueden afectar la vida y el estrés:
-  lifeEffect?: number;    // Efecto en la vida (positivo para curar, negativo para dañar)
-  stressEffect?: number;  // Efecto en el estrés (positivo para aumentar, negativo para aliviar)
-  // Efectos diferenciados para éxito y fallo:
+  // Nuevos efectos diferenciados para éxito y fallo:
   successEffects?: {
     life?: number;    // Efecto en vida en caso de éxito (positivo para curar)
     stress?: number;  // Efecto en estrés en caso de éxito (negativo para aliviar)
@@ -70,6 +66,7 @@ export interface SceneOption {
     stress?: number;  // Efecto en estrés en caso de fallo (positivo para aumentar)
   };
 }
+
 // Escena
 export interface Scene {
   id: string;
@@ -104,14 +101,11 @@ export interface RoomState {
 }
 
 // Cargamos la configuración y las escenas desde db.json
-// Se asume que en db.json tienes { gameConfig: {...}, scenes: [...] }
-// Asegúrate de que tu db.json incluya "initialLife" y "stressThreshold" dentro de gameConfig.
 const dbData = db as {
   gameConfig: GameConfig;
   scenes: Scene[];
 };
 
-// Exportamos la configuración y las escenas
 export const gameConfig = dbData.gameConfig;
 export const SCENES = dbData.scenes;
 

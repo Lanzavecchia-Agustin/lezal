@@ -26,9 +26,7 @@ function checkGameOver(room: any): string | null {
       return "gameOverLife"; // ID de la escena para Game Over por falta de vida.
     }
     if (player.stress >= gameConfig.stressThreshold) {
-      console.log(
-        `[GAME OVER] ${pName} alcanzó ${gameConfig.stressThreshold} de estrés.`
-      );
+      console.log(`[GAME OVER] ${pName} alcanzó ${gameConfig.stressThreshold} de estrés.`);
       return "gameOverStress"; // ID de la escena para Game Over por exceso de estrés.
     }
   }
@@ -52,16 +50,63 @@ export async function GET(req: Request) {
   }
 
   const optIdNum = parseInt(optionId, 10);
+
+  // Si la escena es la de selección de líder, la lógica es especial
+  if (room.scene.id === "leaderSelection") {
+    // Cada opción corresponde a un jugador (según el orden de las opciones generadas en el join)
+    room.votes[optIdNum] = (room.votes[optIdNum] || 0) + 1;
+    room.userVoted.add(userName);
+
+    await pusher.trigger(`room-${roomId}`, "voteUpdate", {
+      votes: room.votes,
+      userVoted: Array.from(room.userVoted),
+    });
+
+    const playerCount = Object.keys(room.players).length;
+    const sceneMaxVote = room.scene.maxVote ?? playerCount;
+    const effectiveMaxVotes = Math.min(sceneMaxVote, playerCount);
+
+    if (room.userVoted.size === effectiveMaxVotes) {
+      console.log(
+        `[VOTE] Se alcanzaron los ${effectiveMaxVotes} votos en leaderSelection. Resolviendo elección...`
+      );
+      const winningOptionId = findWinningOption(room.votes);
+      // Las opciones se crearon en el mismo orden que Object.values(room.players)
+      const playersArray = Object.values(room.players);
+      // En caso de empate o error, se selecciona aleatoriamente
+      const selectedPlayer =
+        playersArray[winningOptionId - 1] ||
+        playersArray[Math.floor(Math.random() * playersArray.length)];
+      if (selectedPlayer) {
+        selectedPlayer.type = "Líder";
+      }
+      // Notificamos a los clientes el líder seleccionado
+      await pusher.trigger(`room-${roomId}`, "leaderSelected", {
+        leader: selectedPlayer?.name || "",
+      });
+      // Avanzamos a la siguiente escena (por ejemplo, "scene1")
+      goToScene(room, "scene1");
+      // Reiniciamos votos y usuarios que votaron
+      room.votes = {};
+      room.userVoted.clear();
+      return broadcastSceneUpdate(roomId);
+    }
+    return NextResponse.json({ success: true, votes: room.votes });
+  }
+
+  // Para escenas normales: se valida la opción elegida
   const sceneOption = room.scene.options.find((o) => o.id === optIdNum);
   if (!sceneOption) {
     return NextResponse.json({ error: "Opción no válida" }, { status: 400 });
   }
 
   if (!room.userVoted.has(userName)) {
-    room.votes[optIdNum] = (room.votes[optIdNum] || 0) + 1;
+    // Si el votante es el líder, su voto vale 2, de lo contrario vale 1.
+    const voteIncrement = room.players[userName].type === "Líder" ? 2 : 1;
+    room.votes[optIdNum] = (room.votes[optIdNum] || 0) + voteIncrement;
     room.userVoted.add(userName);
 
-    // Incremento único de atributo bloqueado: se aplica a TODOS los jugadores solo una vez por escena.
+    // Incremento único de atributo bloqueado
     if (sceneOption.lockedAttributeIncrement && !room.lockedAttributeIncrementApplied) {
       const attr = sceneOption.lockedAttributeIncrement.attribute;
       const increment = sceneOption.lockedAttributeIncrement.increment;
@@ -89,7 +134,9 @@ export async function GET(req: Request) {
   const effectiveMaxVotes = Math.min(sceneMaxVote, playerCount);
 
   if (room.userVoted.size === effectiveMaxVotes) {
-    console.log(`[VOTE] Se alcanzaron los ${effectiveMaxVotes} votos necesarios. Resolviendo escena...`);
+    console.log(
+      `[VOTE] Se alcanzaron los ${effectiveMaxVotes} votos necesarios. Resolviendo escena...`
+    );
     const winningOptionId = findWinningOption(room.votes);
     await resolveCheckAndAdvance(roomId, winningOptionId);
   }
@@ -97,17 +144,23 @@ export async function GET(req: Request) {
   return NextResponse.json({ success: true, votes: room.votes });
 }
 
+/**
+ * Determina la opción ganadora:
+ * - Obtiene el máximo de votos.
+ * - Recolecta todas las opciones que tengan ese máximo.
+ * - Si hay empate, selecciona aleatoriamente una de las opciones empatadas.
+ */
 function findWinningOption(votes: Record<number, number>): number {
-  let maxVotes = -1;
-  let winningOptionId = -1;
-  for (const [optionId, count] of Object.entries(votes)) {
-    const vc = Number(count);
-    if (vc > maxVotes) {
-      maxVotes = vc;
-      winningOptionId = parseInt(optionId, 10);
-    }
+  const maxVotes = Math.max(...Object.values(votes));
+  const tiedOptions = Object.entries(votes)
+    .filter(([optionId, count]) => Number(count) === maxVotes)
+    .map(([optionId]) => parseInt(optionId, 10));
+
+  if (tiedOptions.length > 1) {
+    const randomIndex = Math.floor(Math.random() * tiedOptions.length);
+    return tiedOptions[randomIndex];
   }
-  return winningOptionId;
+  return tiedOptions[0];
 }
 
 async function resolveCheckAndAdvance(roomId: string, winningOptionId: number) {
@@ -123,7 +176,11 @@ async function resolveCheckAndAdvance(roomId: string, winningOptionId: number) {
     // Verificar si se cumplió la condición de Game Over
     const gameOverSceneId = checkGameOver(room);
     if (gameOverSceneId) {
-      room.scene = { id: gameOverSceneId, text: "¡Game Over! Un jugador alcanzó 0 de vida o 100 de estrés. Todos pierden.", options: [] };
+      room.scene = {
+        id: gameOverSceneId,
+        text: "¡Game Over! Un jugador alcanzó 0 de vida o 100 de estrés.",
+        options: [],
+      };
       return broadcastSceneUpdate(roomId);
     }
 
@@ -164,7 +221,11 @@ async function resolveCheckAndAdvance(roomId: string, winningOptionId: number) {
   // Verificar si se cumple la condición de Game Over después de aplicar los efectos
   const gameOverSceneId = checkGameOver(room);
   if (gameOverSceneId) {
-    room.scene = { id: gameOverSceneId, text: "¡Game Over! Un jugador alcanzó 0 de vida o 100 de estrés. Todos pierden.", options: [] };
+    room.scene = {
+      id: gameOverSceneId,
+      text: "¡Game Over! Un jugador alcanzó 0 de vida o 100 de estrés.",
+      options: [],
+    };
     return broadcastSceneUpdate(roomId);
   }
 
@@ -175,7 +236,6 @@ async function resolveCheckAndAdvance(roomId: string, winningOptionId: number) {
 
 /**
  * Aplica los efectos (vida y estrés) a los jugadores que hayan votado.
- * Se respeta que la vida máxima es 100 y el estrés mínimo es 0.
  */
 function applyEffectsToVoters(room: any, option: any, success: boolean) {
   const effects = success ? option.successEffects : option.failureEffects;
@@ -193,7 +253,6 @@ function applyEffectsToVoters(room: any, option: any, success: boolean) {
           console.log(`[EFFECT] ${pName} tiene la vida completa (100) y no se aplica el efecto de sanación.`);
         }
       } else {
-        // Efecto negativo: se resta la vida y se asegura que no baje de 0
         player.life += effects.life;
         player.life = Math.max(player.life, 0);
         console.log(`[EFFECT] ${pName} pierde ${-effects.life} de vida (ahora ${player.life})`);
@@ -210,7 +269,6 @@ function applyEffectsToVoters(room: any, option: any, success: boolean) {
           console.log(`[EFFECT] ${pName} ya tiene el estrés en 0 y no se aplica la reducción.`);
         }
       } else {
-        // Efecto positivo: se aumenta el estrés
         player.stress += effects.stress;
         console.log(`[EFFECT] ${pName} aumenta el estrés en ${effects.stress} (ahora ${player.stress})`);
       }
@@ -235,14 +293,15 @@ function goToScene(room: any, sceneId: string) {
     room.votes = {};
     room.userVoted.clear();
     room.optionVotes = {};
-    // Reiniciamos la bandera para que en la nueva escena se pueda aplicar otro incremento si corresponde
     room.lockedAttributeIncrementApplied = false;
   }
 }
 
 async function broadcastSceneUpdate(roomId: string) {
   const room = rooms[roomId];
-  if (!room) return;
+  if (!room) {
+    return NextResponse.json({ error: "Room not found" }, { status: 404 });
+  }
   await pusher.trigger(`room-${roomId}`, "sceneUpdate", {
     scene: room.scene,
     votes: room.votes,
@@ -257,4 +316,5 @@ async function broadcastSceneUpdate(roomId: string) {
       stress: p.stress,
     })),
   });
+  return NextResponse.json({ success: true, scene: room.scene });
 }

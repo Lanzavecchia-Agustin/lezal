@@ -27,6 +27,7 @@ interface SceneDisplayProps {
   myPlayer?: MyPlayerData;
   // setMyPlayer puede agregarse si se desea actualizar desde este componente
   setMyPlayer?: (player: MyPlayerData) => void;
+  leader?: string | null;
 }
 
 /**
@@ -105,6 +106,7 @@ const SceneDisplay: React.FC<SceneDisplayProps> = ({
   debugMode,
   myPlayer,
   setMyPlayer,
+  leader,
 }) => {
   const [showModal, setShowModal] = useState(false);
   const [showStatusModal, setShowStatusModal] = useState(false);
@@ -191,6 +193,7 @@ const SceneDisplay: React.FC<SceneDisplayProps> = ({
             <span className="font-semibold">Votos necesarios (maxVote):</span> {scene.maxVote}
           </div>
         )}
+        <h1 className="text-lg font-bold">Líder: {leader ?? "No hay líder"}</h1>
       </div>
 
       {/* Información Debug y Restricciones */}

@@ -42,25 +42,18 @@ interface VoteUpdatePayload {
 export default function GameScreen() {
   const [roomId, setRoomId] = useState<string | null>(null);
   const [userName, setUserName] = useState<string>("");
-  const [userType, setUserType] = useState<"Normal" | "Líder">("Normal");
-
-  // Para el join usamos assignedPoints locales (solo para el join inicial)
   const [assignedPoints, setAssignedPoints] = useState<{ [subskillId: string]: number }>({});
-
   const [joined, setJoined] = useState(false);
   const [scene, setScene] = useState<Scene | null>(null);
   const [votes, setVotes] = useState<{ [optionId: number]: number }>({});
   const [users, setUsers] = useState<string[]>([]);
   const [hasVoted, setHasVoted] = useState(false);
-
-  // playersData: guardamos los datos actualizados de cada jugador
   const [playersData, setPlayersData] = useState<Record<string, PlayerData>>({});
+  const [leader, setLeader] = useState<string | null>(null);  // Estado para el líder
 
-  // Pusher
   const pusherRef = useRef<Pusher | null>(null);
   const debugMode = true;
 
-  // Configuramos Pusher y escuchamos los eventos "sceneUpdate", "voteUpdate" y "playerUpdate"
   useEffect(() => {
     if (roomId) {
       if (!pusherRef.current) {
@@ -81,7 +74,7 @@ export default function GameScreen() {
             pd[pl.name] = {
               xp: pl.xp,
               skillPoints: pl.skillPoints,
-              assignedPoints: pl.assignedPoints, // se espera que venga asignado
+              assignedPoints: pl.assignedPoints,
               lockedAttributes: pl.lockedAttributes || {},
               life: pl.life !== undefined ? pl.life : gameConfig.initialLife,
               stress: pl.stress !== undefined ? pl.stress : 0,
@@ -103,12 +96,13 @@ export default function GameScreen() {
       });
 
       channel.bind("playerUpdate", (payload: { player: PlayerData & { name: string } }) => {
-        console.log("[playerUpdate] Payload:", payload.player);
         setPlayersData((prev) => ({ ...prev, [payload.player.name]: payload.player }));
       });
 
-      channel.bind("error", (error: string) => {
-        alert(`Error: ${error}`);
+      // Actualización del líder
+      channel.bind("leaderSelected", (payload: { leader: string }) => {
+        setLeader(payload.leader);  // Actualizamos el estado del líder
+        alert(`El líder es ${payload.leader}`);
       });
 
       return () => {
@@ -118,7 +112,6 @@ export default function GameScreen() {
     }
   }, [roomId, userName, debugMode]);
 
-  /** Crear Sala */
   const handleCreateRoom = async () => {
     if (!userName.trim()) {
       alert("Por favor, ingresa tu nombre para continuar.");
@@ -128,9 +121,7 @@ export default function GameScreen() {
     setRoomId(generatedRoomId);
 
     const assignedPointsString = JSON.stringify(assignedPoints);
-    const joinUrl = API_ROUTES.joinRoom(generatedRoomId, userName, userType, assignedPointsString);
-    console.log("[handleCreateRoom] =>", joinUrl);
-
+    const joinUrl = API_ROUTES.joinRoom(generatedRoomId, userName, assignedPointsString);
     const response = await fetch(joinUrl, { method: "GET" });
     if (response.ok) {
       setJoined(true);
@@ -140,16 +131,13 @@ export default function GameScreen() {
     }
   };
 
-  /** Unirse a Sala */
   const handleJoinRoom = async () => {
     if (!userName.trim() || !roomId) {
       alert("Por favor, ingresa tu nombre y el ID de la sala.");
       return;
     }
     const assignedPointsString = JSON.stringify(assignedPoints);
-    const joinUrl = API_ROUTES.joinRoom(roomId, userName, userType, assignedPointsString);
-    console.log("[handleJoinRoom] =>", joinUrl);
-
+    const joinUrl = API_ROUTES.joinRoom(roomId, userName, assignedPointsString);
     const response = await fetch(joinUrl, { method: "GET" });
     if (response.ok) {
       setJoined(true);
@@ -159,7 +147,6 @@ export default function GameScreen() {
     }
   };
 
-  /** Manejo de voto por una opción */
   const handleVote = async (optionId: number) => {
     if (!scene || scene.isEnding || hasVoted) return;
     if (!roomId) {
@@ -167,8 +154,6 @@ export default function GameScreen() {
       return;
     }
     const voteUrl = API_ROUTES.vote(roomId, userName, optionId);
-    console.log("[handleVote] =>", voteUrl);
-
     try {
       const response = await fetch(voteUrl, { method: "GET" });
       if (!response.ok) {
@@ -180,42 +165,35 @@ export default function GameScreen() {
     }
   };
 
-  // Construimos la información de "mi jugador" usando los datos actualizados de playersData.
-  // Se garantiza que assignedPoints tenga un fallback a {}.
-  // Construimos la información de "mi jugador" usando los datos actualizados de playersData.
-// Si no hay datos, usamos valores por defecto.
-const myPlayerData = playersData[userName] || {
-  xp: 0,
-  skillPoints: 0,
-  assignedPoints: {},
-  lockedAttributes: {},
-  life: gameConfig.initialLife,
-  stress: 0,
-};
+  const myPlayerData = playersData[userName] || {
+    xp: 0,
+    skillPoints: 0,
+    assignedPoints: {},
+    lockedAttributes: {},
+    life: gameConfig.initialLife,
+    stress: 0,
+  };
 
-// Si myPlayerData.assignedPoints está vacío, usamos los assignedPoints locales (que se usaron en el join).
-const effectiveAssignedPoints =
-  Object.keys(myPlayerData.assignedPoints || {}).length > 0
-    ? myPlayerData.assignedPoints
-    : assignedPoints;
+  const effectiveAssignedPoints =
+    Object.keys(myPlayerData.assignedPoints || {}).length > 0
+      ? myPlayerData.assignedPoints
+      : assignedPoints;
 
-const myPlayer = {
-  name: userName,
-  assignedPoints: effectiveAssignedPoints,
-  xp: myPlayerData.xp,
-  skillPoints: myPlayerData.skillPoints,
-  lockedAttributes: myPlayerData.lockedAttributes || {},
-  life: myPlayerData.life,
-  stress: myPlayerData.stress,
-};
+  const myPlayer = {
+    name: userName,
+    assignedPoints: effectiveAssignedPoints,
+    xp: myPlayerData.xp,
+    skillPoints: myPlayerData.skillPoints,
+    lockedAttributes: myPlayerData.lockedAttributes || {},
+    life: myPlayerData.life,
+    stress: myPlayerData.stress,
+  };
 
   if (!joined) {
     return (
       <JoinForm
         userName={userName}
         setUserName={setUserName}
-        userType={userType}
-        setUserType={setUserType}
         roomId={roomId}
         setRoomId={setRoomId}
         handleCreateRoom={handleCreateRoom}
@@ -235,15 +213,18 @@ const myPlayer = {
   }
 
   return (
-    <SceneDisplay
-      roomId={roomId}
-      scene={scene}
-      users={users}
-      votes={votes}
-      hasVoted={hasVoted}
-      handleVote={handleVote}
-      debugMode={debugMode}
-      myPlayer={myPlayer}
-    />
+    <div>
+      <SceneDisplay
+        roomId={roomId}
+        scene={scene}
+        users={users}
+        votes={votes}
+        hasVoted={hasVoted}
+        handleVote={handleVote}
+        debugMode={debugMode}
+        myPlayer={myPlayer}
+        leader={leader}  // Mostrar el líder
+      />
+    </div>
   );
 }

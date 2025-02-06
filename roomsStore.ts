@@ -15,7 +15,7 @@ export interface Skill {
   subskills: Subskill[];
 }
 
-// Interfaz para los atributos (los "atributos ocultos")
+// Interfaz para los atributos
 export interface Attribute {
   id: string;
   name: string;
@@ -26,11 +26,11 @@ export interface Attribute {
 // Configuración del juego
 export interface GameConfig {
   maxStartingPoints: number;
-  initialLife: number;      // Puntos de vida iniciales para cada jugador
-  stressThreshold: number;  // Umbral de estrés (máximo antes de que ocurran efectos negativos)
+  initialLife: number;
+  stressThreshold: number;
   skills: Skill[];
   attributes: Attribute[];
-  xpThreshold: number;      // Puntos de XP necesarios para subir de nivel
+  xpThreshold: number;
 }
 
 // Interfaz para cada opción de la escena
@@ -43,28 +43,25 @@ export interface SceneOption {
     partial?: string;
   };
   roll?: {
-    skillUsed: string; // ID de la subskill (p. ej., "101")
+    skillUsed: string;
     difficulty: number;
   };
   expOnSuccess?: number;
-  // Incremento de atributo al elegir la opción
   lockedAttributeIncrement?: {
     attribute: string;
     increment: number;
   };
-  // Requerimientos para mostrar o habilitar la opción
   requirements?: {
     attribute: string;
     actionIfNotMet: "hide" | "disable";
   };
-  // Nuevos efectos diferenciados para éxito y fallo:
   successEffects?: {
-    life?: number;    // Efecto en vida en caso de éxito (positivo para curar)
-    stress?: number;  // Efecto en estrés en caso de éxito (negativo para aliviar)
+    life?: number;
+    stress?: number;
   };
   failureEffects?: {
-    life?: number;    // Efecto en vida en caso de fallo (negativo para dañar)
-    stress?: number;  // Efecto en estrés en caso de fallo (positivo para aumentar)
+    life?: number;
+    stress?: number;
   };
 }
 
@@ -84,11 +81,9 @@ export interface Player {
   assignedPoints: { [subskillId: string]: number };
   xp: number;
   skillPoints: number;
-  // Atributos ocultos que se irán incrementando (por ejemplo, "corrupto")
   lockedAttributes: { [attribute: string]: number };
-  // NUEVAS PROPIEDADES:
-  life: number;    // Puntos de vida actuales
-  stress: number;  // Nivel de estrés actual
+  life: number;
+  stress: number;
 }
 
 // Estado de la Sala

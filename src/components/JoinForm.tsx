@@ -4,7 +4,6 @@ import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import {
   Card,
   CardContent,
@@ -17,17 +16,14 @@ import { Step, Steps } from "./ui/steps";
 import { gameConfig } from "../../roomsStore";
 import { Subskill } from "../../roomsStore";
 
-// Props que recibe el JoinForm
+// Actualizamos las Props: Eliminamos userType y setUserType
 interface JoinFormProps {
   userName: string;
   setUserName: (name: string) => void;
-  userType: "Normal" | "Líder";
-  setUserType: (type: "Normal" | "Líder") => void;
   roomId: string | null;
   setRoomId: (roomId: string) => void;
   handleCreateRoom: () => void;
   handleJoinRoom: () => void;
-
   // Objeto con subskillId -> puntos asignados
   assignedPoints: { [subskillId: string]: number };
   setAssignedPoints: React.Dispatch<React.SetStateAction<{ [subskillId: string]: number }>>;
@@ -36,14 +32,12 @@ interface JoinFormProps {
 const JoinForm: React.FC<JoinFormProps> = ({
   userName,
   setUserName,
-  userType,
-  setUserType,
   roomId,
   setRoomId,
   handleCreateRoom,
   handleJoinRoom,
   assignedPoints,
-  setAssignedPoints
+  setAssignedPoints,
 }) => {
   const [step, setStep] = useState(1);
 
@@ -86,7 +80,7 @@ const JoinForm: React.FC<JoinFormProps> = ({
       </CardHeader>
 
       <CardContent className="space-y-6">
-        {/* STEP 1: Introducir nombre y tipo de jugador */}
+        {/* STEP 1: Introducir nombre */}
         {step === 1 && (
           <div className="space-y-4">
             <Label htmlFor="userName">Tu nombre</Label>
@@ -96,21 +90,6 @@ const JoinForm: React.FC<JoinFormProps> = ({
               value={userName}
               onChange={(e) => setUserName(e.target.value)}
             />
-
-            <RadioGroup
-              value={userType}
-              onValueChange={(value) => setUserType(value as "Normal" | "Líder")}
-              className="space-y-2"
-            >
-              <div className="flex items-center space-x-2">
-                <RadioGroupItem value="Normal" id="normal" />
-                <Label htmlFor="normal">Normal</Label>
-              </div>
-              <div className="flex items-center space-x-2">
-                <RadioGroupItem value="Líder" id="lider" />
-                <Label htmlFor="lider">Líder</Label>
-              </div>
-            </RadioGroup>
           </div>
         )}
 

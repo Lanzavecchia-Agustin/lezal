@@ -15,16 +15,17 @@ export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
   const roomId = searchParams.get("roomId");
   const userName = searchParams.get("userName");
-  const typeParam = searchParams.get("type") || "Normal";
+  // Se elimina la lectura de "type"
   const attributesParam = searchParams.get("attributes") || "";
 
-  console.log("[JOIN] Incoming params =>", { roomId, userName, typeParam, attributesParam });
+  console.log("[JOIN] Incoming params =>", { roomId, userName, attributesParam });
 
   if (!roomId || !userName) {
     return NextResponse.json({ error: "roomId y userName son requeridos" }, { status: 400 });
   }
 
   if (!rooms[roomId]) {
+    // Inicializamos la sala con la escena inicial del juego
     rooms[roomId] = {
       scene: storyData.scene1,
       votes: {},
@@ -44,15 +45,10 @@ export async function GET(req: Request) {
     return NextResponse.json({ error: "Invalid assignedPoints JSON." }, { status: 400 });
   }
 
-  const existingLeader = Object.values(room.players).find((p) => p.type === "Líder");
-  let finalType: "Normal" | "Líder" = "Normal";
-  if (typeParam === "Líder" && !existingLeader) {
-    finalType = "Líder";
-  }
-
+  // Se asigna siempre el tipo "Normal"
   const newPlayer: Player = {
     name: userName,
-    type: finalType,
+    type: "Normal",
     assignedPoints: parsedPoints,
     xp: 0,
     skillPoints: 0,
@@ -62,6 +58,24 @@ export async function GET(req: Request) {
   };
 
   room.players[userName] = newPlayer;
+
+  // Si ya hay más de un jugador, forzamos la escena de selección de líder
+  if (Object.keys(room.players).length > 1) {
+    // Generamos dinámicamente las opciones para la selección del líder
+    // Se asigna a cada opción un id (comenzando en 1) y el texto con el nombre del jugador.
+    const options = Object.values(room.players).map((p, index) => ({
+      id: index + 1,
+      text: `Seleccionar a ${p.name}`,
+      nextSceneId: { success: "scene1", failure: "", partial: "" },
+    }));
+    room.scene = {
+      id: "leaderSelection",
+      text: "Vota por el líder. Cada jugador debe emitir su voto. (si hay un empate se elige el líder aleatoriamente)",
+      options,
+      isEnding: false,
+      maxVote: Object.keys(room.players).length,
+    };
+  }
 
   await pusher.trigger(`room-${roomId}`, "sceneUpdate", {
     scene: room.scene,

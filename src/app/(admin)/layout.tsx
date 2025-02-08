@@ -23,10 +23,18 @@ export default function RootLayout({
            
               <li>
                 <Link
-                  href="/create-attributes"
+                  href="/atributte-creation"
                   className="text-blue-600 hover:text-blue-800 font-medium transition-colors"
                 >
                   Crear Atributos
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/skill-creation"
+                  className="text-blue-600 hover:text-blue-800 font-medium transition-colors"
+                >
+                  Crear Habilidades
                 </Link>
               </li>
               <li>

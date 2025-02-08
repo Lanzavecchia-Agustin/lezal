@@ -1,12 +1,24 @@
 "use client";
 
-import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { Button } from '@/components/ui/button';
-import Link from 'next/link';
-import type { Scene } from '../../../roomsStore';
+import React, { useEffect, useState } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
+import type { Scene } from "../../../roomsStore";
+
+// Definición de la interfaz Skill para poder obtener la info de la habilidad y sus subskills
+interface Skill {
+  id: string;
+  name: string;
+  subskills: {
+    id: string;
+    name: string;
+    unlockable: boolean;
+    unlock_threshold?: number;
+  }[];
+}
 
 interface SceneCardCustomProps {
   scene: Scene;
@@ -14,6 +26,36 @@ interface SceneCardCustomProps {
 }
 
 export function SceneCardCustom({ scene, deleteScene }: SceneCardCustomProps) {
+  // Estado para almacenar la lista de skills obtenidas de la API.
+  const [skills, setSkills] = useState<Skill[]>([]);
+
+  // Se hace el fetch de skills al montar el componente.
+  useEffect(() => {
+    const fetchSkills = async () => {
+      try {
+        const res = await fetch("http://localhost:3001/skills");
+        const data = await res.json();
+        setSkills(data);
+      } catch (error) {
+        console.error("Error fetching skills:", error);
+      }
+    };
+    fetchSkills();
+  }, []);
+
+  // Función helper para obtener el nombre de un subskill dado su ID.
+  // Se recorre la lista de skills y se busca en cada una el subskill con el id indicado.
+  const getSubskillName = (subskillId: string): string => {
+    for (const skill of skills) {
+      const found = skill.subskills.find((sub) => sub.id === subskillId);
+      if (found) {
+        return `${skill.name} - ${found.name}`;
+      }
+    }
+    // Si no se encuentra, se retorna el propio ID
+    return subskillId;
+  };
+
   const handleDelete = async () => {
     if (
       confirm(
@@ -48,10 +90,19 @@ export function SceneCardCustom({ scene, deleteScene }: SceneCardCustomProps) {
                     <div className="font-semibold mb-1">
                       #{opt.id}: {opt.text}
                     </div>
+                    {/* Mostrar información del roll si existe */}
+                    {opt.roll && (
+                      <div className="ml-2 text-gray-300">
+                        <span className="text-purple-400">Roll:</span>{" "}
+                        {getSubskillName(opt.roll.skillUsed)} (Difficulty:{" "}
+                        {opt.roll.difficulty})
+                      </div>
+                    )}
                     {opt.requirements && (
                       <div className="ml-2 text-gray-300">
-                        <span className="text-purple-400">Requiere:</span>{' '}
-                        {opt.requirements.attribute} (Acción: {opt.requirements.actionIfNotMet})
+                        <span className="text-purple-400">Requiere:</span>{" "}
+                        {opt.requirements.attribute} (Acción:{" "}
+                        {opt.requirements.actionIfNotMet})
                       </div>
                     )}
                     {opt.maxVote !== undefined && (
@@ -61,8 +112,9 @@ export function SceneCardCustom({ scene, deleteScene }: SceneCardCustomProps) {
                     )}
                     {opt.lockedAttributeIncrement && (
                       <div className="ml-2 text-gray-300">
-                        <span className="text-purple-400">Incrementa:</span>{' '}
-                        {opt.lockedAttributeIncrement.attribute} + {opt.lockedAttributeIncrement.increment}
+                        <span className="text-purple-400">Incrementa:</span>{" "}
+                        {opt.lockedAttributeIncrement.attribute} +{" "}
+                        {opt.lockedAttributeIncrement.increment}
                       </div>
                     )}
                     {opt.nextSceneId && (
@@ -71,17 +123,26 @@ export function SceneCardCustom({ scene, deleteScene }: SceneCardCustomProps) {
                         <ul className="list-inside list-disc pl-4">
                           {opt.nextSceneId.success && (
                             <li className="text-green-400">
-                              success → <span className="text-gray-100">{opt.nextSceneId.success}</span>
+                              success →{" "}
+                              <span className="text-gray-100">
+                                {opt.nextSceneId.success}
+                              </span>
                             </li>
                           )}
                           {opt.nextSceneId.failure && (
                             <li className="text-red-400">
-                              failure → <span className="text-gray-100">{opt.nextSceneId.failure}</span>
+                              failure →{" "}
+                              <span className="text-gray-100">
+                                {opt.nextSceneId.failure}
+                              </span>
                             </li>
                           )}
                           {opt.nextSceneId.partial && (
                             <li className="text-orange-400">
-                              partial → <span className="text-gray-100">{opt.nextSceneId.partial}</span>
+                              partial →{" "}
+                              <span className="text-gray-100">
+                                {opt.nextSceneId.partial}
+                              </span>
                             </li>
                           )}
                         </ul>

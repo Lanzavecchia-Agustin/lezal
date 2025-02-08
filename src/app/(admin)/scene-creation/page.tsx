@@ -4,12 +4,20 @@ import { useState, useEffect, type FormEvent } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Pencil, Trash } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
+
+// Definiciones de interfaces
 
 interface Skill {
   id: string;
@@ -28,7 +36,7 @@ interface Attribute {
   unlock_threshold: number;
 }
 
-interface SceneOption {
+export interface SceneOption {
   id: number;
   text: string;
   nextSceneId: {
@@ -59,7 +67,7 @@ interface SceneOption {
   };
 }
 
-interface Scene {
+export interface Scene {
   id: string;
   text: string;
   options: SceneOption[];
@@ -82,7 +90,11 @@ const initialOptionState: SceneOption = {
 export default function CreateScenePage() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  
+
+  // Si se recibe un parámetro "scene" en la query, asumimos modo edición.
+  const queryScene = searchParams.get("scene");
+  const isEditing = Boolean(queryScene);
+
   const [skills, setSkills] = useState<Skill[]>([]);
   const [attributes, setAttributes] = useState<Attribute[]>([]);
   const [scene, setScene] = useState<Scene>({
@@ -127,16 +139,15 @@ export default function CreateScenePage() {
 
   // Si se pasa la escena por query, pre-cargarla para editar
   useEffect(() => {
-    const sceneParam = searchParams.get("scene");
-    if (sceneParam) {
+    if (queryScene) {
       try {
-        const parsedScene: Scene = JSON.parse(sceneParam);
+        const parsedScene: Scene = JSON.parse(queryScene);
         setScene(parsedScene);
       } catch (error) {
         console.error("Error parsing scene from query:", error);
       }
     }
-  }, [searchParams]);
+  }, [queryScene]);
 
   const handleSceneChange = (field: keyof Scene, value: any) => {
     setScene((prev) => ({ ...prev, [field]: value }));
@@ -196,16 +207,21 @@ export default function CreateScenePage() {
     e.preventDefault();
     console.log("Scene data:", scene);
     try {
-      // Si scene.id ya existe, consideramos que es una edición y usamos PATCH
-      const method = scene.id ? "PATCH" : "POST";
-      const url = scene.id ? `http://localhost:3001/scenes/${scene.id}` : "http://localhost:3001/scenes";
+      // Si estamos en modo edición, usamos PATCH; en caso contrario, POST.
+      const method = isEditing ? "PATCH" : "POST";
+      const url = isEditing
+        ? `http://localhost:3001/scenes/${scene.id}`
+        : "http://localhost:3001/scenes";
+      console.log("Submitting scene with method:", method, "to URL:", url);
       const response = await fetch(url, {
         method,
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(scene),
       });
       if (!response.ok) throw new Error("Error al actualizar la escena");
-      alert(scene.id ? "Escena actualizada exitosamente!" : "Escena creada exitosamente!");
+      alert(isEditing
+        ? "Escena actualizada exitosamente!"
+        : "Escena creada exitosamente!");
       // Redirigir a la vista de escenas (ajusta la ruta según corresponda)
       router.push("/scenes-view");
     } catch (error) {
@@ -226,7 +242,9 @@ export default function CreateScenePage() {
 
   return (
     <div className="container mx-auto p-4 bg-blue-900">
-      <h1 className="text-2xl font-bold mb-4">Crear / Editar Escena</h1>
+      <h1 className="text-2xl font-bold mb-4">
+        {isEditing ? "Editar Escena" : "Crear Nueva Escena"}
+      </h1>
       <form onSubmit={handleSubmit}>
         <Card className="mb-4">
           <CardHeader>
@@ -241,6 +259,7 @@ export default function CreateScenePage() {
                   value={scene.id}
                   onChange={(e) => handleSceneChange("id", e.target.value)}
                   placeholder="Ingrese el ID de la escena"
+                  disabled={isEditing} // No permitir cambiar el ID en edición
                 />
               </div>
               <div>
@@ -350,7 +369,9 @@ export default function CreateScenePage() {
                     <div>
                       <Label htmlFor="skillUsed">Habilidad Utilizada</Label>
                       <Select
-                        onValueChange={(value) => handleOptionChange("roll", { skillUsed: value })}
+                        onValueChange={(value) =>
+                          handleOptionChange("roll", { skillUsed: value })
+                        }
                         value={currentOption.roll?.skillUsed}
                       >
                         <SelectTrigger id="skillUsed">
@@ -363,7 +384,10 @@ export default function CreateScenePage() {
                         <SelectContent className="bg-blue-950">
                           {skills.flatMap((skill) =>
                             skill.subskills.map((subskill) => (
-                              <SelectItem key={`${skill.id}-${subskill.id}`} value={subskill.id}>
+                              <SelectItem
+                                key={`${skill.id}-${subskill.id}`}
+                                value={subskill.id}
+                              >
                                 {skill.name} - {subskill.name}
                               </SelectItem>
                             ))
@@ -378,7 +402,9 @@ export default function CreateScenePage() {
                         type="number"
                         value={currentOption.roll?.difficulty || ""}
                         onChange={(e) =>
-                          handleOptionChange("roll", { difficulty: Number(e.target.value) })
+                          handleOptionChange("roll", {
+                            difficulty: Number(e.target.value),
+                          })
                         }
                         placeholder="Nivel de dificultad"
                       />
@@ -396,7 +422,9 @@ export default function CreateScenePage() {
                       id="expOnSuccess"
                       type="number"
                       value={currentOption.expOnSuccess || ""}
-                      onChange={(e) => handleOptionChange("expOnSuccess", Number(e.target.value))}
+                      onChange={(e) =>
+                        handleOptionChange("expOnSuccess", Number(e.target.value))
+                      }
                       placeholder="EXP ganada en caso de éxito"
                     />
                   </div>
@@ -488,13 +516,17 @@ export default function CreateScenePage() {
                         <Input
                           type="number"
                           value={currentOption.successEffects?.life || ""}
-                          onChange={(e) => handleOptionChange("successEffects", { life: Number(e.target.value) })}
+                          onChange={(e) =>
+                            handleOptionChange("successEffects", { life: Number(e.target.value) })
+                          }
                           placeholder="Vida"
                         />
                         <Input
                           type="number"
                           value={currentOption.successEffects?.stress || ""}
-                          onChange={(e) => handleOptionChange("successEffects", { stress: Number(e.target.value) })}
+                          onChange={(e) =>
+                            handleOptionChange("successEffects", { stress: Number(e.target.value) })
+                          }
                           placeholder="Estrés"
                         />
                       </div>
@@ -505,13 +537,17 @@ export default function CreateScenePage() {
                         <Input
                           type="number"
                           value={currentOption.failureEffects?.life || ""}
-                          onChange={(e) => handleOptionChange("failureEffects", { life: Number(e.target.value) })}
+                          onChange={(e) =>
+                            handleOptionChange("failureEffects", { life: Number(e.target.value) })
+                          }
                           placeholder="Vida"
                         />
                         <Input
                           type="number"
                           value={currentOption.failureEffects?.stress || ""}
-                          onChange={(e) => handleOptionChange("failureEffects", { stress: Number(e.target.value) })}
+                          onChange={(e) =>
+                            handleOptionChange("failureEffects", { stress: Number(e.target.value) })
+                          }
                           placeholder="Estrés"
                         />
                       </div>
@@ -538,10 +574,20 @@ export default function CreateScenePage() {
                   <div className="flex justify-between items-center">
                     <span className="font-medium">{option.text}</span>
                     <div>
-                      <Button type="button" variant="ghost" size="icon" onClick={() => editOption(index)}>
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => editOption(index)}
+                      >
                         <Pencil className="h-4 w-4" />
                       </Button>
-                      <Button type="button" variant="ghost" size="icon" onClick={() => removeOption(index)}>
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => removeOption(index)}
+                      >
                         <Trash className="h-4 w-4" />
                       </Button>
                     </div>
@@ -553,7 +599,7 @@ export default function CreateScenePage() {
         </Card>
 
         <Button type="submit" className="w-full mb-4">
-          {scene.id ? "Actualizar Escena" : "Crear Escena"}
+          {isEditing ? "Actualizar Escena" : "Crear Escena"}
         </Button>
       </form>
     </div>

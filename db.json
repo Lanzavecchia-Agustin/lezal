@@ -14,180 +14,208 @@
     },
     {
       "id": "xpThreshold",
-      "value": 1
+      "value": 10
     }
   ],
   "skills": [
     {
-      "id": "0",
+      "id": "intelecto",
       "name": "Intelecto",
       "subskills": [
         {
-          "id": "0",
+          "id": "intelecto-razonamiento",
           "name": "razonamiento",
           "unlockable": false
         },
         {
-          "id": "1",
+          "id": "intelecto-enciclopedia",
           "name": "enciclopedia",
           "unlockable": false
         },
         {
-          "id": "2",
+          "id": "intelecto-retorica",
           "name": "retórica",
           "unlockable": false
         },
         {
-          "id": "3",
+          "id": "intelecto-imaginacion",
           "name": "imaginación",
           "unlockable": true,
           "unlock_threshold": 5
         },
         {
-          "id": "4",
+          "id": "intelecto-calculo-visual",
           "name": "cálculo visual",
           "unlockable": true,
           "unlock_threshold": 6
         },
         {
-          "id": "5",
+          "id": "intelecto-erudicion",
           "name": "erudición",
           "unlockable": false
         }
       ]
     },
     {
-      "id": "1",
+      "id": "psique",
       "name": "Psique",
       "subskills": [
         {
-          "id": "0",
+          "id": "psique-voluntad",
           "name": "voluntad",
           "unlockable": false
         },
         {
-          "id": "1",
+          "id": "psique-empatia",
           "name": "empatía",
           "unlockable": false
         },
         {
-          "id": "2",
+          "id": "psique-autoridad",
           "name": "autoridad",
           "unlockable": false
         },
         {
-          "id": "3",
+          "id": "psique-intuicion",
           "name": "intuición",
           "unlockable": true,
           "unlock_threshold": 5
         },
         {
-          "id": "4",
+          "id": "psique-sugestion",
           "name": "sugestión",
           "unlockable": true,
           "unlock_threshold": 6
         },
         {
-          "id": "5",
+          "id": "psique-compasion",
           "name": "compasión",
           "unlockable": false
         }
       ]
     },
     {
-      "id": "2",
+      "id": "cuerpo",
       "name": "Cuerpo",
       "subskills": [
         {
-          "id": "0",
+          "id": "cuerpo-resistencia",
           "name": "resistencia",
           "unlockable": false
         },
         {
-          "id": "1",
+          "id": "cuerpo-electroquimica",
           "name": "electroquímica",
           "unlockable": false
         },
         {
-          "id": "2",
+          "id": "cuerpo-fuerza",
           "name": "fuerza",
           "unlockable": false
         },
         {
-          "id": "3",
+          "id": "cuerpo-flexibilidad",
           "name": "flexibilidad",
           "unlockable": true,
           "unlock_threshold": 5
         },
         {
-          "id": "4",
+          "id": "cuerpo-golpe-certero",
           "name": "golpe certero",
           "unlockable": true,
           "unlock_threshold": 6
         },
         {
-          "id": "5",
+          "id": "cuerpo-resiliencia",
           "name": "resiliencia",
           "unlockable": false
         }
       ]
     },
     {
-      "id": "3",
+      "id": "motricidad",
       "name": "Motricidad",
       "subskills": [
         {
-          "id": "0",
+          "id": "motricidad-coordinacion",
           "name": "coordinación",
           "unlockable": false
         },
         {
-          "id": "1",
+          "id": "motricidad-percepcion",
           "name": "percepción",
           "unlockable": false
         },
         {
-          "id": "2",
+          "id": "motricidad-sigilo",
           "name": "sigilo",
           "unlockable": false
         },
         {
-          "id": "3",
+          "id": "motricidad-equilibrio",
           "name": "equilibrio",
           "unlockable": true,
           "unlock_threshold": 5
         },
         {
-          "id": "4",
+          "id": "motricidad-reflejos",
           "name": "reflejos",
           "unlockable": true,
           "unlock_threshold": 6
         },
         {
-          "id": "5",
+          "id": "motricidad-punteria",
           "name": "puntería",
           "unlockable": false
         }
       ]
     },
     {
-      "id": "4",
+      "id": "trolleo-edit",
       "name": "trolleo EDIT",
       "subskills": [
         {
-          "id": "0",
+          "id": "trolleo-edit-joder",
           "name": "joder a todos",
           "unlockable": false
         },
         {
-          "id": "1",
+          "id": "trolleo-edit-hacer-todo-mal",
           "name": "hacer todo mal EDIT",
           "unlockable": false
         },
         {
-          "id": "2",
+          "id": "trolleo-edit-hablar-gilada",
           "name": "hablar gilada EDIT",
           "unlockable": false
+        }
+      ]
+    },
+    {
+      "id": "poder-gay",
+      "name": "poder gay",
+      "subskills": [
+        {
+          "id": "poder-gay-ereccion",
+          "name": "ereccion al ver hombres"
+        },
+        {
+          "id": "poder-gay-sentido-de-moda",
+          "name": "sentido de moda"
+        },
+        {
+          "id": "poder-gay-culo-potente",
+          "name": "culo potente"
+        }
+      ]
+    },
+    {
+      "id": "d1e0acdc-7586-4e3d-ac89-302192a224fa",
+      "name": "tests",
+      "subskills": [
+        {
+          "id": "69f75654-be44-4d63-bdbb-99ac8f456324",
+          "name": "testo 1"
         }
       ]
     }
@@ -235,7 +263,7 @@
           "id": 1,
           "text": "Examinar detenidamente los grabados del portal.",
           "roll": {
-            "skillUsed": "106",
+            "skillUsed": "69f75654-be44-4d63-bdbb-99ac8f456324",
             "difficulty": 32
           },
           "expOnSuccess": 12,
@@ -1062,43 +1090,6 @@
       "text": "El estrés ha consumido tu mente. No hay escape para este destino.",
       "isEnding": true,
       "options": []
-    },
-    {
-      "id": "dasdsadsdasdasads",
-      "text": "dasdaasdds",
-      "options": [
-        {
-          "id": 0,
-          "text": "asdadsads",
-          "nextSceneId": {
-            "success": "dsads12d21",
-            "failure": "21212112"
-          },
-          "roll": {
-            "skillUsed": "2",
-            "difficulty": 12
-          },
-          "expOnSuccess": 3,
-          "lockedAttributeIncrement": {
-            "attribute": "misterioso",
-            "increment": 23
-          },
-          "requirements": {
-            "attribute": "",
-            "actionIfNotMet": "hide"
-          },
-          "successEffects": {
-            "life": 0,
-            "stress": 0
-          },
-          "failureEffects": {
-            "life": 0,
-            "stress": 0
-          }
-        }
-      ],
-      "isEnding": false,
-      "maxVote": 33
     },
     {
       "id": "final",

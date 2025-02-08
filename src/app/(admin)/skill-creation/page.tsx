@@ -1,24 +1,24 @@
-'use client'
+'use client';
 
-import { useState, useEffect, ChangeEvent, FormEvent } from "react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog"
-import { useRouter, useSearchParams } from "next/navigation"
+import { useState, useEffect, ChangeEvent, FormEvent, Suspense } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import { useRouter, useSearchParams } from "next/navigation";
 
 // Define interfaces para Skill y Subskill
 interface Subskill {
-  id: string
-  name: string
-  unlock_threshold?: number
+  id: string;
+  name: string;
+  unlock_threshold?: number;
 }
 
 interface Skill {
-  id: string
-  name: string
-  subskills: Subskill[]
+  id: string;
+  name: string;
+  subskills: Subskill[];
 }
 
 // Función para generar un ID único usando crypto.randomUUID (o fallback a otro método)
@@ -26,25 +26,23 @@ const generateUniqueId = (): string => {
   return typeof crypto !== "undefined" && crypto.randomUUID
     ? crypto.randomUUID()
     : Math.random().toString(36).substring(2, 15);
-}
+};
 
-const SkillCreationPage = () => {
+function SkillCreationContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  // Si se recibe un parámetro "scene" en la query (o similar para skills), podrías
-  // usarlo para determinar modo edición. Aquí asumiremos que si existe un parámetro "skill"
-  // se está editando una skill. (Ajusta el nombre del parámetro según necesites).
+  // Si existe un parámetro "skill", asumimos modo edición.
   const isEditing = Boolean(searchParams.get("skill"));
 
-  const [skills, setSkills] = useState<Skill[]>([]); // Lista de skills existentes
+  const [skills, setSkills] = useState<Skill[]>([]);
   const [form, setForm] = useState<Skill>({
     id: "",
     name: "",
-    subskills: []
-  }); // Formulario para crear/editar skill
-  const [editingSkill, setEditingSkill] = useState<Skill | null>(null); // Modo edición
-  const [open, setOpen] = useState(false); // Controla el modal
+    subskills: [],
+  });
+  const [editingSkill, setEditingSkill] = useState<Skill | null>(null);
+  const [open, setOpen] = useState(false);
 
   // Función para obtener las skills desde la API
   const fetchSkills = async () => {
@@ -59,36 +57,33 @@ const SkillCreationPage = () => {
   };
 
   useEffect(() => {
-    fetchSkills(); // Cargar skills al montar el componente
+    fetchSkills();
   }, []);
 
-  // Manejar cambios en los campos generales del formulario (para la skill)
+  // Manejar cambios en los campos generales del formulario
   const handleGeneralChange = (e: ChangeEvent<HTMLInputElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  // Manejar cambios en el input de cada subskill
+  // Manejar cambios en cada subskill
   const handleSubskillsChange = (e: ChangeEvent<HTMLInputElement>, subskillId: string) => {
     setForm((prevForm) => {
-      const updatedSubskills = prevForm.subskills.map((subskill) => {
-        if (subskill.id === subskillId) {
-          return { ...subskill, name: e.target.value };
-        }
-        return subskill;
-      });
+      const updatedSubskills = prevForm.subskills.map((subskill) =>
+        subskill.id === subskillId ? { ...subskill, name: e.target.value } : subskill
+      );
       return { ...prevForm, subskills: updatedSubskills };
     });
   };
 
-  // Agregar una nueva subskill al formulario (con un ID único)
+  // Agregar una nueva subskill
   const handleAddSubskill = () => {
     const newSubskill: Subskill = {
-      id: generateUniqueId(), // Genera un ID único para el subskill
+      id: generateUniqueId(),
       name: "",
     };
     setForm((prevForm) => ({
       ...prevForm,
-      subskills: [...prevForm.subskills, newSubskill]
+      subskills: [...prevForm.subskills, newSubskill],
     }));
   };
 
@@ -98,7 +93,6 @@ const SkillCreationPage = () => {
     console.log("Skill data:", form);
 
     if (editingSkill) {
-      // Modo edición: actualizamos la skill existente (usando PUT o PATCH)
       try {
         const response = await fetch(`http://localhost:3001/skills/${editingSkill.id}`, {
           method: "PUT",
@@ -112,20 +106,19 @@ const SkillCreationPage = () => {
           prevSkills.map((skill) => (skill.id === updatedSkill.id ? updatedSkill : skill))
         );
         alert("Skill updated successfully!");
-        fetchSkills(); // Recargar la lista de skills
+        fetchSkills();
       } catch (error) {
         console.error(error);
         alert("Error updating skill");
       }
     } else {
-      // Modo creación: asignamos nuevos IDs únicos para la skill y sus subskills
       const newSkill: Skill = {
         ...form,
-        id: generateUniqueId(), // Nuevo ID único para la skill
+        id: generateUniqueId(),
         subskills: form.subskills.map((subskill) => ({
           ...subskill,
-          id: generateUniqueId() // Nuevo ID único para cada subskill
-        }))
+          id: generateUniqueId(),
+        })),
       };
 
       try {
@@ -138,20 +131,19 @@ const SkillCreationPage = () => {
 
         setSkills((prevSkills) => [...prevSkills, newSkill]);
         alert("Skill created successfully!");
-        fetchSkills(); // Recargar la lista de skills
+        fetchSkills();
       } catch (error) {
         console.error(error);
         alert("Error creating skill");
       }
     }
 
-    // Limpiar el formulario y reiniciar el modo edición
     setForm({ id: "", name: "", subskills: [] });
     setEditingSkill(null);
-    setOpen(false); // Cerrar el modal
+    setOpen(false);
   };
 
-  // Función para eliminar una skill
+  // Eliminar una skill
   const handleDeleteSkill = async (id: string) => {
     try {
       const response = await fetch(`http://localhost:3001/skills/${id}`, {
@@ -161,18 +153,18 @@ const SkillCreationPage = () => {
 
       setSkills((prevSkills) => prevSkills.filter((skill) => skill.id !== id));
       alert("Skill deleted successfully!");
-      fetchSkills(); // Recargar skills después de eliminar
+      fetchSkills();
     } catch (error) {
       console.error(error);
       alert("Error deleting skill");
     }
   };
 
-  // Función para eliminar un subskill de la skill actual
+  // Eliminar un subskill
   const handleDeleteSubskill = (subskillId: string) => {
     setForm((prevForm) => ({
       ...prevForm,
-      subskills: prevForm.subskills.filter((subskill) => subskill.id !== subskillId)
+      subskills: prevForm.subskills.filter((subskill) => subskill.id !== subskillId),
     }));
   };
 
@@ -283,4 +275,10 @@ const SkillCreationPage = () => {
   );
 }
 
-export default SkillCreationPage;
+export default function SkillCreationPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <SkillCreationContent />
+    </Suspense>
+  );
+}

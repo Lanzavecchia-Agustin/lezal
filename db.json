@@ -215,7 +215,17 @@
       "subskills": [
         {
           "id": "69f75654-be44-4d63-bdbb-99ac8f456324",
-          "name": "testo 1"
+          "name": "testo 12"
+        }
+      ]
+    },
+    {
+      "id": "e3ebd318-b528-4c34-805c-716c78dadd32",
+      "name": "testing 123",
+      "subskills": [
+        {
+          "id": "6b4d096a-8b0f-453d-8ea0-4277a45b5cc1",
+          "name": "puto el que lee"
         }
       ]
     }
@@ -1096,6 +1106,41 @@
       "text": "fin",
       "options": [],
       "isEnding": true
+    },
+    {
+      "id": "dlslslslslsls",
+      "text": "122121121212",
+      "options": [
+        {
+          "id": 0,
+          "text": "OPCION DE TEST",
+          "nextSceneId": {
+            "success": "OPCION DE TEST SUCCESS"
+          },
+          "roll": {
+            "skillUsed": "6b4d096a-8b0f-453d-8ea0-4277a45b5cc1",
+            "difficulty": 23
+          },
+          "expOnSuccess": 0,
+          "lockedAttributeIncrement": {
+            "attribute": "",
+            "increment": 0
+          },
+          "requirements": {
+            "attribute": "",
+            "actionIfNotMet": "hide"
+          },
+          "successEffects": {
+            "life": 0,
+            "stress": 0
+          },
+          "failureEffects": {
+            "life": 0,
+            "stress": 0
+          }
+        }
+      ],
+      "isEnding": false
     }
   ]
 }

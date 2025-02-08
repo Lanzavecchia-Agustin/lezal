@@ -20,9 +20,8 @@ function getStressThreshold(): number {
 }
 
 /**
- * Revisa si algún jugador ha alcanzado 0 de vida o 100 de estrés.
- * Si es así, retorna el ID de la escena de Game Over correspondiente.
- * Si no, retorna null.
+ * Revisa si algún jugador ha alcanzado 0 de vida o el umbral de estrés.
+ * Retorna el ID de la escena de Game Over correspondiente o null.
  */
 function checkGameOver(room: any): string | null {
   const stressThreshold = getStressThreshold();
@@ -30,11 +29,11 @@ function checkGameOver(room: any): string | null {
     const player = room.players[pName];
     if (player.life <= 0) {
       console.log(`[GAME OVER] ${pName} alcanzó 0 de vida.`);
-      return "gameOverLife"; // ID de la escena para Game Over por falta de vida.
+      return "gameOverLife";
     }
     if (player.stress >= stressThreshold) {
       console.log(`[GAME OVER] ${pName} alcanzó ${stressThreshold} de estrés.`);
-      return "gameOverStress"; // ID de la escena para Game Over por exceso de estrés.
+      return "gameOverStress";
     }
   }
   return null;
@@ -58,11 +57,14 @@ export async function GET(req: Request) {
 
   const optIdNum = parseInt(optionId, 10);
 
-  // Si la escena es la de selección de líder, la lógica es especial.
+  // Lógica especial para la escena de selección de líder
   if (room.scene.id === "leaderSelection") {
-    // Cada opción corresponde a un jugador (según el orden de las opciones generadas en el join)
     room.votes[optIdNum] = (room.votes[optIdNum] || 0) + 1;
     room.userVoted.add(userName);
+
+    console.log(
+      `[VOTE - LeaderSelection] Voto agregado. Votos actuales: ${room.votes[optIdNum]} para la opción ${optIdNum}.`
+    );
 
     await pusher.trigger(`room-${roomId}`, "voteUpdate", {
       votes: room.votes,
@@ -73,27 +75,27 @@ export async function GET(req: Request) {
     const sceneMaxVote = room.scene.maxVote ?? playerCount;
     const effectiveMaxVotes = Math.min(sceneMaxVote, playerCount);
 
-    if (room.userVoted.size === effectiveMaxVotes) {
+    console.log(
+      `[VOTE - LeaderSelection] Votos emitidos: ${room.userVoted.size} / ${effectiveMaxVotes}`
+    );
+
+    if (room.userVoted.size >= effectiveMaxVotes) {
       console.log(
-        `[VOTE] Se alcanzaron los ${effectiveMaxVotes} votos en leaderSelection. Resolviendo elección...`
+        `[VOTE - LeaderSelection] Se alcanzó el límite de votos (${effectiveMaxVotes}). Resolviendo elección...`
       );
       const winningOptionId = findWinningOption(room.votes);
-      // Las opciones se crearon en el mismo orden que Object.values(room.players)
       const playersArray = Object.values(room.players);
-      // En caso de empate o error, se selecciona aleatoriamente
       const selectedPlayer =
         playersArray[winningOptionId - 1] ||
         playersArray[Math.floor(Math.random() * playersArray.length)];
       if (selectedPlayer) {
         selectedPlayer.type = "Líder";
+        console.log(`[VOTE - LeaderSelection] El jugador ${selectedPlayer.name} ha sido seleccionado como líder.`);
       }
-      // Notificamos a los clientes el líder seleccionado
       await pusher.trigger(`room-${roomId}`, "leaderSelected", {
         leader: selectedPlayer?.name || "",
       });
-      // Avanzamos a la siguiente escena (por ejemplo, "scene1")
       goToScene(room, "scene1");
-      // Reiniciamos votos y usuarios que votaron
       room.votes = {};
       room.userVoted.clear();
       return broadcastSceneUpdate(roomId);
@@ -108,12 +110,11 @@ export async function GET(req: Request) {
   }
 
   if (!room.userVoted.has(userName)) {
-    // Si el votante es el líder, su voto vale 2, de lo contrario vale 1.
     const voteIncrement = room.players[userName].type === "Líder" ? 2 : 1;
     room.votes[optIdNum] = (room.votes[optIdNum] || 0) + voteIncrement;
     room.userVoted.add(userName);
-
-    // Incremento único de atributo bloqueado
+    console.log(`[VOTE] ${userName} ha votado por la opción ${optIdNum}. Incremento: ${voteIncrement}.`);
+    
     if (sceneOption.lockedAttributeIncrement && !room.lockedAttributeIncrementApplied) {
       const attr = sceneOption.lockedAttributeIncrement.attribute;
       const increment = sceneOption.lockedAttributeIncrement.increment;
@@ -140,9 +141,13 @@ export async function GET(req: Request) {
   const sceneMaxVote = room.scene.maxVote ?? playerCount;
   const effectiveMaxVotes = Math.min(sceneMaxVote, playerCount);
 
-  if (room.userVoted.size === effectiveMaxVotes) {
+  console.log(
+    `[VOTE] Votos emitidos: ${room.userVoted.size} / ${effectiveMaxVotes}`
+  );
+
+  if (room.userVoted.size >= effectiveMaxVotes) {
     console.log(
-      `[VOTE] Se alcanzaron los ${effectiveMaxVotes} votos necesarios. Resolviendo escena...`
+      `[VOTE] Se alcanzó el límite global de votos (${effectiveMaxVotes}). Resolviendo escena...`
     );
     const winningOptionId = findWinningOption(room.votes);
     await resolveCheckAndAdvance(roomId, winningOptionId);
@@ -178,11 +183,12 @@ async function resolveCheckAndAdvance(roomId: string, winningOptionId: number) {
 
   if (!option.roll) {
     // Si no hay tirada, se considera éxito automáticamente
+    console.log(`[RESOLVE] Opción ${winningOptionId} no requiere tirada. Considerando éxito automáticamente.`);
     applyEffectsToVoters(room, option, true);
 
-    // Verificar si se cumplió la condición de Game Over
     const gameOverSceneId = checkGameOver(room);
     if (gameOverSceneId) {
+      console.log(`[RESOLVE] Game Over detectado: ${gameOverSceneId}`);
       room.scene = {
         id: gameOverSceneId,
         text: "¡Game Over! Un jugador alcanzó 0 de vida o 100 de estrés.",
@@ -191,6 +197,7 @@ async function resolveCheckAndAdvance(roomId: string, winningOptionId: number) {
       return broadcastSceneUpdate(roomId);
     }
 
+    console.log(`[RESOLVE] Avanzando a escena ${option.nextSceneId.success} (éxito).`);
     goToScene(room, option.nextSceneId.success ?? "");
     return broadcastSceneUpdate(roomId);
   }
@@ -199,12 +206,11 @@ async function resolveCheckAndAdvance(roomId: string, winningOptionId: number) {
   for (const playerName of room.userVoted) {
     const player = room.players[playerName];
     if (!player) continue;
-    // Se asume que option.roll.skillUsed ya es una clave compuesta
     const skillVal = getSkillValue(player, option.roll.skillUsed);
     const diceRoll = roll2d6();
     const total = diceRoll + skillVal;
     console.log(
-      `[resolveCheck] Player ${playerName} => dice=${diceRoll}, skillVal=${skillVal}, total=${total}, diff=${option.roll.difficulty}`
+      `[RESOLVE] Player ${playerName} => dice=${diceRoll}, skillVal=${skillVal}, total=${total}, diff=${option.roll.difficulty}`
     );
     if (total >= option.roll.difficulty) {
       success = true;
@@ -223,12 +229,11 @@ async function resolveCheckAndAdvance(roomId: string, winningOptionId: number) {
     }
   }
 
-  // Aplicar efectos (vida y estrés) a los jugadores que votaron
   applyEffectsToVoters(room, option, success);
 
-  // Verificar si se cumple la condición de Game Over después de aplicar los efectos
   const gameOverSceneId = checkGameOver(room);
   if (gameOverSceneId) {
+    console.log(`[RESOLVE] Game Over detectado después de aplicar efectos: ${gameOverSceneId}`);
     room.scene = {
       id: gameOverSceneId,
       text: "¡Game Over! Un jugador alcanzó 0 de vida o 100 de estrés.",
@@ -238,6 +243,9 @@ async function resolveCheckAndAdvance(roomId: string, winningOptionId: number) {
   }
 
   const nextKey = success ? option.nextSceneId.success : option.nextSceneId.failure ?? "";
+  console.log(
+    `[RESOLVE] Opción ganadora: ${winningOptionId}. Resultado: ${success ? "éxito" : "fracaso"}. Avanzando a escena: ${nextKey}`
+  );
   goToScene(room, nextKey);
   await broadcastSceneUpdate(roomId);
 }
@@ -250,7 +258,6 @@ function applyEffectsToVoters(room: any, option: any, success: boolean) {
   if (!effects) return;
   for (const pName of room.userVoted) {
     const player = room.players[pName];
-
     if (effects.life !== undefined) {
       if (effects.life > 0) {
         if (player.life < 100) {
@@ -266,7 +273,6 @@ function applyEffectsToVoters(room: any, option: any, success: boolean) {
         console.log(`[EFFECT] ${pName} pierde ${-effects.life} de vida (ahora ${player.life})`);
       }
     }
-
     if (effects.stress !== undefined) {
       if (effects.stress < 0) {
         if (player.stress > 0) {
@@ -288,8 +294,11 @@ function roll2d6(): number {
   return Math.floor(Math.random() * 6 + 1) + Math.floor(Math.random() * 6 + 1);
 }
 
+/**
+ * Obtiene el valor de la habilidad del jugador.
+ * Se asume que skillKey es la clave compuesta (por ejemplo, "0-1").
+ */
 function getSkillValue(player: Player, skillKey: string): number {
-  // Se asume que skillKey es la clave compuesta (por ejemplo, "0-1")
   return player.assignedPoints[skillKey] || 0;
 }
 

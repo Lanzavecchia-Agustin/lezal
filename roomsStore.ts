@@ -59,6 +59,7 @@ export interface SceneOption {
     life?: number;
     stress?: number;
   };
+  maxVote?: number;
 }
 
 // Interfaz para la escena

@@ -227,33 +227,34 @@
   "scenes": [
     {
       "id": "scene1",
-      "text": "Ante ti se alza el Portal del Olvido: una imponente estructura de piedra cubierta de enigmáticos grabados, enclavada en el corazón de un bosque ancestral. Se dice que este portal conecta con secretos olvidados y tiempos distorsionados.",
+      "text": "Ante ti se alza el Portal del Olvido: una imponente estructura de piedra cubierta de enigmáticos grabados, enclavada en el corazón de un bosque ancestral. Se dice que este portal conecta con secretos olvidados y tiempos distorsionados. (edit)",
       "isEnding": false,
+      "maxVote": 1,
       "options": [
         {
           "id": 1,
           "text": "Examinar detenidamente los grabados del portal.",
           "roll": {
             "skillUsed": "106",
-            "difficulty": 2
+            "difficulty": 32
           },
-          "requirements": {
-            "attribute": "redentor",
-            "actionIfNotMet": "disable"
-          },
-          "expOnSuccess": 1,
+          "expOnSuccess": 12,
           "nextSceneId": {
             "success": "scene2",
             "failure": "scene1Fail",
             "partial": ""
           },
           "successEffects": {
-            "life": -100,
+            "life": 0,
             "stress": -5
           },
           "failureEffects": {
             "life": 0,
             "stress": 5
+          },
+          "lockedAttributeIncrement": {
+            "attribute": "esotérico",
+            "increment": 3
           }
         },
         {
@@ -1100,110 +1101,10 @@
       "maxVote": 33
     },
     {
-      "id": "hola este es el nuevo form",
-      "text": "test",
-      "options": [
-        {
-          "id": 0,
-          "text": "OPCION DE TEST",
-          "nextSceneId": {
-            "success": "OPCION DE TEST SUCCESS",
-            "failure": "OPCION DE TEST FAILURE"
-          },
-          "roll": {
-            "skillUsed": "0",
-            "difficulty": 5
-          },
-          "expOnSuccess": 2,
-          "lockedAttributeIncrement": {
-            "attribute": "esotérico",
-            "increment": 9
-          },
-          "requirements": {
-            "attribute": "misterioso",
-            "actionIfNotMet": "disable"
-          },
-          "successEffects": {
-            "life": 0,
-            "stress": 0
-          },
-          "failureEffects": {
-            "life": 0,
-            "stress": 0
-          }
-        }
-      ],
-      "isEnding": false,
-      "maxVote": 12
-    },
-    {
       "id": "final",
       "text": "fin",
       "options": [],
       "isEnding": true
-    },
-    {
-      "id": "testingchange",
-      "text": "test",
-      "options": [
-        {
-          "id": 0,
-          "text": "testeo de si esta oculta la option",
-          "nextSceneId": {
-            "success": "test121"
-          },
-          "roll": {
-            "skillUsed": "",
-            "difficulty": 0
-          },
-          "expOnSuccess": 0,
-          "lockedAttributeIncrement": {
-            "attribute": "",
-            "increment": 0
-          },
-          "requirements": {
-            "attribute": "misterioso",
-            "actionIfNotMet": "hide"
-          },
-          "successEffects": {
-            "life": 0,
-            "stress": 0
-          },
-          "failureEffects": {
-            "life": 0,
-            "stress": 0
-          }
-        },
-        {
-          "id": 1,
-          "text": "testeando si esta bloqueada",
-          "nextSceneId": {
-            "success": "teasdasd"
-          },
-          "roll": {
-            "skillUsed": "",
-            "difficulty": 0
-          },
-          "expOnSuccess": 0,
-          "lockedAttributeIncrement": {
-            "attribute": "",
-            "increment": 0
-          },
-          "requirements": {
-            "attribute": "conspirativo",
-            "actionIfNotMet": "disable"
-          },
-          "successEffects": {
-            "life": 0,
-            "stress": 0
-          },
-          "failureEffects": {
-            "life": 0,
-            "stress": 0
-          }
-        }
-      ],
-      "isEnding": false
     }
   ]
 }

@@ -1,4 +1,5 @@
-// SceneCardCustom.tsx
+"use client";
+
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -14,7 +15,11 @@ interface SceneCardCustomProps {
 
 export function SceneCardCustom({ scene, deleteScene }: SceneCardCustomProps) {
   const handleDelete = async () => {
-    if (confirm(`¿Está seguro de eliminar la escena ${scene.id}? Esta acción actualizará todas las conexiones.`)) {
+    if (
+      confirm(
+        `¿Está seguro de eliminar la escena ${scene.id}? Esta acción actualizará todas las conexiones.`
+      )
+    ) {
       await deleteScene(scene.id);
     }
   };
@@ -43,15 +48,15 @@ export function SceneCardCustom({ scene, deleteScene }: SceneCardCustomProps) {
                     <div className="font-semibold mb-1">
                       #{opt.id}: {opt.text}
                     </div>
-                    {opt.requirement && opt.requirement.length > 0 && (
+                    {opt.requirements && (
                       <div className="ml-2 text-gray-300">
                         <span className="text-purple-400">Requiere:</span>{' '}
-                        {opt.requirement.join(', ')}
+                        {opt.requirements.attribute} (Acción: {opt.requirements.actionIfNotMet})
                       </div>
                     )}
-                    {opt.maxVotes !== undefined && (
+                    {opt.maxVote !== undefined && (
                       <div className="ml-2 text-gray-300">
-                        <span className="text-purple-400">maxVotes:</span> {opt.maxVotes}
+                        <span className="text-purple-400">maxVote:</span> {opt.maxVote}
                       </div>
                     )}
                     {opt.lockedAttributeIncrement && (
@@ -95,11 +100,16 @@ export function SceneCardCustom({ scene, deleteScene }: SceneCardCustomProps) {
       </CardContent>
       <div className="p-6 flex justify-between gap-2">
         <Link href={{ pathname: '/scene-creation', query: { scene: JSON.stringify(scene) } }}>
-          <Button  size="sm" className="w-full">
+          <Button size="sm" className="w-full">
             Editar
           </Button>
         </Link>
-        <Button variant="destructive" size="sm" onClick={handleDelete} className="w-full bg-red-500">
+        <Button
+          variant="destructive"
+          size="sm"
+          onClick={handleDelete}
+          className="w-full bg-red-500"
+        >
           Eliminar
         </Button>
       </div>

@@ -1094,6 +1094,49 @@
       ],
       "isEnding": false,
       "maxVote": 33
+    },
+    {
+      "id": "hola este es el nuevo form",
+      "text": "test",
+      "options": [
+        {
+          "id": 0,
+          "text": "OPCION DE TEST",
+          "nextSceneId": {
+            "success": "OPCION DE TEST SUCCESS",
+            "failure": "OPCION DE TEST FAILURE"
+          },
+          "roll": {
+            "skillUsed": "0",
+            "difficulty": 5
+          },
+          "expOnSuccess": 2,
+          "lockedAttributeIncrement": {
+            "attribute": "esotérico",
+            "increment": 9
+          },
+          "requirements": {
+            "attribute": "misterioso",
+            "actionIfNotMet": "disable"
+          },
+          "successEffects": {
+            "life": 0,
+            "stress": 0
+          },
+          "failureEffects": {
+            "life": 0,
+            "stress": 0
+          }
+        }
+      ],
+      "isEnding": false,
+      "maxVote": 12
+    },
+    {
+      "id": "final",
+      "text": "fin",
+      "options": [],
+      "isEnding": true
     }
   ]
 }

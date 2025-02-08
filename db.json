@@ -1,69 +1,229 @@
 {
-  "gameConfig": {
-    "maxStartingPoints": 10,
-    "initialLife": 100,
-    "stressThreshold": 100,
-    "xpThreshold":1,
-    "skills": [
-      {
-        "id": "intelecto",
-        "name": "Intelecto",
-        "subskills": [
-          { "id": "101", "name": "razonamiento", "unlockable": false },
-          { "id": "102", "name": "enciclopedia", "unlockable": false },
-          { "id": "103", "name": "retórica", "unlockable": false },
-          { "id": "104", "name": "imaginación", "unlockable": true, "unlock_threshold": 5 },
-          { "id": "105", "name": "cálculo visual", "unlockable": true, "unlock_threshold": 6 },
-          { "id": "106", "name": "erudición", "unlockable": false }
-        ]
-      },
-      {
-        "id": "psique",
-        "name": "Psique",
-        "subskills": [
-          { "id": "201", "name": "voluntad", "unlockable": false },
-          { "id": "202", "name": "empatía", "unlockable": false },
-          { "id": "203", "name": "autoridad", "unlockable": false },
-          { "id": "204", "name": "intuición", "unlockable": true, "unlock_threshold": 5 },
-          { "id": "205", "name": "sugestión", "unlockable": true, "unlock_threshold": 6 },
-          { "id": "206", "name": "compasión", "unlockable": false }
-        ]
-      },
-      {
-        "id": "cuerpo",
-        "name": "Cuerpo",
-        "subskills": [
-          { "id": "301", "name": "resistencia", "unlockable": false },
-          { "id": "302", "name": "electroquímica", "unlockable": false },
-          { "id": "303", "name": "fuerza", "unlockable": false },
-          { "id": "304", "name": "flexibilidad", "unlockable": true, "unlock_threshold": 5 },
-          { "id": "305", "name": "golpe certero", "unlockable": true, "unlock_threshold": 6 },
-          { "id": "306", "name": "resiliencia", "unlockable": false }
-        ]
-      },
-      {
-        "id": "motricidad",
-        "name": "Motricidad",
-        "subskills": [
-          { "id": "401", "name": "coordinación", "unlockable": false },
-          { "id": "402", "name": "percepción", "unlockable": false },
-          { "id": "403", "name": "sigilo", "unlockable": false },
-          { "id": "404", "name": "equilibrio", "unlockable": true, "unlock_threshold": 5 },
-          { "id": "405", "name": "reflejos", "unlockable": true, "unlock_threshold": 6 },
-          { "id": "406", "name": "puntería", "unlockable": false }
-        ]
-      }
-    ],
-    "attributes": [
-      { "id": "1", "name": "corrupto", "unlockable": true, "unlock_threshold": 9 },
-      { "id": "6", "name": "misterioso", "unlockable": true, "unlock_threshold": 4 },
-      { "id": "7", "name": "psíquico", "unlockable": true, "unlock_threshold": 5 },
-      { "id": "8", "name": "siniestro", "unlockable": true, "unlock_threshold": 6 },
-      { "id": "10", "name": "esotérico", "unlockable": true, "unlock_threshold": 4 },
-      { "id": "11", "name": "conspirativo", "unlockable": true, "unlock_threshold": 5 },
-      { "id": "12", "name": "redentor", "unlockable": true, "unlock_threshold": 7 }
-    ]
-  },
+  "gameConfig": [
+    {
+      "id": "maxStartingPoints",
+      "value": 10
+    },
+    {
+      "id": "initialLife",
+      "value": 100
+    },
+    {
+      "id": "stressThreshold",
+      "value": 100
+    },
+    {
+      "id": "xpThreshold",
+      "value": 1
+    }
+  ],
+  "skills": [
+    {
+      "id": "0",
+      "name": "Intelecto",
+      "subskills": [
+        {
+          "id": "0",
+          "name": "razonamiento",
+          "unlockable": false
+        },
+        {
+          "id": "1",
+          "name": "enciclopedia",
+          "unlockable": false
+        },
+        {
+          "id": "2",
+          "name": "retórica",
+          "unlockable": false
+        },
+        {
+          "id": "3",
+          "name": "imaginación",
+          "unlockable": true,
+          "unlock_threshold": 5
+        },
+        {
+          "id": "4",
+          "name": "cálculo visual",
+          "unlockable": true,
+          "unlock_threshold": 6
+        },
+        {
+          "id": "5",
+          "name": "erudición",
+          "unlockable": false
+        }
+      ]
+    },
+    {
+      "id": "1",
+      "name": "Psique",
+      "subskills": [
+        {
+          "id": "0",
+          "name": "voluntad",
+          "unlockable": false
+        },
+        {
+          "id": "1",
+          "name": "empatía",
+          "unlockable": false
+        },
+        {
+          "id": "2",
+          "name": "autoridad",
+          "unlockable": false
+        },
+        {
+          "id": "3",
+          "name": "intuición",
+          "unlockable": true,
+          "unlock_threshold": 5
+        },
+        {
+          "id": "4",
+          "name": "sugestión",
+          "unlockable": true,
+          "unlock_threshold": 6
+        },
+        {
+          "id": "5",
+          "name": "compasión",
+          "unlockable": false
+        }
+      ]
+    },
+    {
+      "id": "2",
+      "name": "Cuerpo",
+      "subskills": [
+        {
+          "id": "0",
+          "name": "resistencia",
+          "unlockable": false
+        },
+        {
+          "id": "1",
+          "name": "electroquímica",
+          "unlockable": false
+        },
+        {
+          "id": "2",
+          "name": "fuerza",
+          "unlockable": false
+        },
+        {
+          "id": "3",
+          "name": "flexibilidad",
+          "unlockable": true,
+          "unlock_threshold": 5
+        },
+        {
+          "id": "4",
+          "name": "golpe certero",
+          "unlockable": true,
+          "unlock_threshold": 6
+        },
+        {
+          "id": "5",
+          "name": "resiliencia",
+          "unlockable": false
+        }
+      ]
+    },
+    {
+      "id": "3",
+      "name": "Motricidad",
+      "subskills": [
+        {
+          "id": "0",
+          "name": "coordinación",
+          "unlockable": false
+        },
+        {
+          "id": "1",
+          "name": "percepción",
+          "unlockable": false
+        },
+        {
+          "id": "2",
+          "name": "sigilo",
+          "unlockable": false
+        },
+        {
+          "id": "3",
+          "name": "equilibrio",
+          "unlockable": true,
+          "unlock_threshold": 5
+        },
+        {
+          "id": "4",
+          "name": "reflejos",
+          "unlockable": true,
+          "unlock_threshold": 6
+        },
+        {
+          "id": "5",
+          "name": "puntería",
+          "unlockable": false
+        }
+      ]
+    },
+    {
+      "id": "4",
+      "name": "trolleo EDIT",
+      "subskills": [
+        {
+          "id": "0",
+          "name": "joder a todos",
+          "unlockable": false
+        },
+        {
+          "id": "1",
+          "name": "hacer todo mal EDIT",
+          "unlockable": false
+        },
+        {
+          "id": "2",
+          "name": "hablar gilada EDIT",
+          "unlockable": false
+        }
+      ]
+    }
+  ],
+  "attributes": [
+    {
+      "id": "1",
+      "name": "corrupto",
+      "unlockable": true,
+      "unlock_threshold": 9
+    },
+    {
+      "id": "6",
+      "name": "misterioso",
+      "unlockable": true,
+      "unlock_threshold": 4
+    },
+    {
+      "id": "10",
+      "name": "esotérico",
+      "unlockable": true,
+      "unlock_threshold": 4
+    },
+    {
+      "id": "11",
+      "name": "conspirativo",
+      "unlockable": true,
+      "unlock_threshold": 5
+    },
+    {
+      "id": "12",
+      "name": "redentor",
+      "unlockable": true,
+      "unlock_threshold": 7
+    }
+  ],
   "scenes": [
     {
       "id": "scene1",
@@ -73,20 +233,32 @@
         {
           "id": 1,
           "text": "Examinar detenidamente los grabados del portal.",
-          "roll": { "skillUsed": "106", "difficulty": 26 },
+          "roll": {
+            "skillUsed": "106",
+            "difficulty": 26
+          },
           "expOnSuccess": 1,
           "nextSceneId": {
             "success": "scene2",
             "failure": "scene1Fail",
             "partial": ""
           },
-          "successEffects": { "life": 0, "stress": -5 },
-          "failureEffects": { "life": 0, "stress": 5 }
+          "successEffects": {
+            "life": 0,
+            "stress": -5
+          },
+          "failureEffects": {
+            "life": 0,
+            "stress": 5
+          }
         },
         {
           "id": 2,
           "text": "Intentar forzar la apertura del portal con pura fuerza bruta.",
-          "roll": { "skillUsed": "303", "difficulty": 4 },
+          "roll": {
+            "skillUsed": "303",
+            "difficulty": 4
+          },
           "expOnSuccess": 2,
           "lockedAttributeIncrement": {
             "attribute": "corrupto",
@@ -97,8 +269,14 @@
             "failure": "scene1Fail2",
             "partial": ""
           },
-          "successEffects": { "life": 5, "stress": -5 },
-          "failureEffects": { "life": -5, "stress": 5 }
+          "successEffects": {
+            "life": 5,
+            "stress": -5
+          },
+          "failureEffects": {
+            "life": -5,
+            "stress": 5
+          }
         }
       ]
     },
@@ -110,9 +288,19 @@
         {
           "id": 1,
           "text": "Recobrar la compostura e intentarlo de nuevo.",
-          "nextSceneId": { "success": "scene1", "failure": "", "partial": "" },
-          "successEffects": { "life": 5, "stress": -2 },
-          "failureEffects": { "life": 0, "stress": 0 }
+          "nextSceneId": {
+            "success": "scene1",
+            "failure": "",
+            "partial": ""
+          },
+          "successEffects": {
+            "life": 5,
+            "stress": -2
+          },
+          "failureEffects": {
+            "life": 0,
+            "stress": 0
+          }
         }
       ]
     },
@@ -124,9 +312,19 @@
         {
           "id": 1,
           "text": "Alejarte momentáneamente para evitar lesiones mayores.",
-          "nextSceneId": { "success": "scene1", "failure": "", "partial": "" },
-          "successEffects": { "life": 3, "stress": 0 },
-          "failureEffects": { "life": 0, "stress": 3 }
+          "nextSceneId": {
+            "success": "scene1",
+            "failure": "",
+            "partial": ""
+          },
+          "successEffects": {
+            "life": 3,
+            "stress": 0
+          },
+          "failureEffects": {
+            "life": 0,
+            "stress": 3
+          }
         }
       ]
     },
@@ -138,28 +336,46 @@
         {
           "id": 1,
           "text": "Adentrarte en el interior para investigar una sala de inscripciones místicas.",
-          "roll": { "skillUsed": "102", "difficulty": 7 },
+          "roll": {
+            "skillUsed": "102",
+            "difficulty": 7
+          },
           "expOnSuccess": 1,
           "nextSceneId": {
             "success": "scene4",
             "failure": "scene2Fail",
             "partial": ""
           },
-          "successEffects": { "life": 5, "stress": -5 },
-          "failureEffects": { "life": -5, "stress": 5 }
+          "successEffects": {
+            "life": 5,
+            "stress": -5
+          },
+          "failureEffects": {
+            "life": -5,
+            "stress": 5
+          }
         },
         {
           "id": 2,
           "text": "Dejarte llevar por tu presentimiento y descifrar los símbolos mediante la intuición.",
-          "roll": { "skillUsed": "204", "difficulty": 5 },
+          "roll": {
+            "skillUsed": "204",
+            "difficulty": 5
+          },
           "expOnSuccess": 2,
           "nextSceneId": {
             "success": "scene4",
             "failure": "scene2Fail",
             "partial": ""
           },
-          "successEffects": { "life": 0, "stress": -3 },
-          "failureEffects": { "life": 0, "stress": 5 }
+          "successEffects": {
+            "life": 0,
+            "stress": -3
+          },
+          "failureEffects": {
+            "life": 0,
+            "stress": 5
+          }
         }
       ]
     },
@@ -171,9 +387,19 @@
         {
           "id": 1,
           "text": "Decidir retroceder y evaluar otras alternativas.",
-          "nextSceneId": { "success": "scene1", "failure": "", "partial": "" },
-          "successEffects": { "life": 0, "stress": 5 },
-          "failureEffects": { "life": 0, "stress": 0 }
+          "nextSceneId": {
+            "success": "scene1",
+            "failure": "",
+            "partial": ""
+          },
+          "successEffects": {
+            "life": 0,
+            "stress": 5
+          },
+          "failureEffects": {
+            "life": 0,
+            "stress": 0
+          }
         }
       ]
     },
@@ -185,20 +411,32 @@
         {
           "id": 1,
           "text": "Correr a toda velocidad, confiando en tus reflejos para evadir lo que te persigue.",
-          "roll": { "skillUsed": "405", "difficulty": 6 },
+          "roll": {
+            "skillUsed": "405",
+            "difficulty": 6
+          },
           "expOnSuccess": 1,
           "nextSceneId": {
             "success": "scene4",
             "failure": "scene3Fail",
             "partial": ""
           },
-          "successEffects": { "life": 10, "stress": -5 },
-          "failureEffects": { "life": -5, "stress": 5 }
+          "successEffects": {
+            "life": 10,
+            "stress": -5
+          },
+          "failureEffects": {
+            "life": -5,
+            "stress": 5
+          }
         },
         {
           "id": 2,
           "text": "Escalar una estructura abandonada para obtener una mejor perspectiva del entorno.",
-          "roll": { "skillUsed": "105", "difficulty": 7 },
+          "roll": {
+            "skillUsed": "105",
+            "difficulty": 7
+          },
           "expOnSuccess": 1,
           "lockedAttributeIncrement": {
             "attribute": "conspirativo",
@@ -209,8 +447,14 @@
             "failure": "scene3Fail2",
             "partial": ""
           },
-          "successEffects": { "life": 5, "stress": -2 },
-          "failureEffects": { "life": -3, "stress": 3 }
+          "successEffects": {
+            "life": 5,
+            "stress": -2
+          },
+          "failureEffects": {
+            "life": -3,
+            "stress": 3
+          }
         }
       ]
     },
@@ -222,9 +466,19 @@
         {
           "id": 1,
           "text": "Recuperarte y volver a intentarlo con más cautela.",
-          "nextSceneId": { "success": "scene3", "failure": "", "partial": "" },
-          "successEffects": { "life": 4, "stress": -2 },
-          "failureEffects": { "life": 0, "stress": 0 }
+          "nextSceneId": {
+            "success": "scene3",
+            "failure": "",
+            "partial": ""
+          },
+          "successEffects": {
+            "life": 4,
+            "stress": -2
+          },
+          "failureEffects": {
+            "life": 0,
+            "stress": 0
+          }
         }
       ]
     },
@@ -236,9 +490,19 @@
         {
           "id": 1,
           "text": "Aguantar el dolor y reincorporarte para volver a intentarlo.",
-          "nextSceneId": { "success": "scene3", "failure": "", "partial": "" },
-          "successEffects": { "life": 3, "stress": 2 },
-          "failureEffects": { "life": 0, "stress": 0 }
+          "nextSceneId": {
+            "success": "scene3",
+            "failure": "",
+            "partial": ""
+          },
+          "successEffects": {
+            "life": 3,
+            "stress": 2
+          },
+          "failureEffects": {
+            "life": 0,
+            "stress": 0
+          }
         }
       ]
     },
@@ -250,16 +514,32 @@
         {
           "id": 1,
           "text": "Tomar el corredor adornado con velas y dejarte guiar por su luz temblorosa.",
-          "roll": { "skillUsed": "401", "difficulty": 5 },
+          "roll": {
+            "skillUsed": "401",
+            "difficulty": 5
+          },
           "expOnSuccess": 1,
-          "nextSceneId": { "success": "scene5", "failure": "", "partial": "" },
-          "successEffects": { "life": 5, "stress": -5 },
-          "failureEffects": { "life": 0, "stress": 0 }
+          "nextSceneId": {
+            "success": "scene5",
+            "failure": "",
+            "partial": ""
+          },
+          "successEffects": {
+            "life": 5,
+            "stress": -5
+          },
+          "failureEffects": {
+            "life": 0,
+            "stress": 0
+          }
         },
         {
           "id": 2,
           "text": "Acercarte al altar tallado en la piedra, repleto de símbolos oscuros y enigmáticos.",
-          "roll": { "skillUsed": "104", "difficulty": 8 },
+          "roll": {
+            "skillUsed": "104",
+            "difficulty": 8
+          },
           "expOnSuccess": 2,
           "lockedAttributeIncrement": {
             "attribute": "corrupto",
@@ -270,8 +550,14 @@
             "failure": "scene4Fail",
             "partial": ""
           },
-          "successEffects": { "life": -2, "stress": 5 },
-          "failureEffects": { "life": 0, "stress": 5 }
+          "successEffects": {
+            "life": -2,
+            "stress": 5
+          },
+          "failureEffects": {
+            "life": 0,
+            "stress": 5
+          }
         }
       ]
     },
@@ -283,9 +569,19 @@
         {
           "id": 1,
           "text": "Retroceder y explorar la otra ruta en busca de respuestas.",
-          "nextSceneId": { "success": "scene1", "failure": "", "partial": "" },
-          "successEffects": { "life": 3, "stress": 3 },
-          "failureEffects": { "life": 0, "stress": 0 }
+          "nextSceneId": {
+            "success": "scene1",
+            "failure": "",
+            "partial": ""
+          },
+          "successEffects": {
+            "life": 3,
+            "stress": 3
+          },
+          "failureEffects": {
+            "life": 0,
+            "stress": 0
+          }
         }
       ]
     },
@@ -297,7 +593,10 @@
         {
           "id": 1,
           "text": "Analizar el manuscrito para desvelar los secretos del lugar.",
-          "roll": { "skillUsed": "101", "difficulty": 7 },
+          "roll": {
+            "skillUsed": "101",
+            "difficulty": 7
+          },
           "expOnSuccess": 2,
           "lockedAttributeIncrement": {
             "attribute": "corrupto",
@@ -308,21 +607,36 @@
             "failure": "scene5Fail",
             "partial": "scene5Partial"
           },
-          "successEffects": { "life": 0, "stress": -5 },
-          "failureEffects": { "life": -2, "stress": 5 }
+          "successEffects": {
+            "life": 0,
+            "stress": -5
+          },
+          "failureEffects": {
+            "life": -2,
+            "stress": 5
+          }
         },
         {
           "id": 2,
           "text": "Cerrarte en una breve meditación para conectar con la esencia del conocimiento ancestral.",
-          "roll": { "skillUsed": "203", "difficulty": 6 },
+          "roll": {
+            "skillUsed": "203",
+            "difficulty": 6
+          },
           "expOnSuccess": 1,
           "nextSceneId": {
             "success": "scene7",
             "failure": "scene5Fail",
             "partial": ""
           },
-          "successEffects": { "life": 0, "stress": -3 },
-          "failureEffects": { "life": 0, "stress": 3 }
+          "successEffects": {
+            "life": 0,
+            "stress": -3
+          },
+          "failureEffects": {
+            "life": 0,
+            "stress": 3
+          }
         }
       ]
     },
@@ -334,9 +648,19 @@
         {
           "id": 1,
           "text": "Intentar una vez más, aferrándote a una mínima esperanza de comprensión.",
-          "nextSceneId": { "success": "scene5", "failure": "", "partial": "" },
-          "successEffects": { "life": -2, "stress": 5 },
-          "failureEffects": { "life": 0, "stress": 0 }
+          "nextSceneId": {
+            "success": "scene5",
+            "failure": "",
+            "partial": ""
+          },
+          "successEffects": {
+            "life": -2,
+            "stress": 5
+          },
+          "failureEffects": {
+            "life": 0,
+            "stress": 0
+          }
         }
       ]
     },
@@ -349,9 +673,19 @@
         {
           "id": 1,
           "text": "Decidir seguir el indicio y buscar el acceso al pasaje oculto.",
-          "nextSceneId": { "success": "scene7", "failure": "", "partial": "" },
-          "successEffects": { "life": 0, "stress": 0 },
-          "failureEffects": { "life": 0, "stress": 0 }
+          "nextSceneId": {
+            "success": "scene7",
+            "failure": "",
+            "partial": ""
+          },
+          "successEffects": {
+            "life": 0,
+            "stress": 0
+          },
+          "failureEffects": {
+            "life": 0,
+            "stress": 0
+          }
         }
       ]
     },
@@ -364,7 +698,10 @@
         {
           "id": 1,
           "text": "Emprender un ritual ancestral que intente alterar el curso del destino.",
-          "roll": { "skillUsed": "104", "difficulty": 9 },
+          "roll": {
+            "skillUsed": "104",
+            "difficulty": 9
+          },
           "expOnSuccess": 3,
           "lockedAttributeIncrement": {
             "attribute": "corrupto",
@@ -375,21 +712,36 @@
             "failure": "scene6Fail",
             "partial": ""
           },
-          "successEffects": { "life": -5, "stress": -5 },
-          "failureEffects": { "life": -5, "stress": 15 }
+          "successEffects": {
+            "life": -5,
+            "stress": -5
+          },
+          "failureEffects": {
+            "life": -5,
+            "stress": 15
+          }
         },
         {
           "id": 2,
           "text": "Concentrarte y convocar tus fuerzas interiores para protegerte de las energías caóticas.",
-          "roll": { "skillUsed": "201", "difficulty": 7 },
+          "roll": {
+            "skillUsed": "201",
+            "difficulty": 7
+          },
           "expOnSuccess": 2,
           "nextSceneId": {
             "success": "scene8",
             "failure": "scene6Fail",
             "partial": ""
           },
-          "successEffects": { "life": 0, "stress": -5 },
-          "failureEffects": { "life": 0, "stress": 5 }
+          "successEffects": {
+            "life": 0,
+            "stress": -5
+          },
+          "failureEffects": {
+            "life": 0,
+            "stress": 5
+          }
         }
       ]
     },
@@ -402,9 +754,19 @@
         {
           "id": 1,
           "text": "Replantear tu estrategia y buscar otro camino en el laberinto.",
-          "nextSceneId": { "success": "scene5", "failure": "", "partial": "" },
-          "successEffects": { "life": 0, "stress": 5 },
-          "failureEffects": { "life": 0, "stress": 0 }
+          "nextSceneId": {
+            "success": "scene5",
+            "failure": "",
+            "partial": ""
+          },
+          "successEffects": {
+            "life": 0,
+            "stress": 5
+          },
+          "failureEffects": {
+            "life": 0,
+            "stress": 0
+          }
         }
       ]
     },
@@ -417,20 +779,46 @@
         {
           "id": 1,
           "text": "Entrar en una cámara iluminada por símbolos ancestrales y vestigios de sabiduría.",
-          "roll": { "skillUsed": "102", "difficulty": 8 },
+          "roll": {
+            "skillUsed": "102",
+            "difficulty": 8
+          },
           "expOnSuccess": 2,
-          "nextSceneId": { "success": "scene9", "failure": "scene7Fail", "partial": "" },
-          "successEffects": { "life": 5, "stress": -3 },
-          "failureEffects": { "life": 0, "stress": 5 }
+          "nextSceneId": {
+            "success": "scene9",
+            "failure": "scene7Fail",
+            "partial": ""
+          },
+          "successEffects": {
+            "life": 5,
+            "stress": -3
+          },
+          "failureEffects": {
+            "life": 0,
+            "stress": 5
+          }
         },
         {
           "id": 2,
           "text": "Adentrarte en una cripta oscura donde cada sombra oculta un secreto.",
-          "roll": { "skillUsed": "402", "difficulty": 7 },
+          "roll": {
+            "skillUsed": "402",
+            "difficulty": 7
+          },
           "expOnSuccess": 1,
-          "nextSceneId": { "success": "scene10", "failure": "scene7Fail2", "partial": "scene7Partial" },
-          "successEffects": { "life": 0, "stress": -2 },
-          "failureEffects": { "life": 0, "stress": 5 }
+          "nextSceneId": {
+            "success": "scene10",
+            "failure": "scene7Fail2",
+            "partial": "scene7Partial"
+          },
+          "successEffects": {
+            "life": 0,
+            "stress": -2
+          },
+          "failureEffects": {
+            "life": 0,
+            "stress": 5
+          }
         }
       ]
     },
@@ -443,9 +831,19 @@
         {
           "id": 1,
           "text": "Reconsiderar tus pasos y volver a la encrucijada.",
-          "nextSceneId": { "success": "scene7", "failure": "", "partial": "" },
-          "successEffects": { "life": 3, "stress": -3 },
-          "failureEffects": { "life": 0, "stress": 0 }
+          "nextSceneId": {
+            "success": "scene7",
+            "failure": "",
+            "partial": ""
+          },
+          "successEffects": {
+            "life": 3,
+            "stress": -3
+          },
+          "failureEffects": {
+            "life": 0,
+            "stress": 0
+          }
         }
       ]
     },
@@ -458,9 +856,19 @@
         {
           "id": 1,
           "text": "Retroceder y probar otra ruta en la encrucijada.",
-          "nextSceneId": { "success": "scene7", "failure": "", "partial": "" },
-          "successEffects": { "life": 0, "stress": 5 },
-          "failureEffects": { "life": 0, "stress": 0 }
+          "nextSceneId": {
+            "success": "scene7",
+            "failure": "",
+            "partial": ""
+          },
+          "successEffects": {
+            "life": 0,
+            "stress": 5
+          },
+          "failureEffects": {
+            "life": 0,
+            "stress": 0
+          }
         }
       ]
     },
@@ -473,11 +881,24 @@
         {
           "id": 1,
           "text": "Utilizar tu retórica para invocar respuestas del pasado.",
-          "roll": { "skillUsed": "103", "difficulty": 7 },
+          "roll": {
+            "skillUsed": "103",
+            "difficulty": 7
+          },
           "expOnSuccess": 1,
-          "nextSceneId": { "success": "scene9", "failure": "scene7Fail", "partial": "" },
-          "successEffects": { "life": 5, "stress": -2 },
-          "failureEffects": { "life": 0, "stress": 5 }
+          "nextSceneId": {
+            "success": "scene9",
+            "failure": "scene7Fail",
+            "partial": ""
+          },
+          "successEffects": {
+            "life": 5,
+            "stress": -2
+          },
+          "failureEffects": {
+            "life": 0,
+            "stress": 5
+          }
         }
       ]
     },
@@ -490,37 +911,76 @@
         {
           "id": 1,
           "text": "Leer un antiguo grimorio dispuesto sobre el altar, en busca de respuestas.",
-          "roll": { "skillUsed": "201", "difficulty": 6 },
+          "roll": {
+            "skillUsed": "201",
+            "difficulty": 6
+          },
           "expOnSuccess": 2,
-          "nextSceneId": { "success": "scene9", "failure": "scene8Fail", "partial": "" },
-          "successEffects": { "life": 0, "stress": -10 },
-          "failureEffects": { "life": 0, "stress": 0 }
+          "nextSceneId": {
+            "success": "scene9",
+            "failure": "scene8Fail",
+            "partial": ""
+          },
+          "successEffects": {
+            "life": 0,
+            "stress": -10
+          },
+          "failureEffects": {
+            "life": 0,
+            "stress": 0
+          }
         },
         {
           "id": 2,
           "text": "Realizar un ritual para intentar disolver la presencia maligna que habita en la sala.",
-          "roll": { "skillUsed": "104", "difficulty": 10 },
+          "roll": {
+            "skillUsed": "104",
+            "difficulty": 10
+          },
           "expOnSuccess": 3,
           "lockedAttributeIncrement": {
             "attribute": "corrupto",
             "increment": 1
           },
-          "nextSceneId": { "success": "scene10", "failure": "scene8Fail", "partial": "scene8Partial" },
-          "successEffects": { "life": -5, "stress": -5 },
-          "failureEffects": { "life": -5, "stress": 15 }
+          "nextSceneId": {
+            "success": "scene10",
+            "failure": "scene8Fail",
+            "partial": "scene8Partial"
+          },
+          "successEffects": {
+            "life": -5,
+            "stress": -5
+          },
+          "failureEffects": {
+            "life": -5,
+            "stress": 15
+          }
         },
         {
           "id": 3,
           "text": "Ofrecer redención a la entidad a través de un acto compasivo.",
-          "roll": { "skillUsed": "206", "difficulty": 8 },
+          "roll": {
+            "skillUsed": "206",
+            "difficulty": 8
+          },
           "expOnSuccess": 2,
           "requirements": {
             "attribute": "redentor",
             "actionIfNotMet": "disable"
           },
-          "nextSceneId": { "success": "scene9", "failure": "scene8Fail2", "partial": "" },
-          "successEffects": { "life": 5, "stress": -5 },
-          "failureEffects": { "life": 0, "stress": 5 }
+          "nextSceneId": {
+            "success": "scene9",
+            "failure": "scene8Fail2",
+            "partial": ""
+          },
+          "successEffects": {
+            "life": 5,
+            "stress": -5
+          },
+          "failureEffects": {
+            "life": 0,
+            "stress": 5
+          }
         }
       ]
     },
@@ -533,9 +993,19 @@
         {
           "id": 1,
           "text": "Respirar hondo y reunir coraje para volver a intentarlo.",
-          "nextSceneId": { "success": "scene8", "failure": "", "partial": "" },
-          "successEffects": { "life": 0, "stress": 5 },
-          "failureEffects": { "life": 0, "stress": 0 }
+          "nextSceneId": {
+            "success": "scene8",
+            "failure": "",
+            "partial": ""
+          },
+          "successEffects": {
+            "life": 0,
+            "stress": 5
+          },
+          "failureEffects": {
+            "life": 0,
+            "stress": 0
+          }
         }
       ]
     },
@@ -548,9 +1018,19 @@
         {
           "id": 1,
           "text": "Reunir fuerzas y probar una última vez para alcanzar la iluminación.",
-          "nextSceneId": { "success": "scene8", "failure": "", "partial": "" },
-          "successEffects": { "life": 0, "stress": 5 },
-          "failureEffects": { "life": 0, "stress": 0 }
+          "nextSceneId": {
+            "success": "scene8",
+            "failure": "",
+            "partial": ""
+          },
+          "successEffects": {
+            "life": 0,
+            "stress": 5
+          },
+          "failureEffects": {
+            "life": 0,
+            "stress": 0
+          }
         }
       ]
     },
@@ -577,6 +1057,43 @@
       "text": "El estrés ha consumido tu mente. No hay escape para este destino.",
       "isEnding": true,
       "options": []
+    },
+    {
+      "id": "dasdsadsdasdasads",
+      "text": "dasdaasdds",
+      "options": [
+        {
+          "id": 0,
+          "text": "asdadsads",
+          "nextSceneId": {
+            "success": "dsads12d21",
+            "failure": "21212112"
+          },
+          "roll": {
+            "skillUsed": "2",
+            "difficulty": 12
+          },
+          "expOnSuccess": 3,
+          "lockedAttributeIncrement": {
+            "attribute": "misterioso",
+            "increment": 23
+          },
+          "requirements": {
+            "attribute": "",
+            "actionIfNotMet": "hide"
+          },
+          "successEffects": {
+            "life": 0,
+            "stress": 0
+          },
+          "failureEffects": {
+            "life": 0,
+            "stress": 0
+          }
+        }
+      ],
+      "isEnding": false,
+      "maxVote": 33
     }
   ]
 }

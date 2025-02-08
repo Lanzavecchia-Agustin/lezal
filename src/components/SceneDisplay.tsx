@@ -89,12 +89,12 @@ function evaluateOptionAccessibility(
 /**
  * Extrae los umbrales de atributos desde gameConfig.attributes usando el nombre en minúsculas
  */
-const attributeThresholds = gameConfig.attributes.reduce((acc, attr) => {
-  if (attr.unlockable && attr.unlock_threshold) {
-    acc[attr.name.toLowerCase()] = attr.unlock_threshold;
-  }
-  return acc;
-}, {} as { [attribute: string]: number });
+// const attributeThresholds = gameConfig.attributes.reduce((acc, attr) => {
+//   if (attr.unlockable && attr.unlock_threshold) {
+//     acc[attr.name.toLowerCase()] = attr.unlock_threshold;
+//   }
+//   return acc;
+// }, {} as { [attribute: string]: number });
 
 const SceneDisplay: React.FC<SceneDisplayProps> = ({
   roomId,

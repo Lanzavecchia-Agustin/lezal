@@ -98,7 +98,7 @@ export interface RoomState {
 }
 
 // Cargamos la configuración y las escenas desde db.json
-const dbData = db as {
+const dbData = db as unknown as {
   gameConfig: GameConfig;
   scenes: Scene[];
 };

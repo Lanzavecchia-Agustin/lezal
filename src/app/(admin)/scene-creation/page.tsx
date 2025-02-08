@@ -87,7 +87,7 @@ const initialOptionState: SceneOption = {
   failureEffects: { life: 0, stress: 0 },
 };
 
-export default function CreateScenePage() {
+function SceneCreationContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -659,3 +659,12 @@ export default function CreateScenePage() {
     </Suspense>
   );
 }
+
+export default function SceneCreationPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <SceneCreationContent />
+    </Suspense>
+  );
+}
+

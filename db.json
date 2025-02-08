@@ -1141,6 +1141,42 @@
         }
       ],
       "isEnding": false
+    },
+    {
+      "id": "tesasadsd",
+      "text": "adsadsads",
+      "options": [
+        {
+          "id": 0,
+          "text": "33333",
+          "nextSceneId": {
+            "success": "3333"
+          },
+          "roll": {
+            "skillUsed": "psique-autoridad",
+            "difficulty": 0
+          },
+          "expOnSuccess": 0,
+          "lockedAttributeIncrement": {
+            "attribute": "",
+            "increment": 0
+          },
+          "requirements": {
+            "attribute": "",
+            "actionIfNotMet": "hide"
+          },
+          "successEffects": {
+            "life": 0,
+            "stress": 0
+          },
+          "failureEffects": {
+            "life": 0,
+            "stress": 0
+          }
+        }
+      ],
+      "isEnding": false,
+      "maxVote": 12
     }
   ]
 }

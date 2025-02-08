@@ -10,8 +10,14 @@ const pusher = new Pusher({
   useTLS: true,
 });
 
-// Umbral para subir de nivel (XP)
-const XP_THRESHOLD = gameConfig.xpThreshold;
+// Umbral para subir de nivel (XP) se obtiene del array gameConfig.
+const XP_THRESHOLD =
+  gameConfig.find((item) => item.id === "xpThreshold")?.value ?? 1;
+
+// Función que obtiene el umbral de estrés de gameConfig.
+function getStressThreshold(): number {
+  return gameConfig.find((item) => item.id === "stressThreshold")?.value ?? 100;
+}
 
 /**
  * Revisa si algún jugador ha alcanzado 0 de vida o 100 de estrés.
@@ -19,14 +25,15 @@ const XP_THRESHOLD = gameConfig.xpThreshold;
  * Si no, retorna null.
  */
 function checkGameOver(room: any): string | null {
+  const stressThreshold = getStressThreshold();
   for (const pName in room.players) {
     const player = room.players[pName];
     if (player.life <= 0) {
       console.log(`[GAME OVER] ${pName} alcanzó 0 de vida.`);
       return "gameOverLife"; // ID de la escena para Game Over por falta de vida.
     }
-    if (player.stress >= gameConfig.stressThreshold) {
-      console.log(`[GAME OVER] ${pName} alcanzó ${gameConfig.stressThreshold} de estrés.`);
+    if (player.stress >= stressThreshold) {
+      console.log(`[GAME OVER] ${pName} alcanzó ${stressThreshold} de estrés.`);
       return "gameOverStress"; // ID de la escena para Game Over por exceso de estrés.
     }
   }
@@ -51,7 +58,7 @@ export async function GET(req: Request) {
 
   const optIdNum = parseInt(optionId, 10);
 
-  // Si la escena es la de selección de líder, la lógica es especial
+  // Si la escena es la de selección de líder, la lógica es especial.
   if (room.scene.id === "leaderSelection") {
     // Cada opción corresponde a un jugador (según el orden de las opciones generadas en el join)
     room.votes[optIdNum] = (room.votes[optIdNum] || 0) + 1;
@@ -192,6 +199,7 @@ async function resolveCheckAndAdvance(roomId: string, winningOptionId: number) {
   for (const playerName of room.userVoted) {
     const player = room.players[playerName];
     if (!player) continue;
+    // Se asume que option.roll.skillUsed ya es una clave compuesta
     const skillVal = getSkillValue(player, option.roll.skillUsed);
     const diceRoll = roll2d6();
     const total = diceRoll + skillVal;
@@ -280,8 +288,9 @@ function roll2d6(): number {
   return Math.floor(Math.random() * 6 + 1) + Math.floor(Math.random() * 6 + 1);
 }
 
-function getSkillValue(player: Player, skillId: string): number {
-  return player.assignedPoints[skillId] || 0;
+function getSkillValue(player: Player, skillKey: string): number {
+  // Se asume que skillKey es la clave compuesta (por ejemplo, "0-1")
+  return player.assignedPoints[skillKey] || 0;
 }
 
 function goToScene(room: any, sceneId: string) {

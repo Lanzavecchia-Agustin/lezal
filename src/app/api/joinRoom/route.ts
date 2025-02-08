@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import Pusher from "pusher";
+// Se importa gameConfig desde la roomstore; ahora es un array de ConfigItem.
 import rooms, { Player, gameConfig } from "../../../../roomsStore";
 import { storyData } from "../../../../storyData";
 
@@ -45,6 +46,9 @@ export async function GET(req: Request) {
     return NextResponse.json({ error: "Invalid assignedPoints JSON." }, { status: 400 });
   }
 
+  // Debido a que gameConfig es ahora un arreglo, obtenemos "initialLife" mediante búsqueda.
+  const initialLife = gameConfig.find((item) => item.id === "initialLife")?.value ?? 100;
+
   // Se asigna siempre el tipo "Normal"
   const newPlayer: Player = {
     name: userName,
@@ -53,7 +57,7 @@ export async function GET(req: Request) {
     xp: 0,
     skillPoints: 0,
     lockedAttributes: {},
-    life: gameConfig.initialLife,
+    life: initialLife,
     stress: 0,
   };
 

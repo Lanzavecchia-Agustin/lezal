@@ -5,7 +5,8 @@ import Pusher from "pusher-js";
 import { API_ROUTES } from "../../utils/apiConfig";
 import JoinForm from "./JoinForm";
 import SceneDisplay from "./SceneDisplay";
-import { gameConfig, Scene } from "../../roomsStore"; // gameConfig debe incluir initialLife y stressThreshold
+// Ahora gameConfig es un arreglo, y Scene sigue siendo el mismo
+import { gameConfig, Scene } from "../../roomsStore";
 
 // Estructura para almacenar la información de cada jugador (incluyendo vida y estrés)
 export interface PlayerData {
@@ -49,10 +50,15 @@ export default function GameScreen() {
   const [users, setUsers] = useState<string[]>([]);
   const [hasVoted, setHasVoted] = useState(false);
   const [playersData, setPlayersData] = useState<Record<string, PlayerData>>({});
-  const [leader, setLeader] = useState<string | null>(null);  // Estado para el líder
+  const [leader, setLeader] = useState<string | null>(null); // Estado para el líder
 
   const pusherRef = useRef<Pusher | null>(null);
   const debugMode = true;
+
+  // Función auxiliar para obtener el valor de "initialLife" desde gameConfig
+  const getInitialLife = () =>
+    gameConfig.find((item) => item.id === "initialLife")?.value ?? 100;
+  // (Si necesitas obtener otros valores de configuración, como stressThreshold, hazlo de forma similar)
 
   useEffect(() => {
     if (roomId) {
@@ -76,7 +82,7 @@ export default function GameScreen() {
               skillPoints: pl.skillPoints,
               assignedPoints: pl.assignedPoints,
               lockedAttributes: pl.lockedAttributes || {},
-              life: pl.life !== undefined ? pl.life : gameConfig.initialLife,
+              life: pl.life !== undefined ? pl.life : getInitialLife(),
               stress: pl.stress !== undefined ? pl.stress : 0,
             };
           });
@@ -101,7 +107,7 @@ export default function GameScreen() {
 
       // Actualización del líder
       channel.bind("leaderSelected", (payload: { leader: string }) => {
-        setLeader(payload.leader);  // Actualizamos el estado del líder
+        setLeader(payload.leader);
         alert(`El líder es ${payload.leader}`);
       });
 
@@ -165,15 +171,18 @@ export default function GameScreen() {
     }
   };
 
+  // Si ya tenemos datos de este jugador (por ejemplo, actualizados vía Pusher), se usan;
+  // de lo contrario se usa un objeto por defecto con la vida inicial obtenida de gameConfig.
   const myPlayerData = playersData[userName] || {
     xp: 0,
     skillPoints: 0,
     assignedPoints: {},
     lockedAttributes: {},
-    life: gameConfig.initialLife,
+    life: getInitialLife(),
     stress: 0,
   };
 
+  // Si myPlayerData ya tiene assignedPoints (por ejemplo, del servidor), se prioriza sobre la asignación local
   const effectiveAssignedPoints =
     Object.keys(myPlayerData.assignedPoints || {}).length > 0
       ? myPlayerData.assignedPoints
@@ -223,7 +232,7 @@ export default function GameScreen() {
         handleVote={handleVote}
         debugMode={debugMode}
         myPlayer={myPlayer}
-        leader={leader}  // Mostrar el líder
+        leader={leader}
       />
     </div>
   );

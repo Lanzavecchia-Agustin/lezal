@@ -23,14 +23,10 @@ export interface Attribute {
   unlock_threshold?: number;
 }
 
-// Configuración del juego
-export interface GameConfig {
-  maxStartingPoints: number;
-  initialLife: number;
-  stressThreshold: number;
-  skills: Skill[];
-  attributes: Attribute[];
-  xpThreshold: number;
+// Interfaz para cada ítem de configuración del juego
+export interface ConfigItem {
+  id: string;
+  value: number;
 }
 
 // Interfaz para cada opción de la escena
@@ -53,7 +49,7 @@ export interface SceneOption {
   };
   requirements?: {
     attribute: string;
-    actionIfNotMet: "hide" | "disable";
+    actionIfNotMet: string; 
   };
   successEffects?: {
     life?: number;
@@ -65,7 +61,7 @@ export interface SceneOption {
   };
 }
 
-// Escena
+// Interfaz para la escena
 export interface Scene {
   id: string;
   text: string;
@@ -97,14 +93,38 @@ export interface RoomState {
   lockedAttributeIncrementApplied?: boolean;
 }
 
-// Cargamos la configuración y las escenas desde db.json
-const dbData = db as unknown as {
-  gameConfig: GameConfig;
+// Interfaz que representa la estructura completa del JSON de la DB
+export interface DBData {
+  gameConfig: ConfigItem[];
+  skills: Skill[];
+  attributes: Attribute[];
   scenes: Scene[];
-};
+}
+
+// Cargamos la configuración, las skills, los atributos y las escenas desde db.json
+const dbData = db as unknown as DBData;
 
 export const gameConfig = dbData.gameConfig;
+export const SKILLS = dbData.skills;
+export const ATTRIBUTES = dbData.attributes;
 export const SCENES = dbData.scenes;
+
+console.log(SKILLS)
+
+/*
+  Nota:
+  - Al haber cambiado gameConfig de objeto a array de ConfigItem, para acceder
+    a un valor concreto (por ejemplo, "initialLife") deberás buscarlo en el array.
+  Ejemplo:
+  
+  function getConfigValue(id: string): number {
+    const item = gameConfig.find((conf) => conf.id === id);
+    if (!item) {
+      throw new Error(`No se encontró la configuración para: ${id}`);
+    }
+    return item.value;
+  }
+*/
 
 // Almacén global de salas
 const rooms: Record<string, RoomState> = {};

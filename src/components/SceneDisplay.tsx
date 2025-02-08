@@ -2,12 +2,13 @@
 
 import React, { useEffect, useState } from "react";
 import Pusher from "pusher-js";
-import { gameConfig, Scene, SceneOption } from "../../roomsStore";
+// Importamos SKILLS, ATTRIBUTES, gameConfig, Scene y SceneOption de la nueva roomstore
+import { gameConfig, SKILLS, ATTRIBUTES, Scene, SceneOption } from "../../roomsStore";
 
 // Interfaz para la información del jugador, ahora con vida y estrés
 export interface MyPlayerData {
   name: string;
-  assignedPoints: { [subskillId: string]: number };
+  assignedPoints: { [subskillKey: string]: number };
   xp?: number;
   skillPoints?: number;
   lockedAttributes?: { [attribute: string]: number };
@@ -31,14 +32,25 @@ interface SceneDisplayProps {
 }
 
 /**
- * Devuelve el nombre de la subhabilidad a partir de su ID usando gameConfig.skills
+ * Devuelve el nombre de la subhabilidad a partir de su clave compuesta.
+ * Si la clave contiene "-", se asume el formato "skillId-subId".
  */
-function getSubskillName(subskillId: string): string {
-  for (const skill of gameConfig.skills) {
-    const found = skill.subskills.find((s) => s.id === subskillId);
-    if (found) return found.name;
+function getSubskillName(subskillKey: string): string {
+  if (subskillKey.includes("-")) {
+    const [skillId, subId] = subskillKey.split("-");
+    const skill = SKILLS.find((s) => s.id === skillId);
+    if (skill) {
+      const sub = skill.subskills.find((s) => s.id === subId);
+      if (sub) return sub.name;
+    }
+  } else {
+    // Caso simple, por si acaso
+    for (const skill of SKILLS) {
+      const found = skill.subskills.find((s) => s.id === subskillKey);
+      if (found) return found.name;
+    }
   }
-  return subskillId;
+  return subskillKey;
 }
 
 /**
@@ -69,7 +81,8 @@ function computeSuccessProbability(skillVal: number, difficulty: number): number
 }
 
 /**
- * Evalúa si una opción es accesible para el jugador, según los requerimientos
+ * Evalúa si una opción es accesible para el jugador, según los requerimientos.
+ * (Este fragmento no depende de la clave compuesta, pues se evalúa en base a lockedAttributes)
  */
 function evaluateOptionAccessibility(
   option: SceneOption,
@@ -85,16 +98,6 @@ function evaluateOptionAccessibility(
     ? { accessible: true, hide: false }
     : { accessible: false, hide: option.requirements.actionIfNotMet === "hide" };
 }
-
-/**
- * Extrae los umbrales de atributos desde gameConfig.attributes usando el nombre en minúsculas
- */
-// const attributeThresholds = gameConfig.attributes.reduce((acc, attr) => {
-//   if (attr.unlockable && attr.unlock_threshold) {
-//     acc[attr.name.toLowerCase()] = attr.unlock_threshold;
-//   }
-//   return acc;
-// }, {} as { [attribute: string]: number });
 
 const SceneDisplay: React.FC<SceneDisplayProps> = ({
   roomId,
@@ -114,7 +117,9 @@ const SceneDisplay: React.FC<SceneDisplayProps> = ({
 
   const xp = myPlayer?.xp ?? 0;
   const skillPoints = myPlayer?.skillPoints ?? 0;
-  const life = myPlayer?.life ?? gameConfig.initialLife;
+  // Obtenemos "initialLife" de gameConfig (ahora un array de ConfigItem)
+  const initialLife = gameConfig.find((item) => item.id === "initialLife")?.value ?? 0;
+  const life = myPlayer?.life ?? initialLife;
   const stress = myPlayer?.stress ?? 0;
   const xpPercentage = Math.min(100, (xp / 100) * 100);
   const level = Math.floor(xp / 100);
@@ -150,7 +155,7 @@ const SceneDisplay: React.FC<SceneDisplayProps> = ({
     setLocalRollResult((prev) => ({ ...prev, [optionId]: total }));
   }
   
-  async function handleSpendPoint(subskillId: string) {
+  async function handleSpendPoint(subskillKey: string) {
     if (!myPlayer) return;
     if (myPlayer.skillPoints! <= 0) {
       alert("No tienes Skill Points disponibles");
@@ -162,13 +167,13 @@ const SceneDisplay: React.FC<SceneDisplayProps> = ({
     }
     console.log(`Antes de gastar Skill Point, skillPoints: ${myPlayer.skillPoints}`);
     const res = await fetch(
-      `/api/spendSkillPoint?roomId=${roomId}&userName=${myPlayer.name}&subskillId=${subskillId}`,
+      `/api/spendSkillPoint?roomId=${roomId}&userName=${myPlayer.name}&subskillId=${subskillKey}`,
       { method: "POST" }
     );
     if (res.ok) {
       const data = await res.json();
       console.log("Respuesta de spendSkillPoint:", data.player);
-      alert(`Skill Point asignado a ${getSubskillName(subskillId)}`);
+      alert(`Skill Point asignado a ${getSubskillName(subskillKey)}`);
       if (setMyPlayer) {
         setMyPlayer(data.player);
       }
@@ -289,32 +294,33 @@ const SceneDisplay: React.FC<SceneDisplayProps> = ({
                 </svg>
               </button>
             </div>
-            <div className="p-4">
-              <p className="text-sm mb-4">Elige una subhabilidad para subir en 1 punto.</p>
-              <ul className="space-y-4">
-                {gameConfig.skills.map((skill) => (
-                  <li key={skill.id}>
-                    <h3 className="font-semibold text-lg mb-2">{skill.name}</h3>
-                    <ul className="ml-4 space-y-2">
-                      {skill.subskills
-                        .filter((sub) => !sub.unlockable)
-                        .map((sub) => (
-                          <li key={sub.id} className="flex items-center justify-between">
+            <div className="space-y-4">
+              {SKILLS.map((skill) => (
+                <div key={skill.id}>
+                  <h3 className="font-semibold text-lg mb-2">{skill.name}</h3>
+                  <ul className="ml-4 space-y-1">
+                    {skill.subskills
+                      .filter((sub) => !sub.unlockable)
+                      .map((sub) => {
+                        const subKey = `${skill.id}-${sub.id}`;
+                        const assigned = myPlayer.assignedPoints?.[subKey] || 0;
+                        return (
+                          <li key={subKey} className="flex items-center justify-between">
                             <span>
-                              {sub.name} (Actual: {(myPlayer.assignedPoints && myPlayer.assignedPoints[sub.id]) || 0})
+                              {sub.name} (Actual: {assigned})
                             </span>
                             <button
-                              onClick={() => handleSpendPoint(sub.id)}
+                              onClick={() => handleSpendPoint(subKey)}
                               className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded-md text-sm transition duration-200"
                             >
                               Mejorar
                             </button>
                           </li>
-                        ))}
-                    </ul>
-                  </li>
-                ))}
-              </ul>
+                        );
+                      })}
+                  </ul>
+                </div>
+              ))}
             </div>
           </div>
         </div>
@@ -348,7 +354,7 @@ const SceneDisplay: React.FC<SceneDisplayProps> = ({
                 <p className="text-sm mt-1">XP actual: {xp} / 100</p>
               </div>
               <div className="mb-4">
-                <p className="mb-2"><strong>Vida:</strong> {myPlayer.life ?? gameConfig.initialLife}</p>
+                <p className="mb-2"><strong>Vida:</strong> {myPlayer.life ?? initialLife}</p>
                 <div className="w-full bg-gray-300 rounded-full h-4">
                   <div className="bg-red-600 h-4 rounded-full transition-all duration-500 ease-out"
                     style={{ width: "100%" }} />
@@ -368,7 +374,7 @@ const SceneDisplay: React.FC<SceneDisplayProps> = ({
                   <h3 className="font-semibold">Progreso de Atributos Ocultos:</h3>
                   <ul className="ml-4 space-y-2">
                     {Object.entries(myPlayer.lockedAttributes).map(([attr, value]) => {
-                      const configAttr = gameConfig.attributes.find(
+                      const configAttr = ATTRIBUTES.find(
                         (a) => a.name.toLowerCase() === attr.toLowerCase()
                       );
                       const threshold = configAttr && configAttr.unlock_threshold ? configAttr.unlock_threshold : 0;
@@ -399,15 +405,15 @@ const SceneDisplay: React.FC<SceneDisplayProps> = ({
                 </div>
               )}
               <div className="space-y-4">
-                {gameConfig.skills.map((skill) => (
+                {SKILLS.map((skill) => (
                   <div key={skill.id}>
                     <h3 className="font-semibold text-lg mb-2">{skill.name}</h3>
                     <ul className="ml-4 space-y-1">
                       {skill.subskills.map((sub) => {
-                        // Usamos fallback para assignedPoints en caso de que sea undefined
-                        const assigned = myPlayer.assignedPoints?.[sub.id] || 0;
+                        const subKey = `${skill.id}-${sub.id}`;
+                        const assigned = myPlayer.assignedPoints?.[subKey] || 0;
                         return (
-                          <li key={sub.id} className="flex justify-between">
+                          <li key={subKey} className="flex justify-between">
                             <span>{sub.name}:</span>
                             <span className="font-semibold">{assigned}</span>
                           </li>
@@ -422,6 +428,7 @@ const SceneDisplay: React.FC<SceneDisplayProps> = ({
         </div>
       )}
 
+      {/* Opciones de la escena */}
       <div className="w-full max-w-2xl space-y-4">
         {scene.options.map((opt) => {
           const { accessible, hide } = evaluateOptionAccessibility(opt, myPlayer);
@@ -438,9 +445,9 @@ const SceneDisplay: React.FC<SceneDisplayProps> = ({
           let probability = 0;
           let skillVal = 0;
           if (opt.roll && myPlayer) {
-            const subId = opt.roll.skillUsed;
-            // Usamos el fallback para assignedPoints
-            skillVal = myPlayer.assignedPoints?.[subId] || 0;
+            // Se asume que opt.roll.skillUsed ya es una clave compuesta ("skillId-subId")
+            const subKey = opt.roll.skillUsed;
+            skillVal = myPlayer.assignedPoints?.[subKey] || 0;
             probability = computeSuccessProbability(skillVal, opt.roll.difficulty);
           }
 

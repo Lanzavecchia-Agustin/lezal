@@ -13,10 +13,9 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Step, Steps } from "./ui/steps";
-import { gameConfig } from "../../roomsStore";
-import { Subskill } from "../../roomsStore";
+// Importamos gameConfig y SKILLS (la estructura de la DB cambió)
+import { gameConfig, SKILLS, Subskill } from "../../roomsStore";
 
-// Actualizamos las Props: Eliminamos userType y setUserType
 interface JoinFormProps {
   userName: string;
   setUserName: (name: string) => void;
@@ -24,9 +23,9 @@ interface JoinFormProps {
   setRoomId: (roomId: string) => void;
   handleCreateRoom: () => void;
   handleJoinRoom: () => void;
-  // Objeto con subskillId -> puntos asignados
-  assignedPoints: { [subskillId: string]: number };
-  setAssignedPoints: React.Dispatch<React.SetStateAction<{ [subskillId: string]: number }>>;
+  // Objeto con subskillKey -> puntos asignados
+  assignedPoints: { [subskillKey: string]: number };
+  setAssignedPoints: React.Dispatch<React.SetStateAction<{ [subskillKey: string]: number }>>;
 }
 
 const JoinForm: React.FC<JoinFormProps> = ({
@@ -45,21 +44,26 @@ const JoinForm: React.FC<JoinFormProps> = ({
   const nextStep = () => setStep((prev) => Math.min(prev + 1, 3));
   const prevStep = () => setStep((prev) => Math.max(prev - 1, 1));
 
-  // Cálculo del total de puntos asignados
+  // Obtenemos el valor de "maxStartingPoints" desde gameConfig (que ahora es un array de ConfigItem)
+  const maxStartingPoints =
+    gameConfig.find((item) => item.id === "maxStartingPoints")?.value ?? 0;
+  
+  // Cálculo del total de puntos asignados (usando la clave única para cada subhabilidad)
   const totalAssigned = Object.values(assignedPoints).reduce((acc, val) => acc + val, 0);
-  const pointsLeft = gameConfig.maxStartingPoints - totalAssigned;
+  const pointsLeft = maxStartingPoints - totalAssigned;
 
   // Función para asignar puntos a una subskill
-  const handlePointsChange = (subskillId: string, newValue: number) => {
+  // Recuerda: 'subKey' es la clave única que generamos para cada subhabilidad.
+  const handlePointsChange = (subKey: string, newValue: number) => {
     if (newValue < 0) return;
-    const currentVal = assignedPoints[subskillId] || 0;
+    const currentVal = assignedPoints[subKey] || 0;
     const diff = newValue - currentVal;
     if (diff > 0 && diff > pointsLeft) {
       return; // Evita pasar el límite
     }
     setAssignedPoints((prev) => ({
       ...prev,
-      [subskillId]: newValue,
+      [subKey]: newValue,
     }));
   };
 
@@ -93,24 +97,26 @@ const JoinForm: React.FC<JoinFormProps> = ({
           </div>
         )}
 
-        {/* STEP 2: Distribución de puntos iniciales en subhabilidades (solo las NO unlockable) */}
+        {/* STEP 2: Distribución de puntos en subhabilidades (solo las NO unlockable) */}
         {step === 2 && (
           <div className="space-y-4">
             <p className="font-semibold">
-              Puntos disponibles: {pointsLeft} / {gameConfig.maxStartingPoints}
+              Puntos disponibles: {pointsLeft} / {maxStartingPoints}
             </p>
 
-            {gameConfig.skills.map((skill) => (
+            {SKILLS.map((skill) => (
               <div key={skill.id} className="mb-4">
                 <h3 className="text-lg font-bold mb-2">{skill.name}</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
                   {skill.subskills
-                    .filter((sub: Subskill) => !sub.unlockable) // Ocultamos las unlockable de inicio
+                    .filter((sub: Subskill) => !sub.unlockable)
                     .map((sub: Subskill) => {
-                      const value = assignedPoints[sub.id] || 0;
+                      // Creamos una clave única combinando el id de la habilidad y el id de la subhabilidad.
+                      const subKey = `${skill.id}-${sub.id}`;
+                      const value = assignedPoints[subKey] || 0;
                       return (
                         <div
-                          key={sub.id}
+                          key={subKey}
                           className="flex items-center justify-between p-2 border rounded"
                         >
                           <Label className="font-semibold">{sub.name}</Label>
@@ -119,7 +125,7 @@ const JoinForm: React.FC<JoinFormProps> = ({
                               variant="outline"
                               size="sm"
                               disabled={value <= 0}
-                              onClick={() => handlePointsChange(sub.id, value - 1)}
+                              onClick={() => handlePointsChange(subKey, value - 1)}
                             >
                               -
                             </Button>
@@ -133,7 +139,7 @@ const JoinForm: React.FC<JoinFormProps> = ({
                               variant="outline"
                               size="sm"
                               disabled={pointsLeft <= 0}
-                              onClick={() => handlePointsChange(sub.id, value + 1)}
+                              onClick={() => handlePointsChange(subKey, value + 1)}
                             >
                               +
                             </Button>

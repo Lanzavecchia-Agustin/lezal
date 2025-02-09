@@ -88,7 +88,11 @@ function evaluateOptionAccessibility(
   option: SceneOption,
   myPlayer?: MyPlayerData
 ): { accessible: boolean; hide: boolean } {
-  if (!option.requirements) return { accessible: true, hide: false };
+  // Si no existen requisitos o el atributo está vacío, la opción es accesible y no se oculta.
+  if (!option.requirements || option.requirements.attribute === "") {
+    return { accessible: true, hide: false };
+  }
+  // Si no se tiene información del jugador o de sus atributos bloqueados, se deshabilita u oculta según lo indicado.
   if (!myPlayer || !myPlayer.lockedAttributes) {
     return { accessible: false, hide: option.requirements.actionIfNotMet === "hide" };
   }
@@ -183,6 +187,8 @@ const SceneDisplay: React.FC<SceneDisplayProps> = ({
       alert(`Error al asignar Skill Point: ${err.message}`);
     }
   }
+
+  console.log(scene)
 
   return (
     <div className="min-h-screen flex flex-col items-center p-4 space-y-6 bg-gradient-to-b text-white">

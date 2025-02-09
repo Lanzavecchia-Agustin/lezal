@@ -54,7 +54,7 @@
           },
           "requirements": {
             "attribute": "",
-            "actionIfNotMet": "hide"
+            "actionIfNotMet": ""
           },
           "successEffects": {
             "life": 0,
@@ -100,7 +100,7 @@
           },
           "requirements": {
             "attribute": "",
-            "actionIfNotMet": "hide"
+            "actionIfNotMet": ""
           },
           "successEffects": {
             "life": 0,
@@ -135,7 +135,7 @@
           },
           "requirements": {
             "attribute": "",
-            "actionIfNotMet": "hide"
+            "actionIfNotMet": ""
           },
           "successEffects": {
             "life": 0,
@@ -170,7 +170,7 @@
           },
           "requirements": {
             "attribute": "",
-            "actionIfNotMet": "hide"
+            "actionIfNotMet": ""
           },
           "successEffects": {
             "life": 0,
@@ -205,7 +205,7 @@
           },
           "requirements": {
             "attribute": "",
-            "actionIfNotMet": "hide"
+            "actionIfNotMet": ""
           },
           "successEffects": {
             "life": 0,
@@ -240,7 +240,7 @@
           },
           "requirements": {
             "attribute": "",
-            "actionIfNotMet": "hide"
+            "actionIfNotMet": ""
           },
           "successEffects": {
             "life": 0,
@@ -275,7 +275,7 @@
           },
           "requirements": {
             "attribute": "",
-            "actionIfNotMet": "hide"
+            "actionIfNotMet": ""
           },
           "successEffects": {
             "life": 0,
@@ -310,7 +310,7 @@
           },
           "requirements": {
             "attribute": "",
-            "actionIfNotMet": "hide"
+            "actionIfNotMet": ""
           },
           "successEffects": {
             "life": 0,
@@ -345,7 +345,7 @@
           },
           "requirements": {
             "attribute": "",
-            "actionIfNotMet": "hide"
+            "actionIfNotMet": ""
           },
           "successEffects": {
             "life": 0,
@@ -380,7 +380,7 @@
           },
           "requirements": {
             "attribute": "",
-            "actionIfNotMet": "hide"
+            "actionIfNotMet": ""
           },
           "successEffects": {
             "life": 0,
@@ -415,7 +415,7 @@
           },
           "requirements": {
             "attribute": "",
-            "actionIfNotMet": "hide"
+            "actionIfNotMet": ""
           },
           "successEffects": {
             "life": 0,

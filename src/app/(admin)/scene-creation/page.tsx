@@ -55,7 +55,7 @@ export interface SceneOption {
   };
   requirements?: {
     attribute: string;
-    actionIfNotMet: "hide" | "disable";
+    actionIfNotMet: ''| "hide" | "disable";
   };
   successEffects?: {
     life?: number;
@@ -82,7 +82,7 @@ const initialOptionState: SceneOption = {
   roll: { skillUsed: "", difficulty: 0 },
   expOnSuccess: 0,
   lockedAttributeIncrement: { attribute: "", increment: 0 },
-  requirements: { attribute: "", actionIfNotMet: "hide" },
+  requirements: { attribute: "", actionIfNotMet: '' },
   successEffects: { life: 0, stress: 0 },
   failureEffects: { life: 0, stress: 0 },
 };

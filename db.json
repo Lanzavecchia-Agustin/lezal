@@ -19,1031 +19,46 @@
   ],
   "skills": [
     {
-      "id": "intelecto",
-      "name": "Intelecto",
+      "id": "b8f08a82-b7fc-42fe-9abc-bb8e9e7231bf",
+      "name": "test1",
       "subskills": [
         {
-          "id": "intelecto-razonamiento",
-          "name": "razonamiento",
-          "unlockable": false
-        },
-        {
-          "id": "intelecto-enciclopedia",
-          "name": "enciclopedia",
-          "unlockable": false
-        },
-        {
-          "id": "intelecto-retorica",
-          "name": "retórica",
-          "unlockable": false
-        },
-        {
-          "id": "intelecto-imaginacion",
-          "name": "imaginación",
-          "unlockable": true,
-          "unlock_threshold": 5
-        },
-        {
-          "id": "intelecto-calculo-visual",
-          "name": "cálculo visual",
-          "unlockable": true,
-          "unlock_threshold": 6
-        },
-        {
-          "id": "intelecto-erudicion",
-          "name": "erudición",
-          "unlockable": false
-        }
-      ]
-    },
-    {
-      "id": "psique",
-      "name": "Psique",
-      "subskills": [
-        {
-          "id": "psique-voluntad",
-          "name": "voluntad",
-          "unlockable": false
-        },
-        {
-          "id": "psique-empatia",
-          "name": "empatía",
-          "unlockable": false
-        },
-        {
-          "id": "psique-autoridad",
-          "name": "autoridad",
-          "unlockable": false
-        },
-        {
-          "id": "psique-intuicion",
-          "name": "intuición",
-          "unlockable": true,
-          "unlock_threshold": 5
-        },
-        {
-          "id": "psique-sugestion",
-          "name": "sugestión",
-          "unlockable": true,
-          "unlock_threshold": 6
-        },
-        {
-          "id": "psique-compasion",
-          "name": "compasión",
-          "unlockable": false
-        }
-      ]
-    },
-    {
-      "id": "cuerpo",
-      "name": "Cuerpo",
-      "subskills": [
-        {
-          "id": "cuerpo-resistencia",
-          "name": "resistencia",
-          "unlockable": false
-        },
-        {
-          "id": "cuerpo-electroquimica",
-          "name": "electroquímica",
-          "unlockable": false
-        },
-        {
-          "id": "cuerpo-fuerza",
-          "name": "fuerza",
-          "unlockable": false
-        },
-        {
-          "id": "cuerpo-flexibilidad",
-          "name": "flexibilidad",
-          "unlockable": true,
-          "unlock_threshold": 5
-        },
-        {
-          "id": "cuerpo-golpe-certero",
-          "name": "golpe certero",
-          "unlockable": true,
-          "unlock_threshold": 6
-        },
-        {
-          "id": "cuerpo-resiliencia",
-          "name": "resiliencia",
-          "unlockable": false
-        }
-      ]
-    },
-    {
-      "id": "motricidad",
-      "name": "Motricidad",
-      "subskills": [
-        {
-          "id": "motricidad-coordinacion",
-          "name": "coordinación",
-          "unlockable": false
-        },
-        {
-          "id": "motricidad-percepcion",
-          "name": "percepción",
-          "unlockable": false
-        },
-        {
-          "id": "motricidad-sigilo",
-          "name": "sigilo",
-          "unlockable": false
-        },
-        {
-          "id": "motricidad-equilibrio",
-          "name": "equilibrio",
-          "unlockable": true,
-          "unlock_threshold": 5
-        },
-        {
-          "id": "motricidad-reflejos",
-          "name": "reflejos",
-          "unlockable": true,
-          "unlock_threshold": 6
-        },
-        {
-          "id": "motricidad-punteria",
-          "name": "puntería",
-          "unlockable": false
-        }
-      ]
-    },
-    {
-      "id": "trolleo-edit",
-      "name": "trolleo EDIT",
-      "subskills": [
-        {
-          "id": "trolleo-edit-joder",
-          "name": "joder a todos",
-          "unlockable": false
-        },
-        {
-          "id": "trolleo-edit-hacer-todo-mal",
-          "name": "hacer todo mal EDIT",
-          "unlockable": false
-        },
-        {
-          "id": "trolleo-edit-hablar-gilada",
-          "name": "hablar gilada EDIT",
-          "unlockable": false
-        }
-      ]
-    },
-    {
-      "id": "poder-gay",
-      "name": "poder gay",
-      "subskills": [
-        {
-          "id": "poder-gay-ereccion",
-          "name": "ereccion al ver hombres"
-        },
-        {
-          "id": "poder-gay-sentido-de-moda",
-          "name": "sentido de moda"
-        },
-        {
-          "id": "poder-gay-culo-potente",
-          "name": "culo potente"
-        }
-      ]
-    },
-    {
-      "id": "d1e0acdc-7586-4e3d-ac89-302192a224fa",
-      "name": "tests",
-      "subskills": [
-        {
-          "id": "69f75654-be44-4d63-bdbb-99ac8f456324",
-          "name": "testo 12"
-        }
-      ]
-    },
-    {
-      "id": "e3ebd318-b528-4c34-805c-716c78dadd32",
-      "name": "testing 123",
-      "subskills": [
-        {
-          "id": "6b4d096a-8b0f-453d-8ea0-4277a45b5cc1",
-          "name": "puto el que lee"
+          "id": "d8075e45-628f-4273-a139-1c3cb64f9c89",
+          "name": "t1"
         }
       ]
     }
   ],
-  "attributes": [
-    {
-      "id": "1",
-      "name": "corrupto",
-      "unlockable": true,
-      "unlock_threshold": 9
-    },
-    {
-      "id": "6",
-      "name": "misterioso",
-      "unlockable": true,
-      "unlock_threshold": 4
-    },
-    {
-      "id": "10",
-      "name": "esotérico",
-      "unlockable": true,
-      "unlock_threshold": 4
-    },
-    {
-      "id": "11",
-      "name": "conspirativo",
-      "unlockable": true,
-      "unlock_threshold": 5
-    },
-    {
-      "id": "12",
-      "name": "redentor",
-      "unlockable": true,
-      "unlock_threshold": 7
-    }
-  ],
+  "attributes": [],
   "scenes": [
     {
       "id": "scene1",
-      "text": "Ante ti se alza el Portal del Olvido: una imponente estructura de piedra cubierta de enigmáticos grabados, enclavada en el corazón de un bosque ancestral. Se dice que este portal conecta con secretos olvidados y tiempos distorsionados. (edit)",
+      "text": "Año 2247. La humanidad enfrenta la última frontera: las estrellas.  Escarbando el fondo del tarro, los recursos de la Tierra se encuentran al límite y la expansión interestelar  lleva años estancada, cada expedición al exterior es una apuesta desesperada. ",
       "isEnding": false,
-      "maxVote": 1,
+      "maxVote": 0,
       "options": [
         {
-          "id": 1,
-          "text": "Examinar detenidamente los grabados del portal.",
-          "roll": {
-            "skillUsed": "69f75654-be44-4d63-bdbb-99ac8f456324",
-            "difficulty": 32
-          },
-          "expOnSuccess": 12,
+          "id": 0,
+          "text": "Siguiente",
           "nextSceneId": {
-            "success": "scene2",
-            "failure": "scene1Fail",
-            "partial": ""
+            "success": "inicio1"
           },
-          "successEffects": {
-            "life": 0,
-            "stress": -5
+          "roll": {
+            "skillUsed": "",
+            "difficulty": 0
           },
-          "failureEffects": {
-            "life": 0,
-            "stress": 5
-          },
+          "expOnSuccess": 0,
           "lockedAttributeIncrement": {
-            "attribute": "esotérico",
-            "increment": 3
-          }
-        },
-        {
-          "id": 2,
-          "text": "Intentar forzar la apertura del portal con pura fuerza bruta.",
-          "roll": {
-            "skillUsed": "303",
-            "difficulty": 4
+            "attribute": "",
+            "increment": 0
           },
-          "expOnSuccess": 2,
-          "lockedAttributeIncrement": {
-            "attribute": "corrupto",
-            "increment": 1
-          },
-          "nextSceneId": {
-            "success": "scene3",
-            "failure": "scene1Fail2",
-            "partial": ""
-          },
-          "successEffects": {
-            "life": 5,
-            "stress": -5
-          },
-          "failureEffects": {
-            "life": -5,
-            "stress": 5
-          }
-        }
-      ]
-    },
-    {
-      "id": "scene1Fail",
-      "text": "Al concentrarte en los grabados, un repentino temblor hace que pierdas el equilibrio. El conocimiento se te escapa entre los dedos y sientes un aumento de inquietud.",
-      "isEnding": false,
-      "options": [
-        {
-          "id": 1,
-          "text": "Recobrar la compostura e intentarlo de nuevo.",
-          "nextSceneId": {
-            "success": "scene1",
-            "failure": "",
-            "partial": ""
-          },
-          "successEffects": {
-            "life": 5,
-            "stress": -2
-          },
-          "failureEffects": {
-            "life": 0,
-            "stress": 0
-          }
-        }
-      ]
-    },
-    {
-      "id": "scene1Fail2",
-      "text": "El portal se resiste a tus embestidas y, tras un esfuerzo desmedido, sientes una punzada que te recuerda tus límites físicos.",
-      "isEnding": false,
-      "options": [
-        {
-          "id": 1,
-          "text": "Alejarte momentáneamente para evitar lesiones mayores.",
-          "nextSceneId": {
-            "success": "scene1",
-            "failure": "",
-            "partial": ""
-          },
-          "successEffects": {
-            "life": 3,
-            "stress": 0
-          },
-          "failureEffects": {
-            "life": 0,
-            "stress": 3
-          }
-        }
-      ]
-    },
-    {
-      "id": "scene2",
-      "text": "Logras discernir antiguos símbolos y metáforas ocultas en la piedra. Una tenue luz parece emanar de ellos, invitándote a descubrir sus secretos en el interior del portal.",
-      "isEnding": false,
-      "options": [
-        {
-          "id": 1,
-          "text": "Adentrarte en el interior para investigar una sala de inscripciones místicas.",
-          "roll": {
-            "skillUsed": "102",
-            "difficulty": 7
-          },
-          "expOnSuccess": 1,
-          "nextSceneId": {
-            "success": "scene4",
-            "failure": "scene2Fail",
-            "partial": ""
-          },
-          "successEffects": {
-            "life": 5,
-            "stress": -5
-          },
-          "failureEffects": {
-            "life": -5,
-            "stress": 5
-          }
-        },
-        {
-          "id": 2,
-          "text": "Dejarte llevar por tu presentimiento y descifrar los símbolos mediante la intuición.",
-          "roll": {
-            "skillUsed": "204",
-            "difficulty": 5
-          },
-          "expOnSuccess": 2,
-          "nextSceneId": {
-            "success": "scene4",
-            "failure": "scene2Fail",
-            "partial": ""
-          },
-          "successEffects": {
-            "life": 0,
-            "stress": -3
-          },
-          "failureEffects": {
-            "life": 0,
-            "stress": 5
-          }
-        }
-      ]
-    },
-    {
-      "id": "scene2Fail",
-      "text": "La sala parece impenetrable para tus métodos actuales; las inscripciones se mezclan en un caos de símbolos sin sentido, incrementando tu desasosiego.",
-      "isEnding": false,
-      "options": [
-        {
-          "id": 1,
-          "text": "Decidir retroceder y evaluar otras alternativas.",
-          "nextSceneId": {
-            "success": "scene1",
-            "failure": "",
-            "partial": ""
-          },
-          "successEffects": {
-            "life": 0,
-            "stress": 5
-          },
-          "failureEffects": {
-            "life": 0,
-            "stress": 0
-          }
-        }
-      ]
-    },
-    {
-      "id": "scene3",
-      "text": "Rechazado el misterio del portal, te adentras en un sendero oscuro entre árboles retorcidos, donde sombras y susurros parecen acechar en cada rincón.",
-      "isEnding": false,
-      "options": [
-        {
-          "id": 1,
-          "text": "Correr a toda velocidad, confiando en tus reflejos para evadir lo que te persigue.",
-          "roll": {
-            "skillUsed": "405",
-            "difficulty": 6
-          },
-          "expOnSuccess": 1,
-          "nextSceneId": {
-            "success": "scene4",
-            "failure": "scene3Fail",
-            "partial": ""
-          },
-          "successEffects": {
-            "life": 10,
-            "stress": -5
-          },
-          "failureEffects": {
-            "life": -5,
-            "stress": 5
-          }
-        },
-        {
-          "id": 2,
-          "text": "Escalar una estructura abandonada para obtener una mejor perspectiva del entorno.",
-          "roll": {
-            "skillUsed": "105",
-            "difficulty": 7
-          },
-          "expOnSuccess": 1,
-          "lockedAttributeIncrement": {
-            "attribute": "conspirativo",
-            "increment": 1
-          },
-          "nextSceneId": {
-            "success": "scene4",
-            "failure": "scene3Fail2",
-            "partial": ""
-          },
-          "successEffects": {
-            "life": 5,
-            "stress": -2
-          },
-          "failureEffects": {
-            "life": -3,
-            "stress": 3
-          }
-        }
-      ]
-    },
-    {
-      "id": "scene3Fail",
-      "text": "Tropezando en la penumbra, sientes el peso del entorno y un leve golpe te hace dudar de tus habilidades.",
-      "isEnding": false,
-      "options": [
-        {
-          "id": 1,
-          "text": "Recuperarte y volver a intentarlo con más cautela.",
-          "nextSceneId": {
-            "success": "scene3",
-            "failure": "",
-            "partial": ""
-          },
-          "successEffects": {
-            "life": 4,
-            "stress": -2
-          },
-          "failureEffects": {
-            "life": 0,
-            "stress": 0
-          }
-        }
-      ]
-    },
-    {
-      "id": "scene3Fail2",
-      "text": "La escalada no sale como esperabas y pierdes el equilibrio; la caída te deja con un malestar creciente.",
-      "isEnding": false,
-      "options": [
-        {
-          "id": 1,
-          "text": "Aguantar el dolor y reincorporarte para volver a intentarlo.",
-          "nextSceneId": {
-            "success": "scene3",
-            "failure": "",
-            "partial": ""
-          },
-          "successEffects": {
-            "life": 3,
-            "stress": 2
-          },
-          "failureEffects": {
-            "life": 0,
-            "stress": 0
-          }
-        }
-      ]
-    },
-    {
-      "id": "scene4",
-      "text": "El sendero te conduce hasta la entrada de una antigua ruina, cuyos muros desgastados esconden un laberinto de recuerdos y secretos. En el umbral, dos rutas se abren: una iluminada por tenues velas y otra que se pierde en una penumbra abismal.",
-      "isEnding": false,
-      "options": [
-        {
-          "id": 1,
-          "text": "Tomar el corredor adornado con velas y dejarte guiar por su luz temblorosa.",
-          "roll": {
-            "skillUsed": "401",
-            "difficulty": 5
-          },
-          "expOnSuccess": 1,
-          "nextSceneId": {
-            "success": "scene5",
-            "failure": "",
-            "partial": ""
-          },
-          "successEffects": {
-            "life": 5,
-            "stress": -5
-          },
-          "failureEffects": {
-            "life": 0,
-            "stress": 0
-          }
-        },
-        {
-          "id": 2,
-          "text": "Acercarte al altar tallado en la piedra, repleto de símbolos oscuros y enigmáticos.",
-          "roll": {
-            "skillUsed": "104",
-            "difficulty": 8
-          },
-          "expOnSuccess": 2,
-          "lockedAttributeIncrement": {
-            "attribute": "corrupto",
-            "increment": 1
-          },
-          "nextSceneId": {
-            "success": "scene6",
-            "failure": "scene4Fail",
-            "partial": ""
-          },
-          "successEffects": {
-            "life": -2,
-            "stress": 5
-          },
-          "failureEffects": {
-            "life": 0,
-            "stress": 5
-          }
-        }
-      ]
-    },
-    {
-      "id": "scene4Fail",
-      "text": "Al intentar descifrar los oscuros símbolos del altar, un escalofrío recorre tu cuerpo: la respuesta parece estar fuera de tu alcance, y la incertidumbre aumenta.",
-      "isEnding": false,
-      "options": [
-        {
-          "id": 1,
-          "text": "Retroceder y explorar la otra ruta en busca de respuestas.",
-          "nextSceneId": {
-            "success": "scene1",
-            "failure": "",
-            "partial": ""
-          },
-          "successEffects": {
-            "life": 3,
-            "stress": 3
-          },
-          "failureEffects": {
-            "life": 0,
-            "stress": 0
-          }
-        }
-      ]
-    },
-    {
-      "id": "scene5",
-      "text": "Adentrándote en el corazón del laberinto, descubres una sala oculta: una antigua biblioteca cuyos muros rezuman historia. Sobre un atril, un manuscrito gastado aguarda ser leído.",
-      "isEnding": false,
-      "options": [
-        {
-          "id": 1,
-          "text": "Analizar el manuscrito para desvelar los secretos del lugar.",
-          "roll": {
-            "skillUsed": "101",
-            "difficulty": 7
-          },
-          "expOnSuccess": 2,
-          "lockedAttributeIncrement": {
-            "attribute": "corrupto",
-            "increment": 1
-          },
-          "nextSceneId": {
-            "success": "scene7",
-            "failure": "scene5Fail",
-            "partial": "scene5Partial"
-          },
-          "successEffects": {
-            "life": 0,
-            "stress": -5
-          },
-          "failureEffects": {
-            "life": -2,
-            "stress": 5
-          }
-        },
-        {
-          "id": 2,
-          "text": "Cerrarte en una breve meditación para conectar con la esencia del conocimiento ancestral.",
-          "roll": {
-            "skillUsed": "203",
-            "difficulty": 6
-          },
-          "expOnSuccess": 1,
-          "nextSceneId": {
-            "success": "scene7",
-            "failure": "scene5Fail",
-            "partial": ""
-          },
-          "successEffects": {
-            "life": 0,
-            "stress": -3
-          },
-          "failureEffects": {
-            "life": 0,
-            "stress": 3
-          }
-        }
-      ]
-    },
-    {
-      "id": "scene5Fail",
-      "text": "El manuscrito resulta ser un enigma indescifrable; las palabras se entrelazan sin sentido y sientes que la oportunidad se desvanece.",
-      "isEnding": false,
-      "options": [
-        {
-          "id": 1,
-          "text": "Intentar una vez más, aferrándote a una mínima esperanza de comprensión.",
-          "nextSceneId": {
-            "success": "scene5",
-            "failure": "",
-            "partial": ""
-          },
-          "successEffects": {
-            "life": -2,
-            "stress": 5
-          },
-          "failureEffects": {
-            "life": 0,
-            "stress": 0
-          }
-        }
-      ]
-    },
-    {
-      "id": "scene5Partial",
-      "text": "Entre líneas y símbolos, logras vislumbrar la existencia de un pasaje secreto que conduce a cámaras aún más recónditas del laberinto.",
-      "isEnding": false,
-      "maxVote": 1,
-      "options": [
-        {
-          "id": 1,
-          "text": "Decidir seguir el indicio y buscar el acceso al pasaje oculto.",
-          "nextSceneId": {
-            "success": "scene7",
-            "failure": "",
-            "partial": ""
-          },
-          "successEffects": {
-            "life": 0,
-            "stress": 0
-          },
-          "failureEffects": {
-            "life": 0,
-            "stress": 0
-          }
-        }
-      ]
-    },
-    {
-      "id": "scene6",
-      "text": "Frente a ti se abre El Santuario de los Ecos: un recinto marcado por símbolos arcanos y una energía que parece desafiar la realidad. En el centro, un altar invita a la realización de un ritual ancestral.",
-      "isEnding": false,
-      "maxVote": 1,
-      "options": [
-        {
-          "id": 1,
-          "text": "Emprender un ritual ancestral que intente alterar el curso del destino.",
-          "roll": {
-            "skillUsed": "104",
-            "difficulty": 9
-          },
-          "expOnSuccess": 3,
-          "lockedAttributeIncrement": {
-            "attribute": "corrupto",
-            "increment": 1
-          },
-          "nextSceneId": {
-            "success": "scene8",
-            "failure": "scene6Fail",
-            "partial": ""
-          },
-          "successEffects": {
-            "life": -5,
-            "stress": -5
-          },
-          "failureEffects": {
-            "life": -5,
-            "stress": 15
-          }
-        },
-        {
-          "id": 2,
-          "text": "Concentrarte y convocar tus fuerzas interiores para protegerte de las energías caóticas.",
-          "roll": {
-            "skillUsed": "201",
-            "difficulty": 7
-          },
-          "expOnSuccess": 2,
-          "nextSceneId": {
-            "success": "scene8",
-            "failure": "scene6Fail",
-            "partial": ""
-          },
-          "successEffects": {
-            "life": 0,
-            "stress": -5
-          },
-          "failureEffects": {
-            "life": 0,
-            "stress": 5
-          }
-        }
-      ]
-    },
-    {
-      "id": "scene6Fail",
-      "text": "El ritual fracasa y la energía incontrolable del santuario te abruma. Un halo de desesperación se cierne sobre ti, dejando claras las consecuencias de lo desconocido.",
-      "isEnding": false,
-      "maxVote": 1,
-      "options": [
-        {
-          "id": 1,
-          "text": "Replantear tu estrategia y buscar otro camino en el laberinto.",
-          "nextSceneId": {
-            "success": "scene5",
-            "failure": "",
-            "partial": ""
-          },
-          "successEffects": {
-            "life": 0,
-            "stress": 5
-          },
-          "failureEffects": {
-            "life": 0,
-            "stress": 0
-          }
-        }
-      ]
-    },
-    {
-      "id": "scene7",
-      "text": "Avanzas hacia El Corazón del Secreto: una cámara oculta tras estanterías polvorientas y pasajes olvidados. Ante ti se dividen dos rutas misteriosas.",
-      "isEnding": false,
-      "maxVote": 1,
-      "options": [
-        {
-          "id": 1,
-          "text": "Entrar en una cámara iluminada por símbolos ancestrales y vestigios de sabiduría.",
-          "roll": {
-            "skillUsed": "102",
-            "difficulty": 8
-          },
-          "expOnSuccess": 2,
-          "nextSceneId": {
-            "success": "scene9",
-            "failure": "scene7Fail",
-            "partial": ""
-          },
-          "successEffects": {
-            "life": 5,
-            "stress": -3
-          },
-          "failureEffects": {
-            "life": 0,
-            "stress": 5
-          }
-        },
-        {
-          "id": 2,
-          "text": "Adentrarte en una cripta oscura donde cada sombra oculta un secreto.",
-          "roll": {
-            "skillUsed": "402",
-            "difficulty": 7
-          },
-          "expOnSuccess": 1,
-          "nextSceneId": {
-            "success": "scene10",
-            "failure": "scene7Fail2",
-            "partial": "scene7Partial"
-          },
-          "successEffects": {
-            "life": 0,
-            "stress": -2
-          },
-          "failureEffects": {
-            "life": 0,
-            "stress": 5
-          }
-        }
-      ]
-    },
-    {
-      "id": "scene7Fail",
-      "text": "La luz se desvanece en la cámara y tus esfuerzos por entender los símbolos se tornan infructuosos. El desconcierto y la fatiga te hacen tambalear.",
-      "isEnding": false,
-      "maxVote": 1,
-      "options": [
-        {
-          "id": 1,
-          "text": "Reconsiderar tus pasos y volver a la encrucijada.",
-          "nextSceneId": {
-            "success": "scene7",
-            "failure": "",
-            "partial": ""
-          },
-          "successEffects": {
-            "life": 3,
-            "stress": -3
-          },
-          "failureEffects": {
-            "life": 0,
-            "stress": 0
-          }
-        }
-      ]
-    },
-    {
-      "id": "scene7Fail2",
-      "text": "La oscuridad en la cripta te envuelve por completo y cada paso se vuelve un riesgo. La incertidumbre te hace dudar de la salida.",
-      "isEnding": false,
-      "maxVote": 1,
-      "options": [
-        {
-          "id": 1,
-          "text": "Retroceder y probar otra ruta en la encrucijada.",
-          "nextSceneId": {
-            "success": "scene7",
-            "failure": "",
-            "partial": ""
-          },
-          "successEffects": {
-            "life": 0,
-            "stress": 5
-          },
-          "failureEffects": {
-            "life": 0,
-            "stress": 0
-          }
-        }
-      ]
-    },
-    {
-      "id": "scene7Partial",
-      "text": "Entre la penumbra de la cripta, logras distinguir unos ecos de palabras pronunciadas. Tal vez un discurso persuasivo logre canalizar la energía del lugar.",
-      "isEnding": false,
-      "maxVote": 1,
-      "options": [
-        {
-          "id": 1,
-          "text": "Utilizar tu retórica para invocar respuestas del pasado.",
-          "roll": {
-            "skillUsed": "103",
-            "difficulty": 7
-          },
-          "expOnSuccess": 1,
-          "nextSceneId": {
-            "success": "scene9",
-            "failure": "scene7Fail",
-            "partial": ""
-          },
-          "successEffects": {
-            "life": 5,
-            "stress": -2
-          },
-          "failureEffects": {
-            "life": 0,
-            "stress": 5
-          }
-        }
-      ]
-    },
-    {
-      "id": "scene8",
-      "text": "Llegas a El Umbral del Destino: una sala amplia donde una entidad etérea parece flotar entre sombras y luces. Ante un altar en el centro, se vislumbran dos posibles caminos para alterar tu futuro.",
-      "isEnding": false,
-      "maxVote": 1,
-      "options": [
-        {
-          "id": 1,
-          "text": "Leer un antiguo grimorio dispuesto sobre el altar, en busca de respuestas.",
-          "roll": {
-            "skillUsed": "201",
-            "difficulty": 6
-          },
-          "expOnSuccess": 2,
-          "nextSceneId": {
-            "success": "scene9",
-            "failure": "scene8Fail",
-            "partial": ""
-          },
-          "successEffects": {
-            "life": 0,
-            "stress": -10
-          },
-          "failureEffects": {
-            "life": 0,
-            "stress": 0
-          }
-        },
-        {
-          "id": 2,
-          "text": "Realizar un ritual para intentar disolver la presencia maligna que habita en la sala.",
-          "roll": {
-            "skillUsed": "104",
-            "difficulty": 10
-          },
-          "expOnSuccess": 3,
-          "lockedAttributeIncrement": {
-            "attribute": "corrupto",
-            "increment": 1
-          },
-          "nextSceneId": {
-            "success": "scene10",
-            "failure": "scene8Fail",
-            "partial": "scene8Partial"
-          },
-          "successEffects": {
-            "life": -5,
-            "stress": -5
-          },
-          "failureEffects": {
-            "life": -5,
-            "stress": 15
-          }
-        },
-        {
-          "id": 3,
-          "text": "Ofrecer redención a la entidad a través de un acto compasivo.",
-          "roll": {
-            "skillUsed": "206",
-            "difficulty": 8
-          },
-          "expOnSuccess": 2,
           "requirements": {
-            "attribute": "redentor",
-            "actionIfNotMet": "disable"
-          },
-          "nextSceneId": {
-            "success": "scene9",
-            "failure": "scene8Fail2",
-            "partial": ""
-          },
-          "successEffects": {
-            "life": 5,
-            "stress": -5
-          },
-          "failureEffects": {
-            "life": 0,
-            "stress": 5
-          }
-        }
-      ]
-    },
-    {
-      "id": "scene8Fail",
-      "text": "Las energías en la sala se rebelan y sientes cómo una fuerza incontrolable te impide avanzar. El grimorio se cierra ante ti, dejando un rastro de incertidumbre.",
-      "isEnding": false,
-      "maxVote": 1,
-      "options": [
-        {
-          "id": 1,
-          "text": "Respirar hondo y reunir coraje para volver a intentarlo.",
-          "nextSceneId": {
-            "success": "scene8",
-            "failure": "",
-            "partial": ""
+            "attribute": "",
+            "actionIfNotMet": "hide"
           },
           "successEffects": {
             "life": 0,
-            "stress": 5
+            "stress": 0
           },
           "failureEffects": {
             "life": 0,
@@ -1051,43 +66,6 @@
           }
         }
       ]
-    },
-    {
-      "id": "scene8Fail2",
-      "text": "El acto compasivo fracasa; la entidad se retuerce en una agonía silenciosa, y la sensación de redención se desvanece, dejando tras de sí un eco de dolor.",
-      "isEnding": false,
-      "maxVote": 1,
-      "options": [
-        {
-          "id": 1,
-          "text": "Reunir fuerzas y probar una última vez para alcanzar la iluminación.",
-          "nextSceneId": {
-            "success": "scene8",
-            "failure": "",
-            "partial": ""
-          },
-          "successEffects": {
-            "life": 0,
-            "stress": 5
-          },
-          "failureEffects": {
-            "life": 0,
-            "stress": 0
-          }
-        }
-      ]
-    },
-    {
-      "id": "scene9",
-      "text": "La Revelación del Pasado se desata: los secretos del portal, la ruina y tus propias decisiones confluyen en un momento de epifanía. Las voces de antiguos guardianes te guían hacia una comprensión ineludible.",
-      "isEnding": true,
-      "options": []
-    },
-    {
-      "id": "scene10",
-      "text": "El Legado de la Sombra se consuma: al desafiar las fuerzas oscuras, reconfiguras el destino del lugar. Una calma inquieta se asienta, dejando abierta la posibilidad de redención o condena.",
-      "isEnding": true,
-      "options": []
     },
     {
       "id": "gameOverLife",
@@ -1102,24 +80,18 @@
       "options": []
     },
     {
-      "id": "final",
-      "text": "fin",
-      "options": [],
-      "isEnding": true
-    },
-    {
-      "id": "dlslslslslsls",
-      "text": "122121121212",
+      "id": "inicio1",
+      "text": "A pesar de los avances en la exploración espacial, la inmensidad del cosmos sigue siendo un territorio hostil y desconocido. La mayoría de los planetas colonizables han sido reclamados, los proyectos científicos han colapsado por falta de financiamiento y las viejas promesas de una era dorada en el espacio han sido reemplazadas por silencio y desconfianza...\n",
       "options": [
         {
           "id": 0,
-          "text": "OPCION DE TEST",
+          "text": "Siguiente.",
           "nextSceneId": {
-            "success": "OPCION DE TEST SUCCESS"
+            "success": "inicio2"
           },
           "roll": {
-            "skillUsed": "6b4d096a-8b0f-453d-8ea0-4277a45b5cc1",
-            "difficulty": 23
+            "skillUsed": "",
+            "difficulty": 0
           },
           "expOnSuccess": 0,
           "lockedAttributeIncrement": {
@@ -1143,17 +115,17 @@
       "isEnding": false
     },
     {
-      "id": "tesasadsd",
-      "text": "adsadsads",
+      "id": "inicio2",
+      "text": "...hasta que llegó \"la señal\".",
       "options": [
         {
           "id": 0,
-          "text": "33333",
+          "text": "Siguiente",
           "nextSceneId": {
-            "success": "3333"
+            "success": "inicio3"
           },
           "roll": {
-            "skillUsed": "psique-autoridad",
+            "skillUsed": "",
             "difficulty": 0
           },
           "expOnSuccess": 0,
@@ -1175,8 +147,287 @@
           }
         }
       ],
-      "isEnding": false,
-      "maxVote": 12
+      "isEnding": false
+    },
+    {
+      "id": "inicio3",
+      "text": "Débil. intermitente. Una transmisión emerge desde las profundidades del vacío. Su origen: Lezal, un planeta olvidado en el borde del espacio conocido. Un mundo inhóspito, descartado décadas atrás tras un fallido intento de exploración humana. \n",
+      "options": [
+        {
+          "id": 0,
+          "text": "Siguiente.",
+          "nextSceneId": {
+            "success": "inicio4"
+          },
+          "roll": {
+            "skillUsed": "",
+            "difficulty": 0
+          },
+          "expOnSuccess": 0,
+          "lockedAttributeIncrement": {
+            "attribute": "",
+            "increment": 0
+          },
+          "requirements": {
+            "attribute": "",
+            "actionIfNotMet": "hide"
+          },
+          "successEffects": {
+            "life": 0,
+            "stress": 0
+          },
+          "failureEffects": {
+            "life": 0,
+            "stress": 0
+          }
+        }
+      ],
+      "isEnding": false
+    },
+    {
+      "id": "inicio4",
+      "text": "No hay registros de colonias, ni bases activas, ni satélites en órbita. No debería haber nada allí.\n\nPero la señal persiste.",
+      "options": [
+        {
+          "id": 0,
+          "text": "Siguiente.",
+          "nextSceneId": {
+            "success": "inicio5"
+          },
+          "roll": {
+            "skillUsed": "",
+            "difficulty": 0
+          },
+          "expOnSuccess": 0,
+          "lockedAttributeIncrement": {
+            "attribute": "",
+            "increment": 0
+          },
+          "requirements": {
+            "attribute": "",
+            "actionIfNotMet": "hide"
+          },
+          "successEffects": {
+            "life": 0,
+            "stress": 0
+          },
+          "failureEffects": {
+            "life": 0,
+            "stress": 0
+          }
+        }
+      ],
+      "isEnding": false
+    },
+    {
+      "id": "inicio5",
+      "text": "[Transmisión de la Federación – Canal de Misión 02-L]\n\nSe distingue la voz de una mujer en la lejanía:\n\n\"Tripulación de la misión Lezal-02, procediendo con el protocolo de activación.\"\n",
+      "options": [
+        {
+          "id": 0,
+          "text": "Siguiente.",
+          "nextSceneId": {
+            "success": "inicio6"
+          },
+          "roll": {
+            "skillUsed": "",
+            "difficulty": 0
+          },
+          "expOnSuccess": 0,
+          "lockedAttributeIncrement": {
+            "attribute": "",
+            "increment": 0
+          },
+          "requirements": {
+            "attribute": "",
+            "actionIfNotMet": "hide"
+          },
+          "successEffects": {
+            "life": 0,
+            "stress": 0
+          },
+          "failureEffects": {
+            "life": 0,
+            "stress": 0
+          }
+        }
+      ],
+      "isEnding": false
+    },
+    {
+      "id": "inicio6",
+      "text": "\"Chequeo de signos vitales… aceptables. Condiciones físicas… dentro del margen permitido.\"",
+      "options": [
+        {
+          "id": 0,
+          "text": "Siguiente.",
+          "nextSceneId": {
+            "success": "inicio7"
+          },
+          "roll": {
+            "skillUsed": "",
+            "difficulty": 0
+          },
+          "expOnSuccess": 0,
+          "lockedAttributeIncrement": {
+            "attribute": "",
+            "increment": 0
+          },
+          "requirements": {
+            "attribute": "",
+            "actionIfNotMet": "hide"
+          },
+          "successEffects": {
+            "life": 0,
+            "stress": 0
+          },
+          "failureEffects": {
+            "life": 0,
+            "stress": 0
+          }
+        }
+      ],
+      "isEnding": false
+    },
+    {
+      "id": "inicio7",
+      "text": "Les doy la bienvenida, habla la Dra. Brynwerhaitz, Supervisora de Expediciones de Bajo Riesgo. Si experimentan mareos, desorientación o pérdida momentánea de memoria, es completamente normal. En caso de vómito, eviten hacerlo en los paneles de control.\n",
+      "options": [
+        {
+          "id": 0,
+          "text": "Siguiente.",
+          "nextSceneId": {
+            "success": "inicio8"
+          },
+          "roll": {
+            "skillUsed": "",
+            "difficulty": 0
+          },
+          "expOnSuccess": 0,
+          "lockedAttributeIncrement": {
+            "attribute": "",
+            "increment": 0
+          },
+          "requirements": {
+            "attribute": "",
+            "actionIfNotMet": "hide"
+          },
+          "successEffects": {
+            "life": 0,
+            "stress": 0
+          },
+          "failureEffects": {
+            "life": 0,
+            "stress": 0
+          }
+        }
+      ],
+      "isEnding": false
+    },
+    {
+      "id": "inicio8",
+      "text": "Recordatorio: esta misión es de baja prioridad en la jerarquía operativa de la Federación. Los recursos asignados han sido optimizados según estimaciones de viabilidad y costo-beneficio. En términos simples: no pidan refuerzos.",
+      "options": [
+        {
+          "id": 0,
+          "text": "Siguiente.",
+          "nextSceneId": {
+            "success": "inicio9"
+          },
+          "roll": {
+            "skillUsed": "",
+            "difficulty": 0
+          },
+          "expOnSuccess": 0,
+          "lockedAttributeIncrement": {
+            "attribute": "",
+            "increment": 0
+          },
+          "requirements": {
+            "attribute": "",
+            "actionIfNotMet": "hide"
+          },
+          "successEffects": {
+            "life": 0,
+            "stress": 0
+          },
+          "failureEffects": {
+            "life": 0,
+            "stress": 0
+          }
+        }
+      ],
+      "isEnding": false
+    },
+    {
+      "id": "inicio9",
+      "text": "El objetivo primario es localizar y analizar la señal detectada en Lezal. El objetivo secundario es no incrementar las bajas en expediciones de bajo riesgo.\"\n",
+      "options": [
+        {
+          "id": 0,
+          "text": "Siguiente.",
+          "nextSceneId": {
+            "success": "inicio10"
+          },
+          "roll": {
+            "skillUsed": "",
+            "difficulty": 0
+          },
+          "expOnSuccess": 0,
+          "lockedAttributeIncrement": {
+            "attribute": "",
+            "increment": 0
+          },
+          "requirements": {
+            "attribute": "",
+            "actionIfNotMet": "hide"
+          },
+          "successEffects": {
+            "life": 0,
+            "stress": 0
+          },
+          "failureEffects": {
+            "life": 0,
+            "stress": 0
+          }
+        }
+      ],
+      "isEnding": false
+    },
+    {
+      "id": "inicio10",
+      "text": "El sistema de soporte de misión está a cargo de la Consciencia Híbrida Integrada: C.H.I. Cortesía de la Unión de los Estados Orientales. \nSe espera cooperación. No se garantiza paciencia.\n",
+      "options": [
+        {
+          "id": 0,
+          "text": "Siguiente.",
+          "nextSceneId": {
+            "success": "inicio11"
+          },
+          "roll": {
+            "skillUsed": "",
+            "difficulty": 0
+          },
+          "expOnSuccess": 0,
+          "lockedAttributeIncrement": {
+            "attribute": "",
+            "increment": 0
+          },
+          "requirements": {
+            "attribute": "",
+            "actionIfNotMet": "hide"
+          },
+          "successEffects": {
+            "life": 0,
+            "stress": 0
+          },
+          "failureEffects": {
+            "life": 0,
+            "stress": 0
+          }
+        }
+      ],
+      "isEnding": false
     }
   ]
 }

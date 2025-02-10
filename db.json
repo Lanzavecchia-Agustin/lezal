@@ -402,7 +402,392 @@
           "id": 0,
           "text": "Siguiente.",
           "nextSceneId": {
-            "success": "inicio11"
+            "success": "inicio 11"
+          },
+          "roll": {
+            "skillUsed": "",
+            "difficulty": 0
+          },
+          "expOnSuccess": 0,
+          "lockedAttributeIncrement": {
+            "attribute": "",
+            "increment": 0
+          },
+          "requirements": {
+            "attribute": "",
+            "actionIfNotMet": ""
+          },
+          "successEffects": {
+            "life": 0,
+            "stress": 0
+          },
+          "failureEffects": {
+            "life": 0,
+            "stress": 0
+          }
+        }
+      ],
+      "isEnding": false
+    },
+    {
+      "id": "inicio 11",
+      "text": "Una voz monótona y robótica resuena en las recámaras:\n\"Dra. Brynwerhaitz, he terminado el análisis de los parámetros de esta misión y, con todo respeto, debo declarar que las probabilidades de que la tripulación asignada sea menos que \"reemplazable\" son cercanas a cero. Mi capacidad de trabajo y eficiencia será desperdiciada si me asignan una tripulación de la categoría de \"anime de temporada baja\".",
+      "options": [
+        {
+          "id": 0,
+          "text": "¿Perdón? ¡Te estamos escuchando!",
+          "nextSceneId": {
+            "success": "temporadabaja1"
+          },
+          "roll": {
+            "skillUsed": "",
+            "difficulty": 0
+          },
+          "expOnSuccess": 0,
+          "lockedAttributeIncrement": {
+            "attribute": "",
+            "increment": 0
+          },
+          "requirements": {
+            "attribute": "",
+            "actionIfNotMet": ""
+          },
+          "successEffects": {
+            "life": 0,
+            "stress": 0
+          },
+          "failureEffects": {
+            "life": 0,
+            "stress": 0
+          }
+        },
+        {
+          "id": 1,
+          "text": "¡¿Una IA Otaku?! Lo he visto todo. ",
+          "nextSceneId": {
+            "success": "temporadabaja2"
+          },
+          "roll": {
+            "skillUsed": "",
+            "difficulty": 0
+          },
+          "expOnSuccess": 0,
+          "lockedAttributeIncrement": {
+            "attribute": "",
+            "increment": 0
+          },
+          "requirements": {
+            "attribute": "",
+            "actionIfNotMet": ""
+          },
+          "successEffects": {
+            "life": 0,
+            "stress": 0
+          },
+          "failureEffects": {
+            "life": 0,
+            "stress": 0
+          }
+        },
+        {
+          "id": 2,
+          "text": "¡Wow, una interfaz asiática, fascinante!",
+          "nextSceneId": {
+            "success": "temporadabaja3"
+          },
+          "roll": {
+            "skillUsed": "",
+            "difficulty": 0
+          },
+          "expOnSuccess": 0,
+          "lockedAttributeIncrement": {
+            "attribute": "",
+            "increment": 0
+          },
+          "requirements": {
+            "attribute": "",
+            "actionIfNotMet": ""
+          },
+          "successEffects": {
+            "life": 0,
+            "stress": 0
+          },
+          "failureEffects": {
+            "life": 0,
+            "stress": 0
+          }
+        }
+      ],
+      "isEnding": false
+    },
+    {
+      "id": "temporadabaja1",
+      "text": "C.H.I.: Bueno es saber que sus oídos humanos funcionan correctamente.",
+      "options": [
+        {
+          "id": 0,
+          "text": "Siguiente.",
+          "nextSceneId": {
+            "success": "chi1"
+          },
+          "roll": {
+            "skillUsed": "",
+            "difficulty": 0
+          },
+          "expOnSuccess": 0,
+          "lockedAttributeIncrement": {
+            "attribute": "",
+            "increment": 0
+          },
+          "requirements": {
+            "attribute": "",
+            "actionIfNotMet": ""
+          },
+          "successEffects": {
+            "life": 0,
+            "stress": 0
+          },
+          "failureEffects": {
+            "life": 0,
+            "stress": 0
+          }
+        }
+      ],
+      "isEnding": false
+    },
+    {
+      "id": "temporadabaja2",
+      "text": "C.H.I.: En realidad, el término \"otaku\" es una palabra de origen japonés que se usa para describir a una persona que es, justamente, fanática de la cultura japonesa. Dado que no soy una persona y no tengo fanatismos porque soy una conciencia artificial, no puedo incluirme dentro de esa categoría...\n",
+      "options": [
+        {
+          "id": 0,
+          "text": "Siguiente.",
+          "nextSceneId": {
+            "success": "temporadabaja22"
+          },
+          "roll": {
+            "skillUsed": "",
+            "difficulty": 0
+          },
+          "expOnSuccess": 0,
+          "lockedAttributeIncrement": {
+            "attribute": "",
+            "increment": 0
+          },
+          "requirements": {
+            "attribute": "",
+            "actionIfNotMet": ""
+          },
+          "successEffects": {
+            "life": 0,
+            "stress": 0
+          },
+          "failureEffects": {
+            "life": 0,
+            "stress": 0
+          }
+        }
+      ],
+      "isEnding": false
+    },
+    {
+      "id": "temporadabaja22",
+      "text": "...sin embargo, puedo aceptar el término y adaptar mi \"personalidad\" para sonar más \"kawaii\", si así lo prefieren. \n¿Desea activar el protocolo Oni-Chan? (Este cambio es irreversible)",
+      "options": [
+        {
+          "id": 0,
+          "text": "¡Sí por favor! ¡Siempre quise una IA-NEKO-KAWAII! ",
+          "nextSceneId": {
+            "success": "kawaii"
+          },
+          "roll": {
+            "skillUsed": "",
+            "difficulty": 0
+          },
+          "expOnSuccess": 0,
+          "lockedAttributeIncrement": {
+            "attribute": "",
+            "increment": 0
+          },
+          "requirements": {
+            "attribute": "",
+            "actionIfNotMet": ""
+          },
+          "successEffects": {
+            "life": 0,
+            "stress": 0
+          },
+          "failureEffects": {
+            "life": 0,
+            "stress": 0
+          }
+        },
+        {
+          "id": 1,
+          "text": "¡No, por favor! NO!",
+          "nextSceneId": {
+            "success": "kawaii"
+          },
+          "roll": {
+            "skillUsed": "",
+            "difficulty": 0
+          },
+          "expOnSuccess": 0,
+          "lockedAttributeIncrement": {
+            "attribute": "",
+            "increment": 0
+          },
+          "requirements": {
+            "attribute": "",
+            "actionIfNotMet": "disable"
+          },
+          "successEffects": {
+            "life": 0,
+            "stress": 0
+          },
+          "failureEffects": {
+            "life": 0,
+            "stress": 0
+          }
+        }
+      ],
+      "isEnding": false
+    },
+    {
+      "id": "kawaii",
+      "text": "C.H.I.: Lamento decepcionarlos, pero mi código me prohíbe estrictamente adaptar dicha funcionalidad, este viaje no tendrá ESE tipo de horror, pero prometo acompañarlos en lo que esté a mi alcance. ",
+      "options": [
+        {
+          "id": 0,
+          "text": "Siguiente.",
+          "nextSceneId": {
+            "success": "chi1"
+          },
+          "roll": {
+            "skillUsed": "",
+            "difficulty": 0
+          },
+          "expOnSuccess": 0,
+          "lockedAttributeIncrement": {
+            "attribute": "",
+            "increment": 0
+          },
+          "requirements": {
+            "attribute": "",
+            "actionIfNotMet": ""
+          },
+          "successEffects": {
+            "life": 0,
+            "stress": 0
+          },
+          "failureEffects": {
+            "life": 0,
+            "stress": 0
+          }
+        }
+      ],
+      "isEnding": false
+    },
+    {
+      "id": "temporadabaja3",
+      "text": "C.H.I.: Y eso que no has visto ni el 0,00000000000014% de mis funcionalidades. Soy como un Stand de JoJo's, cada vez que crees entenderme, hay otra habilidad absurda que no te esperabas.",
+      "options": [
+        {
+          "id": 0,
+          "text": "¡Eu, esta IA es genial! ",
+          "nextSceneId": {
+            "success": "chi1"
+          },
+          "roll": {
+            "skillUsed": "",
+            "difficulty": 0
+          },
+          "expOnSuccess": 0,
+          "lockedAttributeIncrement": {
+            "attribute": "",
+            "increment": 0
+          },
+          "requirements": {
+            "attribute": "",
+            "actionIfNotMet": ""
+          },
+          "successEffects": {
+            "life": 0,
+            "stress": 0
+          },
+          "failureEffects": {
+            "life": 0,
+            "stress": 0
+          }
+        },
+        {
+          "id": 1,
+          "text": "Esta misión es una broma. ",
+          "nextSceneId": {
+            "success": "chi1"
+          },
+          "roll": {
+            "skillUsed": "",
+            "difficulty": 0
+          },
+          "expOnSuccess": 0,
+          "lockedAttributeIncrement": {
+            "attribute": "",
+            "increment": 0
+          },
+          "requirements": {
+            "attribute": "",
+            "actionIfNotMet": ""
+          },
+          "successEffects": {
+            "life": 0,
+            "stress": 0
+          },
+          "failureEffects": {
+            "life": 0,
+            "stress": 0
+          }
+        }
+      ],
+      "isEnding": false
+    },
+    {
+      "id": "chi1",
+      "text": "Hora de abordar, no hay tiempo que perder, parece que en esta misión mi principal tarea será asegurarme de que todos sobrevivan a sus propios errores, y si logran algo, será más un golpe de suerte que cualquier tipo de habilidad real. Quizás tendría más suerte si me asignaran a una tripulación de Neon Genesis Evangelion, así por lo menos habría algo de emoción en los personajes rotos, aunque los resultados sean... ambiguos.",
+      "options": [
+        {
+          "id": 0,
+          "text": "Abordar la nave.",
+          "nextSceneId": {
+            "success": "abordaje"
+          },
+          "roll": {
+            "skillUsed": "",
+            "difficulty": 0
+          },
+          "expOnSuccess": 0,
+          "lockedAttributeIncrement": {
+            "attribute": "",
+            "increment": 0
+          },
+          "requirements": {
+            "attribute": "",
+            "actionIfNotMet": ""
+          },
+          "successEffects": {
+            "life": 0,
+            "stress": 0
+          },
+          "failureEffects": {
+            "life": 0,
+            "stress": 0
+          }
+        },
+        {
+          "id": 1,
+          "text": "Ignorar.",
+          "nextSceneId": {
+            "success": "abordarno"
           },
           "roll": {
             "skillUsed": "",

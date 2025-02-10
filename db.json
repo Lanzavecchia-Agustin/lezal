@@ -29,7 +29,13 @@
       ]
     }
   ],
-  "attributes": [],
+  "attributes": [
+    {
+      "id": "0",
+      "name": "Falso",
+      "unlock_threshold": "30"
+    }
+  ],
   "scenes": [
     {
       "id": "scene1",
@@ -638,7 +644,7 @@
             "increment": 0
           },
           "requirements": {
-            "attribute": "",
+            "attribute": "Falso",
             "actionIfNotMet": "disable"
           },
           "successEffects": {

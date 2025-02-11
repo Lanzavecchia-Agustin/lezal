@@ -819,6 +819,442 @@
         }
       ],
       "isEnding": false
+    },
+    {
+      "id": "abordaje",
+      "text": "C.H.I.: ¡Bienvenidos a la \"Quisquillosa\"!",
+      "options": [
+        {
+          "id": 0,
+          "text": "Observar.",
+          "nextSceneId": {
+            "success": "abordaje1"
+          },
+          "roll": {
+            "skillUsed": "",
+            "difficulty": 0
+          },
+          "expOnSuccess": 0,
+          "lockedAttributeIncrement": {
+            "attribute": "",
+            "increment": 0
+          },
+          "requirements": {
+            "attribute": "",
+            "actionIfNotMet": ""
+          },
+          "successEffects": {
+            "life": 0,
+            "stress": 0
+          },
+          "failureEffects": {
+            "life": 0,
+            "stress": 0
+          }
+        }
+      ],
+      "isEnding": false
+    },
+    {
+      "id": "abor",
+      "text": "",
+      "options": [],
+      "isEnding": false
+    },
+    {
+      "id": "abordaje1",
+      "text": "La \"Quisquilosa\" no inspira confianza.\nA primera vista, más que una nave de reconocimiento, ven un pedazo de chatarra que se rehúsa a morir. El casco está parcheado con placas de diversos metales reciclados, como si hubiera sido remendada con lo primero que encontraron flotando en el espacio. Parece que nadie se molestó en pulir las quemaduras de plasma e hiperradiación, las marcas y abolladuras sugieren que esta nave ha visto más problemas de los que debería...",
+      "options": [
+        {
+          "id": 0,
+          "text": "Siguiente.",
+          "nextSceneId": {
+            "success": "abordaje2"
+          },
+          "roll": {
+            "skillUsed": "",
+            "difficulty": 0
+          },
+          "expOnSuccess": 0,
+          "lockedAttributeIncrement": {
+            "attribute": "",
+            "increment": 0
+          },
+          "requirements": {
+            "attribute": "",
+            "actionIfNotMet": ""
+          },
+          "successEffects": {
+            "life": 0,
+            "stress": 0
+          },
+          "failureEffects": {
+            "life": 0,
+            "stress": 0
+          }
+        }
+      ],
+      "isEnding": false
+    },
+    {
+      "id": "abordaje2",
+      "text": "...El interior no es mejor. Los pasillos angostos y opresivos, exponen tuberías que gotean líquidos de dudosa procedencia. La iluminación parpadea en intervalos irregulares, y las pantallas de los paneles de control muestran errores inexplicacbles antes de volver a la normalidad. La cabina de pilotaje, que apesta a caucho sobrecalentado, parece la delantera de un tractor de tercera mano, y la consola principal es un mar de botones que resultan más inservibles que funcionales...\n",
+      "options": [
+        {
+          "id": 0,
+          "text": "Siguiente.",
+          "nextSceneId": {
+            "success": "abordaje3"
+          },
+          "roll": {
+            "skillUsed": "",
+            "difficulty": 0
+          },
+          "expOnSuccess": 0,
+          "lockedAttributeIncrement": {
+            "attribute": "",
+            "increment": 0
+          },
+          "requirements": {
+            "attribute": "",
+            "actionIfNotMet": ""
+          },
+          "successEffects": {
+            "life": 0,
+            "stress": 0
+          },
+          "failureEffects": {
+            "life": 0,
+            "stress": 0
+          }
+        }
+      ],
+      "isEnding": false
+    },
+    {
+      "id": "abordaje3",
+      "text": "...Al menos el sistema de soporte vital funciona, técnicamente. Aunque el zumbido irregular de los ventiladores sugiere que en un sacudón el oxígeno puede volverse un lujo. Las cámaras criogénicas, recicladas de algún modelo mucho más antiguo, tienen etiquetas de advertencia que nadie se molestó en traducir... ",
+      "options": [
+        {
+          "id": 0,
+          "text": "Siguiente.",
+          "nextSceneId": {
+            "success": "abordaje4"
+          },
+          "roll": {
+            "skillUsed": "",
+            "difficulty": 0
+          },
+          "expOnSuccess": 0,
+          "lockedAttributeIncrement": {
+            "attribute": "",
+            "increment": 0
+          },
+          "requirements": {
+            "attribute": "",
+            "actionIfNotMet": ""
+          },
+          "successEffects": {
+            "life": 0,
+            "stress": 0
+          },
+          "failureEffects": {
+            "life": 0,
+            "stress": 0
+          }
+        }
+      ],
+      "isEnding": false
+    },
+    {
+      "id": "abordaje4",
+      "text": "...Evidentemente, la Federación tampoco designó un buen presupuesto en los ingenieros. La praxis de las modificaciones del sector de carga son terribles; cables cuelgan chisporroteantes desde el techo, las placas sueltas del suelo crujen con cada paso, y ese zumbido... ese zumbido constante que nadie podría descifrar de dónde proviene.\n",
+      "options": [
+        {
+          "id": 0,
+          "text": "¿Qué tan segura es esta cosa? ",
+          "nextSceneId": {
+            "success": "seguridad"
+          },
+          "roll": {
+            "skillUsed": "",
+            "difficulty": 0
+          },
+          "expOnSuccess": 0,
+          "lockedAttributeIncrement": {
+            "attribute": "",
+            "increment": 0
+          },
+          "requirements": {
+            "attribute": "",
+            "actionIfNotMet": ""
+          },
+          "successEffects": {
+            "life": 0,
+            "stress": 0
+          },
+          "failureEffects": {
+            "life": 0,
+            "stress": 0
+          }
+        },
+        {
+          "id": 2,
+          "text": "Es perfecta.",
+          "nextSceneId": {
+            "success": "protocolo1"
+          },
+          "roll": {
+            "skillUsed": "",
+            "difficulty": 0
+          },
+          "expOnSuccess": 0,
+          "lockedAttributeIncrement": {
+            "attribute": "",
+            "increment": 0
+          },
+          "requirements": {
+            "attribute": "",
+            "actionIfNotMet": ""
+          },
+          "successEffects": {
+            "life": 0,
+            "stress": 0
+          },
+          "failureEffects": {
+            "life": 0,
+            "stress": 0
+          }
+        },
+        {
+          "id": 2,
+          "text": "Supervisar manualmente la infraestructura",
+          "nextSceneId": {
+            "success": "supervisarexito",
+            "failure": "supervisarfracaso"
+          },
+          "roll": {
+            "skillUsed": "",
+            "difficulty": 0
+          },
+          "expOnSuccess": 0,
+          "lockedAttributeIncrement": {
+            "attribute": "",
+            "increment": 0
+          },
+          "requirements": {
+            "attribute": "",
+            "actionIfNotMet": ""
+          },
+          "successEffects": {
+            "life": 0,
+            "stress": 0
+          },
+          "failureEffects": {
+            "life": 0,
+            "stress": 0
+          }
+        }
+      ],
+      "isEnding": false
+    },
+    {
+      "id": "seguridad",
+      "text": "C.H.I.: La definición operativa de \"segura\" podría necesitar ajustes. Estamos funcionales al 73%. Según mis cálculos, eso nos deja en el lado optimista del espectro. Aunque, si se tratara de un Longboard en descenso, llevaría casco. No sé por qué mencioné eso.",
+      "options": [
+        {
+          "id": 0,
+          "text": "Dudar - Realizar una inspección manual.",
+          "nextSceneId": {
+            "success": "supervisarexito",
+            "failure": "supervisarfracaso"
+          },
+          "roll": {
+            "skillUsed": "",
+            "difficulty": 0
+          },
+          "expOnSuccess": 0,
+          "lockedAttributeIncrement": {
+            "attribute": "",
+            "increment": 0
+          },
+          "requirements": {
+            "attribute": "",
+            "actionIfNotMet": ""
+          },
+          "successEffects": {
+            "life": 0,
+            "stress": 0
+          },
+          "failureEffects": {
+            "life": 0,
+            "stress": 0
+          }
+        },
+        {
+          "id": 1,
+          "text": "Confiar - Me basta con eso.",
+          "nextSceneId": {
+            "success": "protocolo1"
+          },
+          "roll": {
+            "skillUsed": "",
+            "difficulty": 0
+          },
+          "expOnSuccess": 0,
+          "lockedAttributeIncrement": {
+            "attribute": "",
+            "increment": 0
+          },
+          "requirements": {
+            "attribute": "",
+            "actionIfNotMet": ""
+          },
+          "successEffects": {
+            "life": 0,
+            "stress": 0
+          },
+          "failureEffects": {
+            "life": 0,
+            "stress": 0
+          }
+        }
+      ],
+      "isEnding": false
+    },
+    {
+      "id": "protocolo1",
+      "text": "C.H.I.: Procedamos con el Protocolo de Optimización de Recursos de Navegación y Orbitalización. ",
+      "options": [
+        {
+          "id": 0,
+          "text": "Siguiente.",
+          "nextSceneId": {
+            "success": "protocolo2"
+          },
+          "roll": {
+            "skillUsed": "",
+            "difficulty": 0
+          },
+          "expOnSuccess": 0,
+          "lockedAttributeIncrement": {
+            "attribute": "",
+            "increment": 0
+          },
+          "requirements": {
+            "attribute": "",
+            "actionIfNotMet": ""
+          },
+          "successEffects": {
+            "life": 0,
+            "stress": 0
+          },
+          "failureEffects": {
+            "life": 0,
+            "stress": 0
+          }
+        }
+      ],
+      "isEnding": false
+    },
+    {
+      "id": "supervisarexito",
+      "text": "Logran identificar una falla en el sistema de amarres. Pueden solucionarlo provisoriamente o intentar ingeniar un sistema seguro para toda la nave,",
+      "options": [
+        {
+          "id": 0,
+          "text": "Solución provisoria.",
+          "nextSceneId": {
+            "success": "provisoria"
+          },
+          "roll": {
+            "skillUsed": "",
+            "difficulty": 0
+          },
+          "expOnSuccess": 0,
+          "lockedAttributeIncrement": {
+            "attribute": "",
+            "increment": 0
+          },
+          "requirements": {
+            "attribute": "",
+            "actionIfNotMet": ""
+          },
+          "successEffects": {
+            "life": 0,
+            "stress": 0
+          },
+          "failureEffects": {
+            "life": 0,
+            "stress": 0
+          }
+        },
+        {
+          "id": 1,
+          "text": "Reconstruir sistema de amarres.",
+          "nextSceneId": {
+            "success": "amarreexito",
+            "failure": "amarrefracaso"
+          },
+          "roll": {
+            "skillUsed": "",
+            "difficulty": 0
+          },
+          "expOnSuccess": 0,
+          "lockedAttributeIncrement": {
+            "attribute": "",
+            "increment": 0
+          },
+          "requirements": {
+            "attribute": "",
+            "actionIfNotMet": ""
+          },
+          "successEffects": {
+            "life": 0,
+            "stress": 0
+          },
+          "failureEffects": {
+            "life": 0,
+            "stress": 0
+          }
+        }
+      ],
+      "isEnding": false
+    },
+    {
+      "id": "supervisarfracaso",
+      "text": "Todo está en perfectas condiciones. No hay nada de qué preocuparse.",
+      "options": [
+        {
+          "id": 0,
+          "text": "¡Todo listo para comenzar el Protocolo de lanzamiento!",
+          "nextSceneId": {
+            "success": "protocolo1"
+          },
+          "roll": {
+            "skillUsed": "",
+            "difficulty": 0
+          },
+          "expOnSuccess": 0,
+          "lockedAttributeIncrement": {
+            "attribute": "",
+            "increment": 0
+          },
+          "requirements": {
+            "attribute": "",
+            "actionIfNotMet": ""
+          },
+          "successEffects": {
+            "life": 0,
+            "stress": 0
+          },
+          "failureEffects": {
+            "life": 0,
+            "stress": 0
+          }
+        }
+      ],
+      "isEnding": false
     }
   ]
 }

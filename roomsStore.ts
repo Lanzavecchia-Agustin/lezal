@@ -69,6 +69,7 @@ export interface Scene {
   options: SceneOption[];
   isEnding?: boolean;
   maxVote?: number;
+  audio?: string;
 }
 
 // Interfaz Player

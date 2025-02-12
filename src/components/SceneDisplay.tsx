@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import Pusher from "pusher-js";
 // Importamos SKILLS, ATTRIBUTES, gameConfig, Scene y SceneOption de la nueva roomstore
 import { gameConfig, SKILLS, ATTRIBUTES, Scene, SceneOption } from "../../roomsStore";
+import AudioPlayer from "./AudioPlayer";
 
 // Interfaz para la información del jugador, ahora con vida y estrés
 export interface MyPlayerData {
@@ -29,6 +30,7 @@ interface SceneDisplayProps {
   // setMyPlayer puede agregarse si se desea actualizar desde este componente
   setMyPlayer?: (player: MyPlayerData) => void;
   leader?: string | null;
+  audio?: string;
 }
 
 /**
@@ -188,10 +190,11 @@ const SceneDisplay: React.FC<SceneDisplayProps> = ({
     }
   }
 
-  console.log(scene)
 
   return (
-    <div className="min-h-screen flex flex-col items-center p-4 space-y-6 bg-gradient-to-b text-white">
+    <div className="min-h-screen flex flex-col items-center p-4 space-y-6  text-white">
+        {/* Reproductor de audio */}
+      <AudioPlayer audioSrc={scene.audio} />
       <h1 className="text-3xl md:text-4xl font-bold text-center mb-4">{scene.text}</h1>
 
       {/* Información general de la escena */}

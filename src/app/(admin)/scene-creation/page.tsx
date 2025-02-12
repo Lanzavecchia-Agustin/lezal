@@ -55,7 +55,7 @@ export interface SceneOption {
   };
   requirements?: {
     attribute: string;
-    actionIfNotMet: ''| "hide" | "disable";
+    actionIfNotMet: "" | "hide" | "disable";
   };
   successEffects?: {
     life?: number;
@@ -73,6 +73,7 @@ export interface Scene {
   options: SceneOption[];
   isEnding?: boolean;
   maxVote?: number;
+  audio?: string;
 }
 
 const initialOptionState: SceneOption = {
@@ -82,7 +83,7 @@ const initialOptionState: SceneOption = {
   roll: { skillUsed: "", difficulty: 0 },
   expOnSuccess: 0,
   lockedAttributeIncrement: { attribute: "", increment: 0 },
-  requirements: { attribute: "", actionIfNotMet: '' },
+  requirements: { attribute: "", actionIfNotMet: "" },
   successEffects: { life: 0, stress: 0 },
   failureEffects: { life: 0, stress: 0 },
 };
@@ -273,6 +274,16 @@ function SceneCreationContent() {
                     value={scene.text}
                     onChange={(e) => handleSceneChange("text", e.target.value)}
                     placeholder="Describa la escena"
+                  />
+                </div>
+                {/* Nuevo campo para el link de audio */}
+                <div>
+                  <Label htmlFor="audio">Link de Audio</Label>
+                  <Input
+                    id="audio"
+                    value={scene.audio ?? ""}
+                    onChange={(e) => handleSceneChange("audio", e.target.value)}
+                    placeholder="Ingrese URL del audio"
                   />
                 </div>
                 <div className="flex items-center space-x-2">
@@ -667,4 +678,3 @@ export default function SceneCreationPage() {
     </Suspense>
   );
 }
-

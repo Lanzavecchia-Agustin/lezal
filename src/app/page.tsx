@@ -26,7 +26,7 @@ export default function Home() {
   };
 
   return (
-    <div className="relative flex flex-col items-center justify-center min-h-screen bg-gradient-to-b from-black via-indigo-950 to-black">
+    <div className="relative flex flex-col items-center justify-center min-h-screen bg-black">
 
       {/* Capa de partículas sangrientas */}
       <Particles

@@ -1,4 +1,4 @@
-'use client'
+"use client"
 import { useState, useEffect, ChangeEvent } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -8,20 +8,25 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 // Define interfaces for the complete game configuration
 interface GameConfigItem {
   id: string
-  value: number
+  value: string | number
+}
+
+// Form state that can hold either string or number for each key
+type FormState = {
+  [key: string]: string | number
 }
 
 const GameConfigPage = () => {
   const [gameConfig, setGameConfig] = useState<GameConfigItem[]>([])
-  const [form, setForm] = useState<{ [key: string]: number }>({})
+  const [form, setForm] = useState<FormState>({})
 
   useEffect(() => {
     fetch("http://localhost:3001/gameConfig")
       .then((response) => response.json())
       .then((data: GameConfigItem[]) => {
-        const configData: { [key: string]: number } = {};
+        const configData: FormState = {};
         data.forEach((item: GameConfigItem) => {
-          configData[item.id] = item.value;
+          configData[item.id] = item.value
         });
 
         setGameConfig(data);
@@ -34,18 +39,27 @@ const GameConfigPage = () => {
   }, [])
 
   const handleGeneralChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setForm({ ...form, [e.target.name]: Number(e.target.value) })
+    const { name, value } = e.target
+
+    // Decide if the field should be stored as number or string
+    if (name === "initialMusic") {
+      // 'initialMusic' should be a string
+      setForm(prev => ({ ...prev, [name]: value }))
+    } else {
+      // Otherwise store as a number
+      setForm(prev => ({ ...prev, [name]: Number(value) }))
+    }
   }
 
   const saveGeneralConfig = async (id: string) => {
     const value = form[id];
     if (value === undefined) return;
 
-    // Buscamos el item con ese id en el array
+    // Find the item in the gameConfig array
     const itemToUpdate = gameConfig.find(item => item.id === id);
     if (!itemToUpdate) return;
 
-    // Creamos el objeto para actualizar
+    // Create the updated object
     const updatedItem = { ...itemToUpdate, value };
 
     try {
@@ -54,7 +68,7 @@ const GameConfigPage = () => {
       const response = await fetch(`http://localhost:3001/gameConfig/${id}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(updatedItem),  // Enviar solo el valor actualizado
+        body: JSON.stringify(updatedItem), 
       });
 
       if (!response.ok) {
@@ -64,7 +78,7 @@ const GameConfigPage = () => {
       const updatedData = await response.json();
       console.log('Update response:', updatedData);
 
-      // Actualizamos el estado local con el valor actualizado
+      // Update local state
       setGameConfig(gameConfig.map(item => (item.id === id ? updatedItem : item)));
       alert("Configuration updated successfully!");
     } catch (error) {
@@ -73,11 +87,13 @@ const GameConfigPage = () => {
     }
   };
 
-  if (!gameConfig.length) return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-900">
-      <div className="text-white">Loading...</div>
-    </div>
-  )
+  if (!gameConfig.length) {
+    return (
+      <div className="flex justify-center items-center min-h-screen bg-gray-900">
+        <div className="text-white">Loading...</div>
+      </div>
+    )
+  }
 
   return (
     <div className="bg-gray-900 text-white min-h-screen p-6">
@@ -87,29 +103,36 @@ const GameConfigPage = () => {
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="grid gap-4">
-            {gameConfig.map((item) => (
-              <div key={item.id} className="space-y-2">
-                <Label htmlFor={item.id}>
-                  {item.id.replace(/([A-Z])/g, " $1").charAt(0).toUpperCase() + 
-                   item.id.replace(/([A-Z])/g, " $1").slice(1).toLowerCase()}
-                </Label>
-                <Input
-                  id={item.id}
-                  className="bg-gray-700 text-white"
-                  name={item.id}
-                  value={form[item.id] || item.value}  // Manejo de valores por defecto
-                  onChange={handleGeneralChange}
-                  type="number"
-                  min="0"
-                />
-                <Button 
-                  onClick={() => saveGeneralConfig(item.id)} 
-                  className="bg-blue-600 hover:bg-blue-700 w-full mt-2"
-                >
-                  Save {item.id.charAt(0).toUpperCase() + item.id.slice(1)}
-                </Button>
-              </div>
-            ))}
+            {gameConfig.map((item) => {
+              // Decide if this is numeric input or text input
+              const isStringField = item.id === "initialMusic"
+              const inputType = isStringField ? "text" : "number"
+
+              return (
+                <div key={item.id} className="space-y-2">
+                  <Label htmlFor={item.id}>
+                    {item.id.replace(/([A-Z])/g, " $1")
+                      .charAt(0).toUpperCase() + 
+                      item.id.replace(/([A-Z])/g, " $1").slice(1).toLowerCase()}
+                  </Label>
+                  <Input
+                    id={item.id}
+                    className="bg-gray-700 text-white"
+                    name={item.id}
+                    value={form[item.id]} 
+                    onChange={handleGeneralChange}
+                    type={inputType}
+                    min={isStringField ? undefined : 0}  // only apply min if it's a number
+                  />
+                  <Button 
+                    onClick={() => saveGeneralConfig(item.id)} 
+                    className="bg-blue-600 hover:bg-blue-700 w-full mt-2"
+                  >
+                    Save {item.id.charAt(0).toUpperCase() + item.id.slice(1)}
+                  </Button>
+                </div>
+              )
+            })}
           </div>
         </CardContent>
       </Card>

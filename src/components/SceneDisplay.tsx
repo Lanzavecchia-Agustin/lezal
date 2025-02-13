@@ -1,12 +1,12 @@
-"use client";
-
-import React, { useEffect, useState } from "react";
+'use client';
+import React, { useEffect, useState, useRef } from "react";
 import Pusher from "pusher-js";
-// Importamos SKILLS, ATTRIBUTES, gameConfig, Scene y SceneOption de la nueva roomstore
+import { API_ROUTES } from "../../utils/apiConfig";
+import JoinForm from "./JoinForm";
 import { gameConfig, SKILLS, ATTRIBUTES, Scene, SceneOption } from "../../roomsStore";
-import AudioPlayer from "./AudioPlayer";
+import { useAudio } from "@/context/AudioProvider"; // Usamos el contexto global
 
-// Interfaz para la información del jugador, ahora con vida y estrés
+// Estructura para almacenar la información de cada jugador (incluyendo vida y estrés)
 export interface MyPlayerData {
   name: string;
   assignedPoints: { [subskillKey: string]: number };
@@ -27,10 +27,9 @@ interface SceneDisplayProps {
   handleVote: (optionId: number) => void;
   debugMode: boolean;
   myPlayer?: MyPlayerData;
-  // setMyPlayer puede agregarse si se desea actualizar desde este componente
   setMyPlayer?: (player: MyPlayerData) => void;
   leader?: string | null;
-  audio?: string;
+  // Eliminamos la prop audio, ya que ahora se maneja globalmente
 }
 
 /**
@@ -46,7 +45,6 @@ function getSubskillName(subskillKey: string): string {
       if (sub) return sub.name;
     }
   } else {
-    // Caso simple, por si acaso
     for (const skill of SKILLS) {
       const found = skill.subskills.find((s) => s.id === subskillKey);
       if (found) return found.name;
@@ -56,21 +54,12 @@ function getSubskillName(subskillKey: string): string {
 }
 
 /**
- * Calcula la probabilidad aproximada de que (2d6 + skillVal) >= difficulty
+ * Calcula la probabilidad aproximada de que (2d6 + skillVal) >= difficulty.
  */
 function computeSuccessProbability(skillVal: number, difficulty: number): number {
   const ways: Record<number, number> = {
-    2: 1,
-    3: 2,
-    4: 3,
-    5: 4,
-    6: 5,
-    7: 6,
-    8: 5,
-    9: 4,
-    10: 3,
-    11: 2,
-    12: 1,
+    2: 1, 3: 2, 4: 3, 5: 4, 6: 5,
+    7: 6, 8: 5, 9: 4, 10: 3, 11: 2, 12: 1,
   };
   const needed = difficulty - skillVal;
   let totalSuccesses = 0;
@@ -84,17 +73,14 @@ function computeSuccessProbability(skillVal: number, difficulty: number): number
 
 /**
  * Evalúa si una opción es accesible para el jugador, según los requerimientos.
- * (Este fragmento no depende de la clave compuesta, pues se evalúa en base a lockedAttributes)
  */
 function evaluateOptionAccessibility(
   option: SceneOption,
   myPlayer?: MyPlayerData
 ): { accessible: boolean; hide: boolean } {
-  // Si no existen requisitos o el atributo está vacío, la opción es accesible y no se oculta.
   if (!option.requirements || option.requirements.attribute === "") {
     return { accessible: true, hide: false };
   }
-  // Si no se tiene información del jugador o de sus atributos bloqueados, se deshabilita u oculta según lo indicado.
   if (!myPlayer || !myPlayer.lockedAttributes) {
     return { accessible: false, hide: option.requirements.actionIfNotMet === "hide" };
   }
@@ -123,18 +109,26 @@ const SceneDisplay: React.FC<SceneDisplayProps> = ({
 
   const xp = myPlayer?.xp ?? 0;
   const skillPoints = myPlayer?.skillPoints ?? 0;
-  // Obtenemos "initialLife" de gameConfig (ahora un array de ConfigItem)
   const initialLife = gameConfig.find((item) => item.id === "initialLife")?.value ?? 0;
   const life = myPlayer?.life ?? initialLife;
   const stress = myPlayer?.stress ?? 0;
   const xpPercentage = Math.min(100, (xp / 100) * 100);
   const level = Math.floor(xp / 100);
 
+  // Obtenemos el setter del audio global para actualizar la música según la escena.
+  const { setAudio } = useAudio();
+
   useEffect(() => {
     console.log("myPlayer actualizado en SceneDisplay:", myPlayer);
   }, [myPlayer]);
 
-  // Configurar Pusher para actualizar el estado del jugador cuando se dispare "playerUpdate"
+  // Cuando la escena cambia y trae audio, actualizamos el audio global.
+  useEffect(() => {
+    if (scene && scene.audio) {
+      setAudio(scene.audio);
+    }
+  }, [scene?.audio, setAudio]);
+
   useEffect(() => {
     if (!roomId) return;
     const pusherClient = new Pusher(process.env.NEXT_PUBLIC_PUSHER_KEY!, {
@@ -190,11 +184,8 @@ const SceneDisplay: React.FC<SceneDisplayProps> = ({
     }
   }
 
-
   return (
-    <div className="min-h-screen flex flex-col items-center p-4 space-y-6  text-white">
-        {/* Reproductor de audio */}
-      <AudioPlayer audioSrc={scene.audio} />
+    <div className="min-h-screen flex flex-col items-center p-4 space-y-6 text-white">
       <h1 className="text-3xl md:text-4xl font-bold text-center mb-4">{scene.text}</h1>
 
       {/* Información general de la escena */}
@@ -285,7 +276,6 @@ const SceneDisplay: React.FC<SceneDisplayProps> = ({
           </div>
         </div>
       )}
-
       {/* Modal de Skill Points */}
       {showModal && myPlayer && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">

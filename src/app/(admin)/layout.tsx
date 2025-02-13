@@ -43,6 +43,11 @@ export default function RootLayout({
                 </Link>
               </li>
               <li>
+                <Link href="/game-config" className="text-blue-600 hover:text-blue-800 font-medium transition-colors">
+                  Configuracion basica de juego
+                </Link>
+              </li>
+              <li>
                 <Link href="/" className="text-blue-600 hover:text-blue-800 font-medium transition-colors">
                   Jugar
                 </Link>

@@ -15,6 +15,10 @@
     {
       "id": "xpThreshold",
       "value": 10
+    },
+    {
+      "id": "initialMusic",
+      "value": "https://soundimage.org/wp-content/uploads/2018/10/Cold-Moon_Looping.mp3"
     }
   ],
   "skills": [
@@ -42,6 +46,7 @@
       "text": "Año 2247. La humanidad enfrenta la última frontera: las estrellas.  Escarbando el fondo del tarro, los recursos de la Tierra se encuentran al límite y la expansión interestelar  lleva años estancada, cada expedición al exterior es una apuesta desesperada. ",
       "isEnding": false,
       "maxVote": 0,
+      "audio": "https://soundimage.org/wp-content/uploads/2014/02/Eerie-Cyber-World.mp3",
       "options": [
         {
           "id": 0,
@@ -157,6 +162,7 @@
     },
     {
       "id": "inicio3",
+      "audio":"https://soundimage.org/wp-content/uploads/2016/07/Trouble-on-Mercury_Looping.mp3",
       "text": "Débil. intermitente. Una transmisión emerge desde las profundidades del vacío. Su origen: Lezal, un planeta olvidado en el borde del espacio conocido. Un mundo inhóspito, descartado décadas atrás tras un fallido intento de exploración humana. \n",
       "options": [
         {

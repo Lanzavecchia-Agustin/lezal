@@ -40,6 +40,7 @@
       "unlock_threshold": "30"
     }
   ],
+  "npcs": [],
   "scenes": [
     {
       "id": "scene1",
@@ -162,7 +163,7 @@
     },
     {
       "id": "inicio3",
-      "audio":"https://soundimage.org/wp-content/uploads/2016/07/Trouble-on-Mercury_Looping.mp3",
+      "audio": "https://soundimage.org/wp-content/uploads/2016/07/Trouble-on-Mercury_Looping.mp3",
       "text": "Débil. intermitente. Una transmisión emerge desde las profundidades del vacío. Su origen: Lezal, un planeta olvidado en el borde del espacio conocido. Un mundo inhóspito, descartado décadas atrás tras un fallido intento de exploración humana. \n",
       "options": [
         {

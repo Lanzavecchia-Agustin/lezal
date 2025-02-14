@@ -48,6 +48,11 @@ export default function RootLayout({
                 </Link>
               </li>
               <li>
+                <Link href="/create-npc" className="text-blue-600 hover:text-blue-800 font-medium transition-colors">
+                  Crear npc
+                </Link>
+              </li>
+              <li>
                 <Link href="/" className="text-blue-600 hover:text-blue-800 font-medium transition-colors">
                   Jugar
                 </Link>

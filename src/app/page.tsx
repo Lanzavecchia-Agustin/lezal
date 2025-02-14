@@ -29,9 +29,10 @@ export default function Home() {
             '...',
             '...',
             '...',
-            'o matalos primero!'
+            'o matalos primero!',
+            'Lezal',
           ]}
-          className="mb-48"
+          className="mb-12"
           onComplete={() => setAnimationFinished(true)}
         />
         {animationFinished && (

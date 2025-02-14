@@ -1,13 +1,12 @@
-"use client";
+'use client';
 
 import { useCallback, useEffect, useRef } from "react";
-
 import { cn } from "@/lib/utils";
 
 const morphTime = 1.5;
 const cooldownTime = 0.5;
 
-const useMorphingText = (texts: string[]) => {
+const useMorphingText = (texts: string[], onComplete?: () => void) => {
   const textIndexRef = useRef(0);
   const morphRef = useRef(0);
   const cooldownRef = useRef(0);
@@ -41,8 +40,8 @@ const useMorphingText = (texts: string[]) => {
     let fraction = morphRef.current / morphTime;
 
     if (fraction > 1) {
-      cooldownRef.current = cooldownTime;
       fraction = 1;
+      cooldownRef.current = cooldownTime;
     }
 
     setStyles(fraction);
@@ -65,6 +64,7 @@ const useMorphingText = (texts: string[]) => {
 
   useEffect(() => {
     let animationFrameId: number;
+    let completed = false;
 
     const animate = () => {
       animationFrameId = requestAnimationFrame(animate);
@@ -75,15 +75,26 @@ const useMorphingText = (texts: string[]) => {
 
       cooldownRef.current -= dt;
 
-      if (cooldownRef.current <= 0) doMorph();
-      else doCooldown();
+      if (cooldownRef.current <= 0) {
+        doMorph();
+      } else {
+        doCooldown();
+      }
+
+      // Si hemos mostrado el último texto y ya está en estado cooldown, finalizamos.
+      if (!completed && textIndexRef.current >= texts.length - 1) {
+        if (cooldownRef.current > 0) {
+          completed = true;
+          onComplete && onComplete();
+          cancelAnimationFrame(animationFrameId);
+          return;
+        }
+      }
     };
 
     animate();
-    return () => {
-      cancelAnimationFrame(animationFrameId);
-    };
-  }, [doMorph, doCooldown]);
+    return () => cancelAnimationFrame(animationFrameId);
+  }, [doMorph, doCooldown, onComplete, texts]);
 
   return { text1Ref, text2Ref };
 };
@@ -91,10 +102,11 @@ const useMorphingText = (texts: string[]) => {
 interface MorphingTextProps {
   className?: string;
   texts: string[];
+  onComplete?: () => void;
 }
 
-const Texts: React.FC<Pick<MorphingTextProps, "texts">> = ({ texts }) => {
-  const { text1Ref, text2Ref } = useMorphingText(texts);
+const Texts: React.FC<Pick<MorphingTextProps, "texts" | "onComplete">> = ({ texts, onComplete }) => {
+  const { text1Ref, text2Ref } = useMorphingText(texts, onComplete);
   return (
     <>
       <span
@@ -133,6 +145,7 @@ const SvgFilters: React.FC = () => (
 export const MorphingText: React.FC<MorphingTextProps> = ({
   texts,
   className,
+  onComplete,
 }) => (
   <div
     className={cn(
@@ -140,7 +153,7 @@ export const MorphingText: React.FC<MorphingTextProps> = ({
       className,
     )}
   >
-    <Texts texts={texts} />
+    <Texts texts={texts} onComplete={onComplete} />
     <SvgFilters />
   </div>
 );

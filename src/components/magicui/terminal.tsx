@@ -100,11 +100,11 @@ export const Terminal = ({ children, className }: TerminalProps) => {
   return (
     <div
       className={cn(
-        "z-0 h-full rounded-xl border border-purple-700 bg-background sticky",
+        "z-0 h-full rounded-xl border border-border bg-background sticky",
         className,
       )}
     >
-      <div className="flex flex-col gap-y-2 border-b border-purple-700 p-4">
+      <div className="flex flex-col gap-y-2 border-b  p-4">
         {/* <div className="flex flex-row gap-x-2">
           <div className="h-2 w-2 rounded-full bg-red-500"></div>
           <div className="h-2 w-2 rounded-full bg-yellow-500"></div>

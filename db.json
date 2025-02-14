@@ -24,11 +24,55 @@
   "skills": [
     {
       "id": "b8f08a82-b7fc-42fe-9abc-bb8e9e7231bf",
-      "name": "test1",
+      "name": "Inteligencia",
       "subskills": [
         {
           "id": "d8075e45-628f-4273-a139-1c3cb64f9c89",
-          "name": "t1"
+          "name": "Razonamiento"
+        },
+        {
+          "id": "9d2ba0ce-ee24-4d6e-bc48-a097716dd751",
+          "name": "Pensamiento abstracto"
+        },
+        {
+          "id": "ab04c094-cedf-4364-91d5-455e474b9b07",
+          "name": "Calculo"
+        },
+        {
+          "id": "90cf7828-953d-4e50-ae3a-0defea4f665d",
+          "name": "Lenguaje"
+        }
+      ]
+    },
+    {
+      "id": "9647901e-5516-4513-b6e7-1940dd49f16b",
+      "name": "Cuerpo",
+      "subskills": [
+        {
+          "id": "cb92f88d-3ef7-4a17-9cc1-79629fad4438",
+          "name": "Fuerza"
+        },
+        {
+          "id": "3b8d87fb-2381-4ee7-ba12-e0dcb9fd3d36",
+          "name": "Motricidad"
+        },
+        {
+          "id": "1c5a9374-8c91-4bcd-a475-47b4ae8ccf30",
+          "name": "Apariencia"
+        }
+      ]
+    },
+    {
+      "id": "dc5914d1-fadf-40a2-89f3-5564e5ad29bf",
+      "name": "Espiritu",
+      "subskills": [
+        {
+          "id": "39d166a1-1e78-4833-9c7b-2133af2fcdda",
+          "name": "Intuicion"
+        },
+        {
+          "id": "f3f8a418-23fa-441a-93c8-42b0cd201fea",
+          "name": "Encanto"
         }
       ]
     }

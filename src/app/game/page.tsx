@@ -88,17 +88,17 @@ export default function Home() {
             />
 
 
-            {!showGame && (
+            {/* {!showGame && (
                 <div className="absolute inset-0 z-5 flex items-center justify-center">
                     <div className="apocalyptic-planet">
                     </div>
                     <Meteors number={30} />
                 </div>
-            )}
+            )} */}
 
 
             {/* Contenido principal */}
-            <div className="relative z-10 flex flex-col items-center justify-center text-center">
+            {/* <div className="relative z-10 flex flex-col items-center justify-center text-center">
                 {!showGame ? (
                     <div>
                         <h1 className="content__title text-white">Lezal</h1>
@@ -110,9 +110,10 @@ export default function Home() {
                         </button>
                     </div>
                 ) : (
-                    <GameScreen />
+                    // <GameScreen />
                 )}
-            </div>
+            </div> */}
+            <GameScreen />
         </div>
     );
 }

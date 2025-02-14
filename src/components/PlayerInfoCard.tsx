@@ -31,7 +31,7 @@ export function PlayerInfoBar({
   roomId,
 }: PlayerInfoBarProps) {
   return (
-    <div className="m-5  flex flex-col">
+    <div className="mx-5  flex flex-col ">
     <div className=" text-gray-300 w-full py-4 flex flex-wrap items-center justify-center gap-4">
       <div className="flex items-center space-x-4">
         <p className="text-lg font-semibold text-purple-400">{myPlayer.name}</p>

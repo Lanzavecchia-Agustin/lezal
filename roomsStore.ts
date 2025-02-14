@@ -62,6 +62,12 @@ export interface SceneOption {
   maxVote?: number;
 }
 
+export interface Npc {
+  id: string;
+  name: string;
+  img: string;
+}
+
 // Interfaz para la escena
 export interface Scene {
   id: string;
@@ -70,6 +76,7 @@ export interface Scene {
   isEnding?: boolean;
   maxVote?: number;
   audio?: string;
+  npc?: Npc;
 }
 
 // Interfaz Player

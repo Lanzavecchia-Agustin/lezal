@@ -101,12 +101,12 @@ export default function Home() {
             <div className="relative z-10 flex flex-col items-center justify-center text-center">
                 {!showGame ? (
                     <div>
-                        <h1 className="content__title text-purple-400">Lezale</h1>
+                        <h1 className="content__title text-white">Lezal</h1>
                         <button
                             onClick={handleContinue}
                             className="px-6 py-3 bg-purple-900/30 text-purple-500 text-2xl border-2 border-purple-800/50 rounded hover:bg-purple-950 hover:text-purple-400 transition-all duration-500 font-retro mb-4"
                         >
-                            INICIAR JUEGO
+                            Crear partida
                         </button>
                     </div>
                 ) : (

@@ -561,6 +561,10 @@ import { SkillPointModal } from "./SkillPointModal"
 import { PlayerStatusModal } from "./PlayerStatusModal"
 import { DebugPanel } from "./DebugPanel"
 import { SceneOptionsList } from "./SceneOptionsList"
+import { motion, AnimatePresence } from "framer-motion"
+import { TerminalWrapper } from "@/context/TerminalWrapper"
+import { TypingAnimation } from "./magicui/terminal"
+
 
 // ---- Interfaces -----------------------
 export interface MyPlayerData {
@@ -662,6 +666,30 @@ const SceneDisplay: React.FC<SceneDisplayProps> = ({
   const xpPercentage = Math.min(100, (xp / 100) * 100)
   const level = Math.floor(xp / 100)
 
+  const [displayedText, setDisplayedText] = useState("")
+  const [isTyping, setIsTyping] = useState(false)
+
+  useEffect(() => {
+    if (scene.text) {
+      setIsTyping(true)
+      let i = 0
+      const typingInterval = setInterval(() => {
+        if (i < scene.text.length) {
+          setDisplayedText(scene.text.slice(0, i + 1))
+          i++
+        } else {
+          clearInterval(typingInterval)
+          setIsTyping(false)
+        }
+      }, 30) // Adjust typing speed here
+
+      return () => clearInterval(typingInterval)
+    }
+  }, [scene.text])
+
+
+
+
   // Manejo de audio global
   const { setAudio } = useAudio()
 
@@ -725,80 +753,122 @@ const SceneDisplay: React.FC<SceneDisplayProps> = ({
       alert(`Error al asignar Skill Point: ${err.message}`)
     }
   }
-
   return (
-    <div className="min-h-screen flex flex-col text-gray-200 w-[100vw]">
-      {/* Header con información del jugador */}
-      {myPlayer && (
-        <PlayerInfoBar
-          myPlayer={myPlayer}
-          xp={xp}
-          skillPoints={skillPoints}
-          life={life}
-          stress={stress}
-          onOpenSkillPointModal={() => setShowSkillModal(true)}
-          onOpenStatusModal={() => setShowStatusModal(true)}
-          level={level}
-          xpPercentage={xpPercentage}
-          initialLife={initialLife}
-          roomId={roomId || ''}
-        />
-      )}
-
-      {/* Contenido principal */}
-      <main className="flex-grow flex flex-col p-4 gap-8">
-        {/* Texto de la escena */}
-        <section className="w-fulll mx-auto">
-          <div className=" p-6">
-            <h1 className="text-2xl md:text-3xl font-bold text-center text-purple-200 mb-4">{scene.text}</h1>
-            {scene.isEnding && (
-              <div className="mt-4 p-4 bg-purple-800 rounded-lg text-white text-center">
-                <p className="text-xl font-bold">¡Has llegado a un final!</p>
-              </div>
-            )}
-          </div>
-        </section>
-
-        {/* Opciones de la escena */}
-        <section className="w-full max-w-3xl mx-auto">
-          <SceneOptionsList
-            options={scene.options}
-            debugMode={debugMode}
+    <TerminalWrapper>
+      <div className="min-h-screen flex flex-col text-green-400 w-[95vw]">
+        {myPlayer && (
+          <PlayerInfoBar
             myPlayer={myPlayer}
-            hasVoted={hasVoted}
-            votes={votes}
-            evaluateOptionAccessibility={evaluateOptionAccessibility}
-            computeSuccessProbability={computeSuccessProbability}
-            getSubskillName={getSubskillName}
-            localRollResult={localRollResult}
-            doLocalRoll={doLocalRoll}
-            onVote={handleVote}
+            xp={xp}
+            skillPoints={skillPoints}
+            life={life}
+            stress={stress}
+            onOpenSkillPointModal={() => setShowSkillModal(true)}
+            onOpenStatusModal={() => setShowStatusModal(true)}
+            level={level}
+            xpPercentage={xpPercentage}
+            initialLife={initialLife}
+            roomId={roomId || ""}
           />
-        </section>
-      </main>
+        )}
 
-      {/* Modales */}
-      {showSkillModal && myPlayer && (
-        <SkillPointModal
-          myPlayer={myPlayer}
-          onClose={() => setShowSkillModal(false)}
-          onSpendPoint={handleSpendPoint}
-          availablePoints={myPlayer.skillPoints ?? 0}
-        />
-      )}
+        <main className="flex-grow flex flex-col p-4 gap-8">
+          <section className="w-full max-w-6xl mx-auto">
+            <div className="p-6 bg-black bg-opacity-50 rounded borderrelative overflow-hidden">
+              <div className="relative z-10">
+                {scene.npc ? (
+                  <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4 mb-4">
+                    {scene.npc?.img && <div className="relative">
+                      <img
+                        src={scene.npc.img || "/placeholder.svg"}
+                        alt={scene.npc.name}
+                        className="w-32 h-32 rounded-full shadow-md object-cover border-2"
+                      />
+                      <div className="absolute bottom-0 right-0 w-6 h-6 rounded-full border-2 border-black" />
+                      <h2 className="text-xl font-semibold text-white mb-2">{scene.npc.name}</h2>
 
-      {showStatusModal && myPlayer && (
-        <PlayerStatusModal
-          myPlayer={myPlayer}
-          onClose={() => setShowStatusModal(false)}
-          level={level}
-          xpPercentage={xpPercentage}
-          initialLife={initialLife}
-          ATTRIBUTES={ATTRIBUTES}
-          SKILLS={SKILLS}
-        />
-      )}
-    </div>
+                    </div>}
+                    <div className="flex-1">
+                      <AnimatePresence>
+                        <motion.div
+                          key={scene.text}
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          exit={{ opacity: 0 }}
+                          className=" p-4 rounded border border-purple-700 text-lg md:text-xl text-white "
+                        >
+                          <TypingAnimation className="whitespace-pre-wrap break-words font-retro text-2xl">{scene.text}</TypingAnimation>
+                        </motion.div>
+                      </AnimatePresence>
+                    </div>
+                  </div>
+                ) : (
+                  <AnimatePresence>
+                    <motion.div
+                      key={scene.text}
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      className=" p-4 rounded border border-purple-700 text-lg md:text-xl text-white "
+                    >
+                      <TypingAnimation className="whitespace-pre-wrap break-words font-retro text-2xl">{scene.text}</TypingAnimation>
+                    </motion.div>
+                  </AnimatePresence>
+                )}
+
+                {scene.isEnding && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.5 }}
+                    className="mt-4 p-4 bg-green-900 rounded border border-green-500 text-green-100 text-center"
+                  >
+                    <p className="text-xl font-bold">¡Has llegado a un final!</p>
+                  </motion.div>
+                )}
+              </div>
+            </div>
+          </section>
+
+          <section className="w-full max-w-3xl mx-auto">
+            <SceneOptionsList
+              options={scene.options}
+              debugMode={debugMode}
+              myPlayer={myPlayer}
+              hasVoted={hasVoted}
+              votes={votes}
+              evaluateOptionAccessibility={evaluateOptionAccessibility}
+              computeSuccessProbability={computeSuccessProbability}
+              getSubskillName={getSubskillName}
+              localRollResult={localRollResult}
+              doLocalRoll={doLocalRoll}
+              onVote={handleVote}
+            />
+          </section>
+        </main>
+
+        {showSkillModal && myPlayer && (
+          <SkillPointModal
+            myPlayer={myPlayer}
+            onClose={() => setShowSkillModal(false)}
+            onSpendPoint={handleSpendPoint}
+            availablePoints={myPlayer.skillPoints ?? 0}
+          />
+        )}
+
+        {showStatusModal && myPlayer && (
+          <PlayerStatusModal
+            myPlayer={myPlayer}
+            onClose={() => setShowStatusModal(false)}
+            level={level}
+            xpPercentage={xpPercentage}
+            initialLife={initialLife}
+            ATTRIBUTES={ATTRIBUTES}
+            SKILLS={SKILLS}
+          />
+        )}
+      </div>
+    </TerminalWrapper>
   )
 }
 

@@ -1,81 +1,84 @@
-'use client';
+"use client"
 
-import { useState, useEffect, type FormEvent, Suspense } from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Switch } from "@/components/ui/switch";
-import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Pencil, Trash } from "lucide-react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useState, useEffect, type FormEvent, Suspense } from "react"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Textarea } from "@/components/ui/textarea"
+import { Switch } from "@/components/ui/switch"
+import { Label } from "@/components/ui/label"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Pencil, Trash } from "lucide-react"
+import { useRouter, useSearchParams } from "next/navigation"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 
-// Definiciones de interfaces
-
+// ---------- Definiciones de interfaces ----------
 interface Skill {
-  id: string;
-  name: string;
+  id: string
+  name: string
   subskills: {
-    id: string;
-    name: string;
-    unlockable: boolean;
-    unlock_threshold?: number;
-  }[];
+    id: string
+    name: string
+    unlockable: boolean
+    unlock_threshold?: number
+  }[]
 }
 
 interface Attribute {
-  id: string;
-  name: string;
-  unlock_threshold: number;
+  id: string
+  name: string
+  unlock_threshold: number
+}
+
+// Nueva interfaz para NPC
+interface Npc {
+  id: string
+  name: string
+  img: string
 }
 
 export interface SceneOption {
-  id: number;
-  text: string;
+  id: number
+  text: string
   nextSceneId: {
-    success: string;
-    failure?: string;
-    partial?: string;
-  };
+    success: string
+    failure?: string
+    partial?: string
+  }
   roll?: {
-    skillUsed: string;
-    difficulty: number;
-  };
-  expOnSuccess?: number;
+    skillUsed: string
+    difficulty: number
+  }
+  expOnSuccess?: number
   lockedAttributeIncrement?: {
-    attribute: string;
-    increment: number;
-  };
+    attribute: string
+    increment: number
+  }
   requirements?: {
-    attribute: string;
-    actionIfNotMet: "" | "hide" | "disable";
-  };
+    attribute: string
+    actionIfNotMet: "" | "hide" | "disable"
+  }
   successEffects?: {
-    life?: number;
-    stress?: number;
-  };
+    life?: number
+    stress?: number
+  }
   failureEffects?: {
-    life?: number;
-    stress?: number;
-  };
+    life?: number
+    stress?: number
+  }
 }
 
+// Agregamos npc?: Npc a la interfaz Scene
 export interface Scene {
-  id: string;
-  text: string;
-  options: SceneOption[];
-  isEnding?: boolean;
-  maxVote?: number;
-  audio?: string;
+  id: string
+  text: string
+  options: SceneOption[]
+  isEnding?: boolean
+  maxVote?: number
+  audio?: string
+  npc?: Npc
 }
 
+// Estado inicial para SceneOption
 const initialOptionState: SceneOption = {
   id: 0,
   text: "",
@@ -86,74 +89,92 @@ const initialOptionState: SceneOption = {
   requirements: { attribute: "", actionIfNotMet: "" },
   successEffects: { life: 0, stress: 0 },
   failureEffects: { life: 0, stress: 0 },
-};
+}
 
 function SceneCreationContent() {
-  const router = useRouter();
-  const searchParams = useSearchParams();
+  const router = useRouter()
+  const searchParams = useSearchParams()
 
   // Si se recibe un parámetro "scene" en la query, asumimos modo edición.
-  const queryScene = searchParams.get("scene");
-  const isEditing = Boolean(queryScene);
+  const queryScene = searchParams.get("scene")
+  const isEditing = Boolean(queryScene)
 
-  const [skills, setSkills] = useState<Skill[]>([]);
-  const [attributes, setAttributes] = useState<Attribute[]>([]);
+  const [skills, setSkills] = useState<Skill[]>([])
+  const [attributes, setAttributes] = useState<Attribute[]>([])
+  // Lista de NPCs
+  const [npcs, setNpcs] = useState<Npc[]>([])
+
+  // Estado de la escena
   const [scene, setScene] = useState<Scene>({
     id: "",
     text: "",
     options: [],
     isEnding: false,
     maxVote: undefined,
-  });
-  const [currentOption, setCurrentOption] = useState<SceneOption>(initialOptionState);
-  const [editingOptionIndex, setEditingOptionIndex] = useState<number | null>(null);
-  const [showNextSceneFailure, setShowNextSceneFailure] = useState(false);
-  const [showNextScenePartial, setShowNextScenePartial] = useState(false);
-  const [showSkillCheck, setShowSkillCheck] = useState(false);
-  const [showExpOnSuccess, setShowExpOnSuccess] = useState(false);
-  const [showLockedAttributeIncrement, setShowLockedAttributeIncrement] = useState(false);
-  const [showRequirements, setShowRequirements] = useState(false);
-  const [showEffects, setShowEffects] = useState(false);
+  })
+
+  // Estado de la opción actual
+  const [currentOption, setCurrentOption] = useState<SceneOption>(initialOptionState)
+
+  // Control de edición de opción
+  const [editingOptionIndex, setEditingOptionIndex] = useState<number | null>(null)
+
+  // Toggles para mostrar/ocultar campos
+  const [showNextSceneFailure, setShowNextSceneFailure] = useState(false)
+  const [showNextScenePartial, setShowNextScenePartial] = useState(false)
+  const [showSkillCheck, setShowSkillCheck] = useState(false)
+  const [showExpOnSuccess, setShowExpOnSuccess] = useState(false)
+  const [showLockedAttributeIncrement, setShowLockedAttributeIncrement] = useState(false)
+  const [showRequirements, setShowRequirements] = useState(false)
+  const [showEffects, setShowEffects] = useState(false)
 
   const toggleField = (setter: React.Dispatch<React.SetStateAction<boolean>>) => {
-    setter((prev) => !prev);
-  };
+    setter((prev) => !prev)
+  }
 
-  // Obtener skills y attributes desde la API
+  // Obtener skills, attributes y npcs desde la API
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [skillsResponse, attributesResponse] = await Promise.all([
+        const [skillsResponse, attributesResponse, npcsResponse] = await Promise.all([
           fetch("http://localhost:3001/skills"),
           fetch("http://localhost:3001/attributes"),
-        ]);
-        const skillsData = await skillsResponse.json();
-        const attributesData = await attributesResponse.json();
-        setSkills(skillsData);
-        setAttributes(attributesData);
+          fetch("http://localhost:3001/npcs"), // <--- Cargamos NPCs
+        ])
+
+        const skillsData = await skillsResponse.json()
+        const attributesData = await attributesResponse.json()
+        const npcsData = await npcsResponse.json()
+
+        setSkills(skillsData)
+        setAttributes(attributesData)
+        setNpcs(npcsData)
       } catch (error) {
-        console.error("Error fetching data:", error);
+        console.error("Error fetching data:", error)
       }
-    };
-    fetchData();
-  }, []);
+    }
+    fetchData()
+  }, [])
 
   // Si se pasa la escena por query, pre-cargarla para editar
   useEffect(() => {
     if (queryScene) {
       try {
-        const parsedScene: Scene = JSON.parse(queryScene);
-        setScene(parsedScene);
+        const parsedScene: Scene = JSON.parse(queryScene)
+        console.log("Escena cargada:", parsedScene)
+        setScene(parsedScene)
       } catch (error) {
-        console.error("Error parsing scene from query:", error);
+        console.error("Error parsing scene from query:", error)
       }
     }
-  }, [queryScene]);
+  }, [queryScene])
 
+  // Handler genérico para actualizar campos de la escena
   const handleSceneChange = (field: keyof Scene, value: any) => {
-    setScene((prev) => ({ ...prev, [field]: value }));
-  };
+    setScene((prev) => ({ ...prev, [field]: value }))
+  }
 
+  // Handler genérico para actualizar campos de la opción actual
   const handleOptionChange = (field: keyof SceneOption, value: any) => {
     setCurrentOption((prev) => {
       if (
@@ -164,93 +185,100 @@ function SceneCreationContent() {
         field === "successEffects" ||
         field === "failureEffects"
       ) {
-        const currentValue = prev[field];
+        const currentValue = prev[field]
         if (currentValue && typeof currentValue === "object") {
-          return { ...prev, [field]: { ...currentValue, ...value } };
+          return { ...prev, [field]: { ...currentValue, ...value } }
         }
       }
-      return { ...prev, [field]: value };
-    });
-  };
+      return { ...prev, [field]: value }
+    })
+  }
 
+  // Agregar o actualizar la opción en la lista de opciones de la escena
   const addOrUpdateOption = () => {
     setScene((prev) => {
-      const newOptions = [...prev.options];
+      const newOptions = [...prev.options]
       if (editingOptionIndex !== null) {
-        newOptions[editingOptionIndex] = currentOption;
+        newOptions[editingOptionIndex] = currentOption
       } else {
-        newOptions.push({ ...currentOption, id: prev.options.length });
+        newOptions.push({ ...currentOption, id: prev.options.length })
       }
-      return { ...prev, options: newOptions };
-    });
-    setCurrentOption(initialOptionState);
-    setEditingOptionIndex(null);
-  };
+      return { ...prev, options: newOptions }
+    })
+    setCurrentOption(initialOptionState)
+    setEditingOptionIndex(null)
+  }
 
+  // Cancelar edición de opción
   const cancelOptionEdit = () => {
-    setCurrentOption(initialOptionState);
-    setEditingOptionIndex(null);
-  };
+    setCurrentOption(initialOptionState)
+    setEditingOptionIndex(null)
+  }
 
+  // Editar una opción existente
   const editOption = (index: number) => {
-    setCurrentOption(scene.options[index]);
-    setEditingOptionIndex(index);
-  };
+    setCurrentOption(scene.options[index])
+    setEditingOptionIndex(index)
+  }
 
+  // Eliminar una opción
   const removeOption = (index: number) => {
     setScene((prev) => ({
       ...prev,
       options: prev.options.filter((_, i) => i !== index),
-    }));
-  };
+    }))
+  }
 
+  // Guardar escena
   const handleSubmit = async (e: FormEvent) => {
-    e.preventDefault();
-    console.log("Scene data:", scene);
+    e.preventDefault()
+    console.log("Scene data:", scene)
     try {
-      // Si estamos en modo edición, usamos PATCH; en caso contrario, POST.
-      const method = isEditing ? "PATCH" : "POST";
+      const method = isEditing ? "PATCH" : "POST"
       const url = isEditing
         ? `http://localhost:3001/scenes/${scene.id}`
-        : "http://localhost:3001/scenes";
-      console.log("Submitting scene with method:", method, "to URL:", url);
+        : "http://localhost:3001/scenes"
+
+      console.log("Submitting scene with method:", method, "to URL:", url)
+
       const response = await fetch(url, {
         method,
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(scene),
-      });
-      if (!response.ok) throw new Error("Error al actualizar la escena");
+      })
+      if (!response.ok) throw new Error("Error al actualizar la escena")
+
       alert(
         isEditing
           ? "Escena actualizada exitosamente!"
           : "Escena creada exitosamente!"
-      );
-      // Redirigir a la vista de escenas (ajusta la ruta según corresponda)
-      router.push("/scenes-view");
+      )
+      router.push("/scenes-view")
     } catch (error) {
-      console.error(error);
-      alert("Error al actualizar la escena");
+      console.error(error)
+      alert("Error al actualizar la escena")
     }
-  };
+  }
 
+  // Obtener el label de la subskill seleccionada
   const getSubskillLabel = (id: string) => {
     for (const skill of skills) {
-      const subskill = skill.subskills.find((s) => s.id === id);
+      const subskill = skill.subskills.find((s) => s.id === id)
       if (subskill) {
-        return subskill.name;
+        return subskill.name
       }
     }
-    return "Seleccione una habilidad";
-  };
+    return "Seleccione una habilidad"
+  }
 
   return (
-    // Se envuelve todo el contenido en un Suspense para asegurar que useSearchParams se use en el cliente
     <Suspense fallback={<div>Loading...</div>}>
       <div className="container mx-auto p-4 bg-blue-900">
         <h1 className="text-2xl font-bold mb-4">
           {isEditing ? "Editar Escena" : "Crear Nueva Escena"}
         </h1>
         <form onSubmit={handleSubmit}>
+          {/* Información General de la Escena */}
           <Card className="mb-4">
             <CardHeader>
               <CardTitle>Información General</CardTitle>
@@ -264,9 +292,10 @@ function SceneCreationContent() {
                     value={scene.id}
                     onChange={(e) => handleSceneChange("id", e.target.value)}
                     placeholder="Ingrese el ID de la escena"
-                    disabled={isEditing} // No permitir cambiar el ID en edición
+                    disabled={isEditing}
                   />
                 </div>
+
                 <div>
                   <Label htmlFor="sceneText">Texto de la Escena</Label>
                   <Textarea
@@ -276,7 +305,8 @@ function SceneCreationContent() {
                     placeholder="Describa la escena"
                   />
                 </div>
-                {/* Nuevo campo para el link de audio */}
+
+                {/* Campo para el link de audio */}
                 <div>
                   <Label htmlFor="audio">Link de Audio</Label>
                   <Input
@@ -286,16 +316,41 @@ function SceneCreationContent() {
                     placeholder="Ingrese URL del audio"
                   />
                 </div>
+
+                {/* Selección de NPC mediante botones */}
+                <div>
+                <Label>NPC Asignado</Label>
+                <div className="flex flex-wrap gap-2 mt-2">
+                  <Button
+                    type="button"
+                    variant={!scene.npc ? "default" : "outline"}
+                    onClick={() => handleSceneChange("npc", {id: '', name: '',img:''})}
+                  >
+                    Ninguno
+                  </Button>
+                  {npcs.map((npc) => (
+                    <Button
+                      key={npc.id}
+                      type="button"
+                      variant={scene.npc?.id === npc.id ? "default" : "outline"}
+                      onClick={() => handleSceneChange("npc", npc)}
+                    >
+                      {npc.name}
+                    </Button>
+                  ))}
+                </div>
+              </div>
+
+
                 <div className="flex items-center space-x-2">
                   <Switch
                     id="isEnding"
                     checked={scene.isEnding}
-                    onCheckedChange={(checked) =>
-                      handleSceneChange("isEnding", checked)
-                    }
+                    onCheckedChange={(checked) => handleSceneChange("isEnding", checked)}
                   />
                   <Label htmlFor="isEnding">¿Es escena final?</Label>
                 </div>
+
                 <div>
                   <Label htmlFor="maxVote">Votos Máximos</Label>
                   <Input
@@ -303,10 +358,7 @@ function SceneCreationContent() {
                     type="number"
                     value={scene.maxVote || ""}
                     onChange={(e) =>
-                      handleSceneChange(
-                        "maxVote",
-                        e.target.value ? Number(e.target.value) : undefined
-                      )
+                      handleSceneChange("maxVote", e.target.value ? Number(e.target.value) : undefined)
                     }
                     placeholder="Número máximo de votos"
                   />
@@ -315,7 +367,7 @@ function SceneCreationContent() {
             </CardContent>
           </Card>
 
-          {/* Formulario para las opciones */}
+          {/* Formulario para las opciones de la Escena */}
           <Card className="mb-4">
             <CardHeader>
               <CardTitle>Opciones de la Escena</CardTitle>
@@ -326,83 +378,68 @@ function SceneCreationContent() {
                   {editingOptionIndex !== null ? "Editar Opción" : "Crear Nueva Opción"}
                 </h3>
                 <div className="grid gap-4">
+                  {/* Texto de la opción */}
                   <div>
                     <Label htmlFor="optionText">Texto de la Opción</Label>
                     <Input
                       id="optionText"
                       value={currentOption.text}
-                      onChange={(e) =>
-                        handleOptionChange("text", e.target.value)
-                      }
+                      onChange={(e) => handleOptionChange("text", e.target.value)}
                       placeholder="Describa la opción"
                     />
                   </div>
+
+                  {/* Siguiente Escena (Éxito) */}
                   <div>
                     <Label htmlFor="nextSceneSuccess">Siguiente Escena (Éxito)</Label>
                     <Input
                       id="nextSceneSuccess"
                       value={currentOption.nextSceneId.success}
                       onChange={(e) =>
-                        handleOptionChange("nextSceneId", {
-                          success: e.target.value,
-                        })
+                        handleOptionChange("nextSceneId", { success: e.target.value })
                       }
                       placeholder="ID de la siguiente escena en caso de éxito"
                     />
                   </div>
 
-                  <Button
-                    type="button"
-                    onClick={() => toggleField(setShowNextSceneFailure)}
-                  >
+                  {/* Siguiente Escena (Fracaso) */}
+                  <Button type="button" onClick={() => toggleField(setShowNextSceneFailure)}>
                     {showNextSceneFailure ? "Ocultar" : "Mostrar"} Escena de Fracaso
                   </Button>
                   {showNextSceneFailure && (
                     <div>
-                      <Label htmlFor="nextSceneFailure">
-                        Siguiente Escena (Fracaso)
-                      </Label>
+                      <Label htmlFor="nextSceneFailure">Siguiente Escena (Fracaso)</Label>
                       <Input
                         id="nextSceneFailure"
                         value={currentOption.nextSceneId.failure || ""}
                         onChange={(e) =>
-                          handleOptionChange("nextSceneId", {
-                            failure: e.target.value,
-                          })
+                          handleOptionChange("nextSceneId", { failure: e.target.value })
                         }
                         placeholder="ID de la siguiente escena en caso de fracaso"
                       />
                     </div>
                   )}
 
-                  <Button
-                    type="button"
-                    onClick={() => toggleField(setShowNextScenePartial)}
-                  >
+                  {/* Siguiente Escena (Parcial) */}
+                  <Button type="button" onClick={() => toggleField(setShowNextScenePartial)}>
                     {showNextScenePartial ? "Ocultar" : "Mostrar"} Escena Parcial
                   </Button>
                   {showNextScenePartial && (
                     <div>
-                      <Label htmlFor="nextScenePartial">
-                        Siguiente Escena (Parcial)
-                      </Label>
+                      <Label htmlFor="nextScenePartial">Siguiente Escena (Parcial)</Label>
                       <Input
                         id="nextScenePartial"
                         value={currentOption.nextSceneId.partial || ""}
                         onChange={(e) =>
-                          handleOptionChange("nextSceneId", {
-                            partial: e.target.value,
-                          })
+                          handleOptionChange("nextSceneId", { partial: e.target.value })
                         }
                         placeholder="ID de la siguiente escena en caso de éxito parcial"
                       />
                     </div>
                   )}
 
-                  <Button
-                    type="button"
-                    onClick={() => toggleField(setShowSkillCheck)}
-                  >
+                  {/* Chequeo de Habilidad */}
+                  <Button type="button" onClick={() => toggleField(setShowSkillCheck)}>
                     {showSkillCheck ? "Ocultar" : "Mostrar"} Chequeo de Habilidad
                   </Button>
                   {showSkillCheck && (
@@ -410,9 +447,7 @@ function SceneCreationContent() {
                       <div>
                         <Label htmlFor="skillUsed">Habilidad Utilizada</Label>
                         <Select
-                          onValueChange={(value) =>
-                            handleOptionChange("roll", { skillUsed: value })
-                          }
+                          onValueChange={(value) => handleOptionChange("roll", { skillUsed: value })}
                           value={currentOption.roll?.skillUsed}
                         >
                           <SelectTrigger id="skillUsed">
@@ -436,6 +471,7 @@ function SceneCreationContent() {
                           </SelectContent>
                         </Select>
                       </div>
+
                       <div>
                         <Label htmlFor="difficulty">Dificultad</Label>
                         <Input
@@ -443,9 +479,7 @@ function SceneCreationContent() {
                           type="number"
                           value={currentOption.roll?.difficulty || ""}
                           onChange={(e) =>
-                            handleOptionChange("roll", {
-                              difficulty: Number(e.target.value),
-                            })
+                            handleOptionChange("roll", { difficulty: Number(e.target.value) })
                           }
                           placeholder="Nivel de dificultad"
                         />
@@ -453,10 +487,8 @@ function SceneCreationContent() {
                     </>
                   )}
 
-                  <Button
-                    type="button"
-                    onClick={() => toggleField(setShowExpOnSuccess)}
-                  >
+                  {/* EXP en Éxito */}
+                  <Button type="button" onClick={() => toggleField(setShowExpOnSuccess)}>
                     {showExpOnSuccess ? "Ocultar" : "Mostrar"} EXP en Éxito
                   </Button>
                   {showExpOnSuccess && (
@@ -474,23 +506,16 @@ function SceneCreationContent() {
                     </div>
                   )}
 
-                  <Button
-                    type="button"
-                    onClick={() =>
-                      toggleField(setShowLockedAttributeIncrement)
-                    }
-                  >
-                    {showLockedAttributeIncrement ? "Ocultar" : "Mostrar"} Incremento
-                    de Atributo Bloqueado
+                  {/* Incremento de Atributo Bloqueado */}
+                  <Button type="button" onClick={() => toggleField(setShowLockedAttributeIncrement)}>
+                    {showLockedAttributeIncrement ? "Ocultar" : "Mostrar"} Incremento de Atributo Bloqueado
                   </Button>
                   {showLockedAttributeIncrement && (
                     <div>
                       <Label>Incremento de Atributo Bloqueado</Label>
                       <Select
                         onValueChange={(value) =>
-                          handleOptionChange("lockedAttributeIncrement", {
-                            attribute: value,
-                          })
+                          handleOptionChange("lockedAttributeIncrement", { attribute: value })
                         }
                         value={currentOption.lockedAttributeIncrement?.attribute}
                       >
@@ -519,6 +544,7 @@ function SceneCreationContent() {
                     </div>
                   )}
 
+                  {/* Requisitos */}
                   <Button type="button" onClick={() => toggleField(setShowRequirements)}>
                     {showRequirements ? "Ocultar" : "Mostrar"} Requisitos
                   </Button>
@@ -544,9 +570,7 @@ function SceneCreationContent() {
                       </Select>
                       <Select
                         onValueChange={(value) =>
-                          handleOptionChange("requirements", {
-                            actionIfNotMet: value as "hide" | "disable",
-                          })
+                          handleOptionChange("requirements", { actionIfNotMet: value as "hide" | "disable" })
                         }
                         value={currentOption.requirements?.actionIfNotMet}
                       >
@@ -561,6 +585,7 @@ function SceneCreationContent() {
                     </div>
                   )}
 
+                  {/* Efectos de Éxito / Fracaso */}
                   <Button type="button" onClick={() => toggleField(setShowEffects)}>
                     {showEffects ? "Ocultar" : "Mostrar"} Efectos
                   </Button>
@@ -573,9 +598,7 @@ function SceneCreationContent() {
                             type="number"
                             value={currentOption.successEffects?.life || ""}
                             onChange={(e) =>
-                              handleOptionChange("successEffects", {
-                                life: Number(e.target.value),
-                              })
+                              handleOptionChange("successEffects", { life: Number(e.target.value) })
                             }
                             placeholder="Vida"
                           />
@@ -583,9 +606,7 @@ function SceneCreationContent() {
                             type="number"
                             value={currentOption.successEffects?.stress || ""}
                             onChange={(e) =>
-                              handleOptionChange("successEffects", {
-                                stress: Number(e.target.value),
-                              })
+                              handleOptionChange("successEffects", { stress: Number(e.target.value) })
                             }
                             placeholder="Estrés"
                           />
@@ -598,9 +619,7 @@ function SceneCreationContent() {
                             type="number"
                             value={currentOption.failureEffects?.life || ""}
                             onChange={(e) =>
-                              handleOptionChange("failureEffects", {
-                                life: Number(e.target.value),
-                              })
+                              handleOptionChange("failureEffects", { life: Number(e.target.value) })
                             }
                             placeholder="Vida"
                           />
@@ -608,9 +627,7 @@ function SceneCreationContent() {
                             type="number"
                             value={currentOption.failureEffects?.stress || ""}
                             onChange={(e) =>
-                              handleOptionChange("failureEffects", {
-                                stress: Number(e.target.value),
-                              })
+                              handleOptionChange("failureEffects", { stress: Number(e.target.value) })
                             }
                             placeholder="Estrés"
                           />
@@ -619,6 +636,7 @@ function SceneCreationContent() {
                     </>
                   )}
 
+                  {/* Botones para confirmar o cancelar la opción */}
                   <div className="flex justify-end space-x-2">
                     <Button type="button" onClick={cancelOptionEdit} variant="outline">
                       Cancelar
@@ -638,20 +656,10 @@ function SceneCreationContent() {
                     <div className="flex justify-between items-center">
                       <span className="font-medium">{option.text}</span>
                       <div>
-                        <Button
-                          type="button"
-                          variant="ghost"
-                          size="icon"
-                          onClick={() => editOption(index)}
-                        >
+                        <Button type="button" variant="ghost" size="icon" onClick={() => editOption(index)}>
                           <Pencil className="h-4 w-4" />
                         </Button>
-                        <Button
-                          type="button"
-                          variant="ghost"
-                          size="icon"
-                          onClick={() => removeOption(index)}
-                        >
+                        <Button type="button" variant="ghost" size="icon" onClick={() => removeOption(index)}>
                           <Trash className="h-4 w-4" />
                         </Button>
                       </div>
@@ -662,13 +670,14 @@ function SceneCreationContent() {
             </CardContent>
           </Card>
 
+          {/* Botón para guardar la escena */}
           <Button type="submit" className="w-full mb-4">
             {isEditing ? "Actualizar Escena" : "Crear Escena"}
           </Button>
         </form>
       </div>
     </Suspense>
-  );
+  )
 }
 
 export default function SceneCreationPage() {
@@ -676,5 +685,5 @@ export default function SceneCreationPage() {
     <Suspense fallback={<div>Loading...</div>}>
       <SceneCreationContent />
     </Suspense>
-  );
+  )
 }

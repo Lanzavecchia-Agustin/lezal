@@ -774,7 +774,7 @@ const SceneDisplay: React.FC<SceneDisplayProps> = ({
 
         <main className="flex-grow flex flex-col p-4 gap-8">
           <section className="w-full max-w-6xl mx-auto">
-            <div className="p-6 bg-black bg-opacity-50 rounded borderrelative overflow-hidden">
+            <div className="p-6 bg-black bg-opacity-50 rounded relative overflow-hidden">
               <div className="relative z-10">
                 {scene.npc ? (
                   <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4 mb-4">
@@ -789,31 +789,27 @@ const SceneDisplay: React.FC<SceneDisplayProps> = ({
 
                     </div>}
                     <div className="flex-1">
-                      <AnimatePresence>
                         <motion.div
                           key={scene.text}
-                          initial={{ opacity: 0 }}
-                          animate={{ opacity: 1 }}
+                          // initial={{ opacity: 0 }}
+                          // animate={{ opacity: 1 }}
                           exit={{ opacity: 0 }}
-                          className=" p-4 rounded border border-purple-700 text-lg md:text-xl text-white "
+                          className=" p-4 rounded border border-purple-700 text-lg md:text-xl text-white min-h-20"
                         >
                           <TypingAnimation className="whitespace-pre-wrap break-words font-retro text-2xl">{scene.text}</TypingAnimation>
                         </motion.div>
-                      </AnimatePresence>
                     </div>
                   </div>
                 ) : (
-                  <AnimatePresence>
                     <motion.div
                       key={scene.text}
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
                       exit={{ opacity: 0 }}
-                      className=" p-4 rounded border border-purple-700 text-lg md:text-xl text-white "
+                      className=" p-4 rounded border border-purple-700 text-lg md:text-xl text-white min-h-20"
                     >
                       <TypingAnimation className="whitespace-pre-wrap break-words font-retro text-2xl">{scene.text}</TypingAnimation>
                     </motion.div>
-                  </AnimatePresence>
                 )}
 
                 {scene.isEnding && (

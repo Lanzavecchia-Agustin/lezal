@@ -16,7 +16,7 @@ export default function Home() {
   };
 
   return (
-    <div className="relative flex min-h-screen flex-col items-center justify-center bg-black">
+    <div className="relative flex min-h-[100vh] flex-col items-center justify-center bg-black">
       <div
         className="absolute inset-0 z-50 flex flex-col items-center justify-center bg-black"
         onClick={navigateToGame}
@@ -32,11 +32,11 @@ export default function Home() {
             'o matalos primero!',
             'Lezal',
           ]}
-          className="mb-12"
+          className={`mb-12 ${animationFinished && 'animate-pulse'}`}
           onComplete={() => setAnimationFinished(true)}
         />
         {animationFinished && (
-          <p className="animate-pulse text-white">
+          <p className="animate-pulse text-white mx-6 text-center mt-6">
             Por favor haz click en cualquier parte para empezar el juego
           </p>
         )}

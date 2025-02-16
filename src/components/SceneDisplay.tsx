@@ -682,7 +682,7 @@ const SceneDisplay: React.FC<SceneDisplayProps> = ({
           clearInterval(typingInterval)
           setIsTyping(false)
         }
-      }, 30) // Adjust typing speed here
+      }, 2) // Adjust typing speed here
 
       return () => clearInterval(typingInterval)
     }

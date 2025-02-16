@@ -85,13 +85,39 @@
     }
   ],
   "npcs": [],
+  "avatars": [
+    {
+      "id": "avatar1",
+      "name": "Avatar 1",
+      "img": "https://images.piclumen.com/normal/20250216/05/786eb91fd77d43bc8ebc5267d931e0b8.webp"
+    },
+    {
+      "id": "avatar2",
+      "name": "Avatar 2",
+      "img": "https://images.piclumen.com/normal/20250216/06/c8f1c574718746acb4da5831f6b3ab03.webp"
+    },
+    {
+      "id": "avatar3",
+      "name": "Avatar 3",
+      "img": "https://images.piclumen.com/normal/20250216/06/e45dd0a16cd74709bfdc736f13f0be4b.webp"
+    },
+    {
+      "id": "avatar4",
+      "name": "Avatar 4",
+      "img": "https://images.piclumen.com/normal/20250216/06/a8df94d859ee4a6baef86b7c7ddc9750.webp"
+    },
+    {
+      "id": "avatar5",
+      "name": "Avatar 5",
+      "img": " https://images.piclumen.com/normal/20250216/08/7e91da8003834c2084517ed9e9fe18ac.webp"
+    }
+  ],
   "scenes": [
     {
       "id": "scene1",
       "text": "Año 2247. La humanidad enfrenta la última frontera: las estrellas.  Escarbando el fondo del tarro, los recursos de la Tierra se encuentran al límite y la expansión interestelar  lleva años estancada, cada expedición al exterior es una apuesta desesperada. ",
       "isEnding": false,
       "maxVote": 0,
-      "audio": "https://soundimage.org/wp-content/uploads/2014/02/Eerie-Cyber-World.mp3",
       "options": [
         {
           "id": 0,
@@ -103,7 +129,7 @@
             "skillUsed": "",
             "difficulty": 0
           },
-          "expOnSuccess": 0,
+          "expOnSuccess": 100,
           "lockedAttributeIncrement": {
             "attribute": "",
             "increment": 0
@@ -207,7 +233,6 @@
     },
     {
       "id": "inicio3",
-      "audio": "https://soundimage.org/wp-content/uploads/2016/07/Trouble-on-Mercury_Looping.mp3",
       "text": "Débil. intermitente. Una transmisión emerge desde las profundidades del vacío. Su origen: Lezal, un planeta olvidado en el borde del espacio conocido. Un mundo inhóspito, descartado décadas atrás tras un fallido intento de exploración humana. \n",
       "options": [
         {

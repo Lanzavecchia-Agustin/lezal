@@ -559,9 +559,8 @@ import { gameConfig, SKILLS, ATTRIBUTES, Scene, SceneOption } from "../../roomsS
 import { PlayerInfoBar } from "./PlayerInfoCard"
 import { SkillPointModal } from "./SkillPointModal"
 import { PlayerStatusModal } from "./PlayerStatusModal"
-import { DebugPanel } from "./DebugPanel"
 import { SceneOptionsList } from "./SceneOptionsList"
-import { motion, AnimatePresence } from "framer-motion"
+import { motion} from "framer-motion"
 import { TerminalWrapper } from "@/context/TerminalWrapper"
 import { TypingAnimation } from "./magicui/terminal"
 
@@ -575,6 +574,7 @@ export interface MyPlayerData {
   lockedAttributes?: { [attribute: string]: number }
   life?: number
   stress?: number
+  avatar?: string
 }
 
 interface SceneDisplayProps {
@@ -665,6 +665,7 @@ const SceneDisplay: React.FC<SceneDisplayProps> = ({
   const stress = myPlayer?.stress ?? 0
   const xpPercentage = Math.min(100, (xp / 100) * 100)
   const level = Math.floor(xp / 100)
+  const avatar = myPlayer?.avatar || ""
 
   const [displayedText, setDisplayedText] = useState("")
   const [isTyping, setIsTyping] = useState(false)
@@ -743,7 +744,6 @@ const SceneDisplay: React.FC<SceneDisplayProps> = ({
     )
     if (res.ok) {
       const data = await res.json()
-      alert(`Skill Point asignado a ${getSubskillName(subskillKey)}`)
       if (setMyPlayer) {
         setMyPlayer(data.player)
       }
@@ -769,10 +769,11 @@ const SceneDisplay: React.FC<SceneDisplayProps> = ({
             xpPercentage={xpPercentage}
             initialLife={initialLife}
             roomId={roomId || ""}
+            avatar={avatar}
           />
         )}
 
-        <main className="flex-grow flex flex-col p-4 gap-8">
+        <main className="flex-grow flex flex-col p-4 gap-4">
           <section className="w-full max-w-6xl mx-auto">
             <div className="p-6 bg-black bg-opacity-50 rounded relative overflow-hidden">
               <div className="relative z-10">
@@ -846,7 +847,7 @@ const SceneDisplay: React.FC<SceneDisplayProps> = ({
         {showSkillModal && myPlayer && (
           <SkillPointModal
             myPlayer={myPlayer}
-            onClose={() => setShowSkillModal(false)}
+            onClose={() => setShowSkillModal(myPlayer.skillPoints === 0 ? true : false)}
             onSpendPoint={handleSpendPoint}
             availablePoints={myPlayer.skillPoints ?? 0}
           />

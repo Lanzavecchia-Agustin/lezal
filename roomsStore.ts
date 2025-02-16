@@ -89,6 +89,7 @@ export interface Player {
   lockedAttributes: { [attribute: string]: number };
   life: number;
   stress: number;
+  avatar: string;
 }
 
 // Estado de la Sala

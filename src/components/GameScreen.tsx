@@ -1,11 +1,10 @@
-"use client";
+'use client';
 
 import React, { useEffect, useState, useRef } from "react";
 import Pusher from "pusher-js";
 import { API_ROUTES } from "../../utils/apiConfig";
 import JoinForm from "./JoinForm";
 import SceneDisplay from "./SceneDisplay";
-// Ahora gameConfig es un arreglo, y Scene sigue siendo el mismo
 import { gameConfig, Scene } from "../../roomsStore";
 
 // Estructura para almacenar la información de cada jugador (incluyendo vida y estrés)
@@ -50,7 +49,8 @@ export default function GameScreen() {
   const [users, setUsers] = useState<string[]>([]);
   const [hasVoted, setHasVoted] = useState(false);
   const [playersData, setPlayersData] = useState<Record<string, PlayerData>>({});
-  const [leader, setLeader] = useState<string | null>(null); // Estado para el líder
+  const [leader, setLeader] = useState<string | null>(null);
+  const [selectedAvatar, setSelectedAvatar] = useState<string>("");
 
   const pusherRef = useRef<Pusher | null>(null);
   const debugMode = true;
@@ -58,7 +58,6 @@ export default function GameScreen() {
   // Función auxiliar para obtener el valor de "initialLife" desde gameConfig
   const getInitialLife = () =>
     gameConfig.find((item) => item.id === "initialLife")?.value ?? 100;
-  // (Si necesitas obtener otros valores de configuración, como stressThreshold, hazlo de forma similar)
 
   useEffect(() => {
     if (roomId) {
@@ -123,11 +122,21 @@ export default function GameScreen() {
       alert("Por favor, ingresa tu nombre para continuar.");
       return;
     }
+    if (!selectedAvatar) {
+      alert("Por favor, selecciona un avatar.");
+      return;
+    }
     const generatedRoomId = `room-${Math.random().toString(36).substring(2, 10)}`;
     setRoomId(generatedRoomId);
 
     const assignedPointsString = JSON.stringify(assignedPoints);
-    const joinUrl = API_ROUTES.joinRoom(generatedRoomId, userName, assignedPointsString);
+    // Se incluye el avatar como nuevo parámetro en el endpoint
+    const joinUrl = API_ROUTES.joinRoom(
+      generatedRoomId,
+      userName,
+      assignedPointsString,
+      selectedAvatar
+    );
     const response = await fetch(joinUrl, { method: "GET" });
     if (response.ok) {
       setJoined(true);
@@ -142,8 +151,12 @@ export default function GameScreen() {
       alert("Por favor, ingresa tu nombre y el ID de la sala.");
       return;
     }
+    if (!selectedAvatar) {
+      alert("Por favor, selecciona un avatar.");
+      return;
+    }
     const assignedPointsString = JSON.stringify(assignedPoints);
-    const joinUrl = API_ROUTES.joinRoom(roomId, userName, assignedPointsString);
+    const joinUrl = API_ROUTES.joinRoom(roomId, userName, assignedPointsString, selectedAvatar);
     const response = await fetch(joinUrl, { method: "GET" });
     if (response.ok) {
       setJoined(true);
@@ -180,23 +193,25 @@ export default function GameScreen() {
     lockedAttributes: {},
     life: getInitialLife(),
     stress: 0,
+    avatar: selectedAvatar,
   };
 
-  // Si myPlayerData ya tiene assignedPoints (por ejemplo, del servidor), se prioriza sobre la asignación local
-  const effectiveAssignedPoints =
-    Object.keys(myPlayerData.assignedPoints || {}).length > 0
-      ? myPlayerData.assignedPoints
-      : assignedPoints;
+  // Si myPlayerData ya tiene assignedPoints, se prioriza sobre la asignación local.
+      const effectiveAssignedPoints =
+      Object.keys(myPlayerData.assignedPoints || {}).length > 0
+        ? myPlayerData.assignedPoints
+        : assignedPoints;
 
-  const myPlayer = {
-    name: userName,
-    assignedPoints: effectiveAssignedPoints,
-    xp: myPlayerData.xp,
-    skillPoints: myPlayerData.skillPoints,
-    lockedAttributes: myPlayerData.lockedAttributes || {},
-    life: myPlayerData.life,
-    stress: myPlayerData.stress,
-  };
+    const myPlayer = {
+      name: userName,
+      assignedPoints: effectiveAssignedPoints,
+      xp: myPlayerData.xp,
+      skillPoints: myPlayerData.skillPoints,
+      lockedAttributes: myPlayerData.lockedAttributes || {},
+      life: myPlayerData.life,
+      stress: myPlayerData.stress,
+      avatar: selectedAvatar,
+    };
 
   if (!joined) {
     return (
@@ -209,6 +224,8 @@ export default function GameScreen() {
         handleJoinRoom={handleJoinRoom}
         assignedPoints={assignedPoints}
         setAssignedPoints={setAssignedPoints}
+        selectedAvatar={selectedAvatar}
+        setSelectedAvatar={setSelectedAvatar}
       />
     );
   }

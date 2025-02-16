@@ -14,6 +14,7 @@ interface RoomPayload {
   userName: string
   roomId: string
   assignedPoints: { [subskillKey: string]: number }
+  avatar: string
 }
 
 interface JoinFormProps {
@@ -25,6 +26,8 @@ interface JoinFormProps {
   handleJoinRoom: (data: RoomPayload) => void
   assignedPoints: { [subskillKey: string]: number }
   setAssignedPoints: React.Dispatch<React.SetStateAction<{ [subskillKey: string]: number }>>
+  selectedAvatar: string
+  setSelectedAvatar: React.Dispatch<React.SetStateAction<string>>
 }
 
 const JoinForm: React.FC<JoinFormProps> = ({
@@ -36,18 +39,30 @@ const JoinForm: React.FC<JoinFormProps> = ({
   handleJoinRoom,
   assignedPoints,
   setAssignedPoints,
+  selectedAvatar,
+  setSelectedAvatar
 }) => {
   const [step, setStep] = useState(1)
   const [confirmedUserName, setConfirmedUserName] = useState("")
   const [confirmedSkills, setConfirmedSkills] = useState<{ [subskillKey: string]: number }>({})
+  const [avatars, setAvatars] = useState<any[]>([])
   const containerRef = useRef<HTMLDivElement>(null)
   const [skillsData, setSkillsData] = useState<any>(null)
 
+  // Obtener datos de habilidades
   useEffect(() => {
     fetch("http://localhost:3001/skills")
       .then((response) => response.json())
       .then((data) => setSkillsData(data))
       .catch((error) => console.error("Error fetching skills:", error))
+  }, [])
+
+  // Obtener avatares
+  useEffect(() => {
+    fetch("http://localhost:3001/avatars")
+      .then((response) => response.json())
+      .then((data) => setAvatars(data))
+      .catch((error) => console.error("Error fetching avatars:", error))
   }, [])
 
   useEffect(() => {
@@ -69,8 +84,12 @@ const JoinForm: React.FC<JoinFormProps> = ({
     setAssignedPoints((prev) => ({ ...prev, [subKey]: newValue }))
   }
 
-  // Funciones para confirmar y también para editar (resetear el estado de confirmación)
+  // Confirmar nombre (requiere que se haya seleccionado un avatar)
   const confirmUserName = () => {
+    if (!selectedAvatar) {
+      alert("Por favor, selecciona un avatar")
+      return
+    }
     setConfirmedUserName(userName)
     nextStep()
   }
@@ -90,8 +109,7 @@ const JoinForm: React.FC<JoinFormProps> = ({
     setStep(2)
   }
 
-  // Dado que la clave se forma como `${skill.id}-${sub.id}` y ambos son UUID (36 caracteres),
-  // extraemos el primer UUID (skillId) y el segundo (subskillId) usando slice.
+  // Extraer nombres de habilidad y subhabilidad
   const getSkillName = (skillId: string, subskillId: string) => {
     if (!skillsData) return ""
     const skill = skillsData.find((s: any) => s.id === skillId)
@@ -100,12 +118,13 @@ const JoinForm: React.FC<JoinFormProps> = ({
     return subskill ? subskill.name : ""
   }
 
-  // Funciones que envían el payload con { userName, roomId, assignedPoints }
+  // Payload a enviar (incluye avatar)
   const onCreateRoom = () => {
     const payload: RoomPayload = {
       userName,
       roomId: roomId || "",
       assignedPoints,
+      avatar: selectedAvatar,
     }
     handleCreateRoom(payload)
   }
@@ -115,37 +134,68 @@ const JoinForm: React.FC<JoinFormProps> = ({
       userName,
       roomId: roomId || "",
       assignedPoints,
+      avatar: selectedAvatar,
     }
     handleJoinRoom(payload)
   }
 
   return (
     <Terminal className="min-h-screen w-[80vw] flex flex-col bg-transparent font-mono p-4 border border-white">
-      <AnimatedSpan className="text-2xl font-bold text-white mb-4">Terminal de Acceso</AnimatedSpan>
+      <AnimatedSpan className="text-2xl font-bold text-white mb-4">
+        Terminal de Acceso
+      </AnimatedSpan>
 
       <div ref={containerRef} className="flex-grow overflow-auto">
         <div className="space-y-6">
-          {/* Sección 1: Identificación */}
+          {/* Sección 1: Identificación y selección de avatar */}
           <div className="space-y-4">
             <AnimatedSpan className="flex items-center space-x-2 text-xl text-white">
               <Cpu className="w-6 h-6" />
               <span>Identificación</span>
             </AnimatedSpan>
             {!confirmedUserName ? (
-              <div className="p-4">
-                <Input
-                  id="userName"
-                  placeholder="Ingresa tu nombre clave"
-                  value={userName}
-                  onChange={(e) => setUserName(e.target.value)}
-                  className="bg-transparent border-white text-white w-full"
-                />
-              </div>
+              <>
+                <div className="p-4">
+                  <Input
+                    id="userName"
+                    placeholder="Ingresa tu nombre clave"
+                    value={userName}
+                    onChange={(e) => setUserName(e.target.value)}
+                    className="bg-transparent border-white text-white w-full"
+                  />
+                </div>
+                <div className="p-4">
+                  <Label className="block text-white mb-2">Elige tu Apariencia</Label>
+                  <div className="flex gap-4 flex-wrap">
+                    {avatars.map((avatar) => (
+                      <img
+                        key={avatar.id}
+                        src={avatar.img}
+                        alt={avatar.name}
+                        className={`w-16 h-16 rounded-full cursor-pointer border-2 ${
+                          selectedAvatar === avatar.img ? "border-purple-500" : "border-transparent"
+                        }`}
+                        onClick={() => setSelectedAvatar(avatar.img)}
+                      />
+                    ))}
+                  </div>
+                </div>
+              </>
             ) : (
               <div className="p-4 bg-purple-900 rounded-lg flex items-center justify-between">
-                <p className="text-white">
-                  Nombre confirmado: <span className="font-bold">{confirmedUserName}</span>
-                </p>
+                <div className="flex items-center gap-4">
+                  <img
+                    src={
+                      avatars.find((avatar) => avatar.img === selectedAvatar)?.img ||
+                      "/placeholder.svg"
+                    }
+                    alt="Avatar seleccionado"
+                    className="w-16 h-16 rounded-full border-2 border-purple-500"
+                  />
+                  <p className="text-white">
+                    Nombre confirmado: <span className="font-bold">{confirmedUserName}</span>
+                  </p>
+                </div>
                 <Button onClick={editUserName} variant="outline" size="sm" className="text-white border-white">
                   Editar
                 </Button>
@@ -174,7 +224,6 @@ const JoinForm: React.FC<JoinFormProps> = ({
                             {skill.subskills
                               .filter((sub: Subskill) => !sub.unlockable)
                               .map((sub: Subskill) => {
-                                // Usamos el guión como delimitador
                                 const subKey = `${skill.id}-${sub.id}`
                                 const value = assignedPoints[subKey] || 0
                                 return (
@@ -228,8 +277,6 @@ const JoinForm: React.FC<JoinFormProps> = ({
                   </div>
                   <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
                     {Object.entries(confirmedSkills).map(([key, value]) => {
-                      // Dado que la clave es de la forma `${skill.id}-${sub.id}` y cada UUID tiene 36 caracteres,
-                      // extraemos el primer UUID (skillId) y el segundo (subskillId) a partir del índice 37.
                       const skillId = key.slice(0, 36)
                       const subskillId = key.slice(37)
                       const skillName = SKILLS.find((s) => s.id === skillId)?.name || ""
@@ -313,4 +360,4 @@ const JoinForm: React.FC<JoinFormProps> = ({
   )
 }
 
-export default JoinForm
+export default JoinForm;

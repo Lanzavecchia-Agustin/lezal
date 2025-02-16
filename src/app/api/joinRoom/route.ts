@@ -18,8 +18,10 @@ export async function GET(req: Request) {
   const userName = searchParams.get("userName");
   // Se elimina la lectura de "type"
   const attributesParam = searchParams.get("attributes") || "";
+  // Nuevo parámetro para el avatar
+  const avatar = searchParams.get("avatar") || "";
 
-  console.log("[JOIN] Incoming params =>", { roomId, userName, attributesParam });
+  console.log("[JOIN] Incoming params =>", { roomId, userName, attributesParam, avatar });
 
   if (!roomId || !userName) {
     return NextResponse.json({ error: "roomId y userName son requeridos" }, { status: 400 });
@@ -59,6 +61,7 @@ export async function GET(req: Request) {
     lockedAttributes: {},
     life: initialLife,
     stress: 0,
+    avatar, // Agregamos el avatar seleccionado
   };
 
   room.players[userName] = newPlayer;

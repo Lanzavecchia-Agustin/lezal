@@ -9,7 +9,7 @@ import { gameConfig, SKILLS, type Subskill } from "../../roomsStore"
 import { Cpu, Users, Radio, ChevronLeft, Plus, Minus, Check } from "lucide-react"
 import { Terminal, AnimatedSpan } from "@/components/magicui/terminal"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
-
+import db from "../../db.json"
 interface RoomPayload {
   userName: string
   roomId: string
@@ -51,20 +51,14 @@ const JoinForm: React.FC<JoinFormProps> = ({
 
   // Obtener datos de habilidades
   useEffect(() => {
-    fetch("http://localhost:3001/skills")
-      .then((response) => response.json())
-      .then((data) => setSkillsData(data))
-      .catch((error) => console.error("Error fetching skills:", error))
-  }, [])
-
+    // En lugar de fetch, usamos los datos importados
+    setSkillsData(db.skills);
+  }, []);
   // Obtener avatares
   useEffect(() => {
-    fetch("http://localhost:3001/avatars")
-      .then((response) => response.json())
-      .then((data) => setAvatars(data))
-      .catch((error) => console.error("Error fetching avatars:", error))
-  }, [])
-
+    setAvatars(db.avatars);
+  }, []);
+  
   useEffect(() => {
     containerRef.current?.scrollTo({ top: containerRef.current.scrollHeight, behavior: "smooth" })
   }, [])
